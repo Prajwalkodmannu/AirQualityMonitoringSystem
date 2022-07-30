@@ -21,19 +21,22 @@ export function setAlertColor(newNotificationStack){
   if (newNotificationStack.length > 0) {
     let colorCode = {
       priority: 3,
-      color: '#ab47bc'
+      color: '#ab47bc',
+      message: 'Warning Alert'
     };
     for(let i = 0; i < newNotificationStack.length; i++) {
       if (newNotificationStack[i].alertType === 'Critical') {
         colorCode = {
           priority: 1,
-          color: '#E53935'
+          color: '#E53935',
+          message: 'Critical Alert'
         };
         break;
       } else if(newNotificationStack[i].alertType === 'outOfRange') {
         colorCode = {
           priority: 2,
-          color: '#FFC107'
+          color: '#ff9800',
+          message: 'Out Of Range Alert'
         }
       }
     }

@@ -5,6 +5,8 @@ import {
   ErrorOutlineOutlined,
   WarningAmber,
   ChevronLeft,
+  Fullscreen,
+  FullscreenExit,
   ChevronRight,
   PriorityHigh,
 } from '@mui/icons-material';
@@ -102,8 +104,8 @@ function Navbar(props) {
         >
           <MenuIcon sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
           {props.mobileMenu
-            ? <ChevronLeft sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />
-            : <ChevronRight sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />}
+            ? <Fullscreen sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />
+            : <FullscreenExit sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />}
         </IconButton>
       </Toolbar>
       <div className="wrapper">

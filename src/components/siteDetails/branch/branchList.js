@@ -178,7 +178,7 @@ export function BranchListResults(props) {
           color="inherit"
           to="/"
         >
-          {pathname[1].replace("%20", " ")}
+          {pathname[1].replace(/%20/g, ' ')}
         </Typography>
       </Breadcrumbs>
       <BranchListToolbar

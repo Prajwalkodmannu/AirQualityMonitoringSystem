@@ -25,15 +25,6 @@ function NotificationWidget({ type, figure, handleClick }) {
       (<VolumeUp style={{fontSize: '70px', color : 'goldenrod', animation: 'flash 1s infinite '}}/>) , 
       link: '',
       icon: ''
-      // (
-      //   <Groups
-      //     className="icon"
-      //     style={{
-      //       color: 'goldenrod',
-      //       backgroundColor: 'rgba(218, 165, 32, 0.2)',
-      //     }}
-      //   />
-      // )
       ,
     };
     break;
@@ -118,15 +109,6 @@ function NotificationWidget({ type, figure, handleClick }) {
     <div
       className="widget"
       onClick={() => {
-        // switch(type){
-        //   case 'alerts' : 
-        //     handleAlert();
-        //     break;
-        //   case 'hooterStatus' :
-        //     handleHooter();
-        //     break;
-        //   default : break;
-        // }
         handleClick();
       }}
       style={{ cursor: type === 'alerts' && 'pointer', justifyContent: type === 'hooterStatus' && 'center' }}

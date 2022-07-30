@@ -74,9 +74,8 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
       >
         Back to Data Logger
       </Button>
-      <div className="widgets" style={{ textAlignLast: 'auto', paddingLeft: '10px', paddingTop: '5px' }}>
-        {/* <Widget type="user" /> */}
-        <Widget type="labs" />
+      <div className="widgets" style={{ height: 'auto', backgroundColor: '#fafafa', padding: 10  }}>
+        
         <Widget type="devices" totalSensors={totalSensors} />
         <Widget type="alerts" setAlertOpen={setAlertOpen} totalAlerts={totalAlerts} />
         <Widget type="time" />

@@ -35,6 +35,10 @@ function DeviceGridComponent({
     intervalCallFunction();
     const devicePolling = setInterval(() => {
       intervalCallFunction();
+      // if(pollingStatus === true){
+        // setPollingStatus(false);
+        // intervalCallFunction();
+      // }
     }, intervalSec);
     return () => {
       clearInterval(devicePolling);
@@ -53,6 +57,7 @@ function DeviceGridComponent({
   };
 
   const handleSuccess = (dataObject) => {
+    // setPollingStatus(true);
     setDeviceList(dataObject.data);
     const deviceCoordinationsList = dataObject.data.map((data) => {
       const coordination = data.floorCords;

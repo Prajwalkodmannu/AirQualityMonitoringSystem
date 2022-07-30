@@ -118,17 +118,14 @@ function Widget({ type , setAlertOpen, totalSensors, totalAlerts }) {
   }, []);
   return (
     <div className="widget" onClick={() => {
-        type === 'alerts' &&        
-        setAlertOpen(true);
+        type === 'alerts' && setAlertOpen(true);
       }}
       style={{ cursor: type === 'alerts' && 'pointer', display: 'inline-block' }}
     >
       <div>
-        <span className="title">{data.title}</span>
-      </div>
-      <div>
         <div className="left" >
-          <span className="counter">
+          <span className="title" style={{minWidth: '150px'}}>{data.title}</span>
+          <span className="counter" style={{minWidth: '150px'}}>
             {data.figure}
           </span>
           <span className="link">{data.link}</span>

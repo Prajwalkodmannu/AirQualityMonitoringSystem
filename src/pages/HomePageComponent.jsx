@@ -23,7 +23,7 @@ function HomePageComponent() {
   const [mobileMenu, setMobileOpen] = useState(true);
   const [notifierState, setNotifierState] = useState({
     open: false,
-    message: 'New have new notification !',
+    message: 'You have new notification !',
     color: '#ffca28', // amber : '#ffca28', green: '#4caf50'
   });
   const [newNotification, setNewNotification] = useState(false);
@@ -107,6 +107,7 @@ function HomePageComponent() {
           ...oldValue,
           open: true,
           color: colorObject.color,
+          message: colorObject.message,
         };
       });
       ApplicationStore().setStorage('notificationDetails', {notificationList: newDataObject, newNotification: newNotificationValue});

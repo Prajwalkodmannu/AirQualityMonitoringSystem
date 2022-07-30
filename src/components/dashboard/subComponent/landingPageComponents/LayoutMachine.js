@@ -8,18 +8,20 @@ function LayoutMachine({
   return (
     <div
       style={{
-        marginTop: 0,
+        marginTop: 5,
         maxHeight: '65vh',
         overflow: 'auto',
+        padding: 5
       }}
     >
       <Grid
         container
-        spacing={3}
+        spacing={2}
+        style={{padding: 1}}
       >
         {analogSensorList.map((data) => {
           return (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={data.sensorTagId}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={data.sensorTagId}>
               <MachineCard
                 setOpen={setOpen}
                 id={data.sensorTagId}
@@ -40,7 +42,7 @@ function LayoutMachine({
         })}
         {digitalSensorList.map((data) => {
           return (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={data.sensorTagId}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={data.sensorTagId}>
               <MachineCard
                 setOpen={setOpen}
                 id={data.sensorTagId}
@@ -61,7 +63,7 @@ function LayoutMachine({
         })}
         {modbusSensorList.map((data) => {
           return (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={data.sensorTagId}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={data.sensorTagId}>
               <MachineCard
                 setOpen={setOpen}
                 id={data.sensorTagId}

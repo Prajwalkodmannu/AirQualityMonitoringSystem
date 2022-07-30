@@ -6,7 +6,7 @@ import { AnalogSensorValidate } from '../../../validation/formValidation';
 import { useUserAccess } from '../../../context/UserAccessProvider';
 
 function Modbus({
-  errorObject, setErrorObject, disable, units, setUnits, sensorType, setSensorType, minRatedReading, setMinRatedReading,
+  errorObject, setErrorObject, disable, units, unitsList, setUnits, sensorType, setSensorType, minRatedReading, setMinRatedReading,
   minRatedReadingChecked, setMinRatedReadingChecked, minRatedReadingScale, setMinRatedReadingScale,
   maxRatedReading, setMaxRatedReading, maxRatedReadingChecked, setMaxRatedReadingChecked,
   maxRatedReadingScale, setMaxRatedReadingScale, slaveId, setSlaveId,
@@ -325,24 +325,12 @@ function Modbus({
                 error={errorObject?.units?.errorStatus}
                 helperText={errorObject?.units?.helperText}
               >
-                <MenuItem value="ppb">ppb</MenuItem>
-                <MenuItem value="ppm">ppm</MenuItem>
-                <MenuItem value="µg/m3">µg/m3</MenuItem>
-                <MenuItem value="mg/m3">mg/m3</MenuItem>
-                <MenuItem value="%vol">%vol</MenuItem>
-                <MenuItem value="mmHg">mmHg</MenuItem>
-                <MenuItem value="Pa">Pa</MenuItem>
-                <MenuItem value="Bar">Bar</MenuItem>
-                <MenuItem value="°C">°C</MenuItem>
-                <MenuItem value="°F">°F</MenuItem>
-                <MenuItem value="CFM">CFM</MenuItem>
-                <MenuItem value="mm">mm</MenuItem>
-                <MenuItem value="m/s">m/s</MenuItem>
-                <MenuItem value="degree">degree</MenuItem>
-                <MenuItem value="W/mt2">W/mt2</MenuItem>
-                <MenuItem value="m">m</MenuItem>
-                <MenuItem value="psi">psi</MenuItem>
-                <MenuItem value="%">%</MenuItem>
+                {unitsList?.map((data, index) =>{
+                  return(
+                    <MenuItem value={data.unitLabel}>{data.unitLabel}</MenuItem>
+                  )
+                })}
+                
               </Select>
             </FormControl>
           </div>
