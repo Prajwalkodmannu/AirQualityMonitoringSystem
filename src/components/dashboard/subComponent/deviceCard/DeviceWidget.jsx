@@ -6,30 +6,48 @@ import {
 } from '@mui/icons-material';
 import { Badge, Chip } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { getDeviceBackgroundColor, getDeviceHeaderColor, getDeviceModeColor } from '../../../../utils/helperFunctions';
 
 function DeviceWidget({
-  data, setLocationDetails, setBreadCrumbLabels, setIsDashBoard,
+  data, setLocationDetails, setBreadCrumbLabels, setIsDashBoard, deviceIdList
 }) {
   const [modeColor, setModeColor] = useState('primary');
+  const [alertStatus, setAlertStatus] = useState(4);
 
   useEffect(() => {
     if (data) {
-      switch (data.deviceMode) {
-      case 'enabled': setModeColor('#1b5e20');
-        break;
-      case 'config': setModeColor('#4a148c');
-        break;
-      case 'calibration': setModeColor('#f57f17');
-        break;
-      case 'disabled': setModeColor('#b71c1c');
-        break;
-      case 'bumpTest': setModeColor('#01579b');
-        break;
-      case 'firmwareUpgradation': setModeColor('#c2185b');
-        break;
-      default: break;
-      }
+      setModeColor(getDeviceBackgroundColor(data.deviceMode, alertStatus));
     }
+    let element = {
+      alertLabel: 'Good',
+      alertColor: 'green',
+      alertPriority: 4,
+    };
+
+    const alertObject = deviceIdList?.filter((alert) => {
+      return data.id === parseInt(alert.id);
+    });
+
+    alertObject?.map((data) => {
+      element = element.alertPriority < data.alertPriority ? element
+        : {
+          alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
+          alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
+          alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
+        };
+        // if(element.alertPriority > data.alertPriority){
+          switch(data.alertType){
+            case 'Critical' : setAlertStatus(1);
+            break;
+            case 'Warning' : setAlertStatus(2);
+            break;
+            case 'outOfRange' : setAlertStatus(3);
+            break;
+            default : break;
+          }
+        // } 
+    });
+
   }, []);
 
   const handleClick = () => {
@@ -55,7 +73,7 @@ function DeviceWidget({
       <div
         className="left"
         style={{
-          backgroundColor: data.deviceMode === 'disabled' ? '#9e9e9e': '#dcedc8',
+          backgroundColor: getDeviceBackgroundColor(data.deviceMode, alertStatus),
           borderTopRightRadius: '10px',
           borderTopLeftRadius: '10px',
           alignContent: 'space-between',
@@ -80,7 +98,7 @@ function DeviceWidget({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 width: '120px',
-                color: data.deviceMode === 'disabled' ? '#212121' : '#388e3c',
+                color: getDeviceHeaderColor(data.deviceMode, alertStatus),
               }}
             >
               {data.deviceName}
@@ -93,7 +111,7 @@ function DeviceWidget({
                 float: 'right',
                 marginRight: 5,
                 fontWeight: 500,
-                color: data.deviceMode === 'disabled' ? '#212121' : '#388e3c',
+                color: getDeviceHeaderColor(data.deviceMode, alertStatus),
               }}
             >
               {data.deviceCategory}
@@ -191,8 +209,8 @@ function DeviceWidget({
                     label={data.deviceMode}
                     variant="outlined"
                     sx={{
-                      color: data.deviceMode === 'disabled' ? '#757575' : modeColor,
-                      borderColor: data.deviceMode === 'disabled' ? '#757575' : modeColor,
+                      color: getDeviceModeColor(data.deviceMode),
+                      borderColor: getDeviceModeColor(data.deviceMode),
                       height: '100%',
                     }}
                   />

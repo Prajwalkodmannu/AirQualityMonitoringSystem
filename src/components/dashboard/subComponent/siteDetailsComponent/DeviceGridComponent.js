@@ -23,6 +23,7 @@ function DeviceGridComponent({
   const [labHooterStatus, setLabHooterStatus] = useState('0');
   const [expanded, setExpanded] = useState(false);
   const { intervalDetails } = ApplicationStore().getStorage('userDetails');
+  const { deviceIdList } = ApplicationStore().getStorage('alertDetails');
   const intervalSec = intervalDetails.deviceLogInterval * 1000;
   const [pollingStatus, setPollingStatus] = useState(false);
   const [openNotification, setNotification] = useState({
@@ -32,6 +33,7 @@ function DeviceGridComponent({
   });
 
   useEffect(() => {
+    console.log(deviceIdList);
     intervalCallFunction();
     const devicePolling = setInterval(() => {
       intervalCallFunction();
@@ -235,6 +237,7 @@ function DeviceGridComponent({
                 <DeviceWidget
                   type="aqmi"
                   data={data}
+                  deviceIdList={deviceIdList}
                   setLocationDetails={setLocationDetails}
                   setIsDashBoard={setIsDashBoard}
                   setBreadCrumbLabels={setBreadCrumbLabels}
