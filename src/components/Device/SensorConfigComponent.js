@@ -14,6 +14,7 @@ import {
 
 import {
   CategoryFetchService,
+  DynamicUnitListService,
   SensorAddService,
   SensorCategoryFetchService,
   SensorEditService,
@@ -39,13 +40,14 @@ function SensorConfig({
   // -----analog----//
   const [sensorType, setSensorType] = useState(editData.sensorType || '');
   const [units, setUnits] = useState(editData.units || '');
-  const [relayOutput, setRelayOutput] = useState(editData?.relayOutput || 'ON');
+  const [unitsList, setUnitsList] = useState([]);
+  // const [relayOutput, setRelayOutput] = useState(editData?.relayOutput || 'ON');
   const [bumpTestRequired, setBumpTestRequired] = useState(editData?.bumpTestRequired || 'ON');
   const [minRatedReading, setMinRatedReading] = useState(editData.minRatedReading || '');
-  const [minRatedReadingChecked, setMinRatedReadingChecked] = useState(editData.minRatedReadingChecked || 0);
+  const [minRatedReadingChecked, setMinRatedReadingChecked] = useState(editData.minRatedReadingChecked || '0');
   const [minRatedReadingScale, setMinRatedReadingScale] = useState(editData.minRatedReadingScale || '');
   const [maxRatedReading, setMaxRatedReading] = useState(editData.maxRatedReading || '');
-  const [maxRatedReadingChecked, setMaxRatedReadingChecked] = useState(editData.maxRatedReadingChecked || 0);
+  const [maxRatedReadingChecked, setMaxRatedReadingChecked] = useState(editData.maxRatedReadingChecked || '0');
   const [maxRatedReadingScale, setMaxRatedReadingScale] = useState(editData.maxRatedReadingScale || '');
   // -Modbus--------//
   const [slaveId, setSlaveId] = useState(editData.slaveId || '');
@@ -126,7 +128,8 @@ function SensorConfig({
 
   const loadData = () => {
     CategoryFetchService(categoryHandleSuccess, handleException);
-    SensorCategoryFetchService(sensorCategoryHandleSuccess, handleException);
+    SensorCategoryFetchService(sensorCategoryHandleSuccess, handleException); 
+    editData.sensorCategoryId && DynamicUnitListService(editData.sensorCategoryId, handleSensorUnitSuccess, handleSensorUnitException);
   };
 
   const handleSubmit = async (e) => {
@@ -142,7 +145,7 @@ function SensorConfig({
         sensorOutput,
         sensorType,
         units,
-        relayOutput,
+        // relayOutput,
         bumpTestRequired,
         minRatedReading,
         minRatedReadingChecked,
@@ -197,7 +200,7 @@ function SensorConfig({
         sensorOutput,
         sensorType,
         units,
-        relayOutput,
+        // relayOutput,
         bumpTestRequired,
         minRatedReading,
         minRatedReadingChecked,
@@ -275,6 +278,23 @@ function SensorConfig({
       message: '',
     });
   };
+
+  const onSensorCategoryChange = (e) =>{
+    setSensorCategoryId(e.target.value);
+    DynamicUnitListService(e.target.value, handleSensorUnitSuccess, handleSensorUnitException);
+  };
+
+  const handleSensorUnitSuccess = (dataObject) =>{
+    setUnitsList(JSON.parse(dataObject.data[0].measureUnitList?.replace(/\\/g, '').replace(/(^"|"$)/g, '')) || []);
+  }
+
+  const handleSensorUnitException = (errorObject, errorMessage) =>{
+    setNotification({
+      status: true,
+      type: 'error',
+      message: errorMessage,
+    });
+  }
   return (
     <div className="w-full" style={{ marginTop: 0 }}>
       <form className="mt-0 p-0 w-full" onSubmit={handleSubmit}>
@@ -307,7 +327,7 @@ function SensorConfig({
                           label="Sensor Category"
                           required
                           onChange={(e) => {
-                            setSensorCategoryId(e.target.value);
+                            onSensorCategoryChange(e);
                           }}
                         >
                           {sensorCategoryList.map((data) => {
@@ -430,7 +450,7 @@ function SensorConfig({
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid
+                  {/* <Grid
                     sx={{ mt: 0, padding: 0 }}
                     item
                     xs={12}
@@ -455,7 +475,7 @@ function SensorConfig({
                         </Select>
                       </FormControl>
                     </div>
-                  </Grid>
+                  </Grid> */}
                   <Grid
                     sx={{ mt: 0, padding: 0 }}
                     item
@@ -519,10 +539,11 @@ function SensorConfig({
                     errorObject={errorObject}
                     setErrorObject={setErrorObject}
                     units={units}
+                    unitsList={unitsList}
                     setUnits={setUnits}
-                    relayOutput={relayOutput}
+                    // relayOutput={relayOutput}
                     bumpTestRequired={bumpTestRequired}
-                    setRelayOutput={setRelayOutput}
+                    // setRelayOutput={setRelayOutput}
                     setBumpTestRequired={setBumpTestRequired}
                     sensorType={sensorType}
                     setSensorType={setSensorType}
@@ -544,10 +565,11 @@ function SensorConfig({
                     errorObject={errorObject}
                     setErrorObject={setErrorObject}
                     units={units}
+                    unitsList={unitsList}
                     setUnits={setUnits}
-                    relayOutput={relayOutput}
+                    // relayOutput={relayOutput}
                     bumpTestRequired={bumpTestRequired}
-                    setRelayOutput={setRelayOutput}
+                    // setRelayOutput={setRelayOutput}
                     setBumpTestRequired={setBumpTestRequired}
                     sensorType={sensorType}
                     setSensorType={setSensorType}
@@ -672,7 +694,30 @@ function SensorConfig({
               md={12}
               lg={12}
               xl={12}
-            >
+            > 
+              {nextPage !== true &&
+              <Button
+                sx={{ m: 2 }}
+                size="large"
+                type="submit"
+                disabled={
+                  errorObject?.sensorName?.errorStatus
+                || errorObject?.manufacturer?.errorStatus
+                || errorObject?.partId?.errorStatus
+                || errorObject?.units?.errorStatus
+                || errorObject?.minRatedReading?.errorStatus
+                || errorObject?.minRatedReadingScale?.errorStatus
+                || errorObject?.maxRatedReading?.errorStatus
+                || errorObject?.maxRatedReadingScale?.errorStatus
+                || errorObject?.ipAddress?.errorStatus
+                || errorObject?.subnetMask?.errorStatus
+                || errorObject?.slaveId?.errorStatus
+                || errorObject?.registerId?.errorStatus
+                }
+              >
+                {isAddButton ? 'ADD' : 'UPDATE'}
+              </Button>
+              }
               <Button
                 sx={{ m: 2 }}
                 onClick={() => {
@@ -685,42 +730,21 @@ function SensorConfig({
               >
                 {nextButton}
               </Button>
+              <Button
+                sx={{ m: 2 }}
+                onClick={() => {
+                  setErrorObject({});
+                  setOpen(false);
+                }}
+              >
+                Cancel
+              </Button>
             </Grid>
           </Grid>
           {nextPage === true
             ? ''
             : (
               <div className="float-right">
-                <Button
-                  sx={{ m: 2 }}
-                  onClick={() => {
-                    setErrorObject({});
-                    setOpen(false);
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  sx={{ m: 2 }}
-                  size="large"
-                  type="submit"
-                  disabled={
-                    errorObject?.sensorName?.errorStatus
-                  || errorObject?.manufacturer?.errorStatus
-                  || errorObject?.partId?.errorStatus
-                  || errorObject?.units?.errorStatus
-                  || errorObject?.minRatedReading?.errorStatus
-                  || errorObject?.minRatedReadingScale?.errorStatus
-                  || errorObject?.maxRatedReading?.errorStatus
-                  || errorObject?.maxRatedReadingScale?.errorStatus
-                  || errorObject?.ipAddress?.errorStatus
-                  || errorObject?.subnetMask?.errorStatus
-                  || errorObject?.slaveId?.errorStatus
-                  || errorObject?.registerId?.errorStatus
-                  }
-                >
-                  {isAddButton ? 'ADD' : 'UPDATE'}
-                </Button>
               </div>
             )}
         </DialogContent>

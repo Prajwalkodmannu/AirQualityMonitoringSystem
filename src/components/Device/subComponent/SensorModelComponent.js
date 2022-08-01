@@ -202,8 +202,6 @@ function SensorModel({
   };
 
   const successSensorUpdate = () => {
-    setPopperOpen(false);
-    // Refresh sensor data
     setSensorRefresh(oldvalue => !oldvalue);
   };
 

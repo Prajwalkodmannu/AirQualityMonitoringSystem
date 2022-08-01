@@ -69,6 +69,7 @@ function AlertWidget({ dataList, setRefreshData }) {
 
   function ClearAlert({ selectedRow }) {
     return (
+      selectedRow.alarmType === 'Latch' ?
       <Button
         variant="contained"
         color="success"
@@ -80,6 +81,7 @@ function AlertWidget({ dataList, setRefreshData }) {
       >
         Clear
       </Button>
+      : ''
     );
   }
 

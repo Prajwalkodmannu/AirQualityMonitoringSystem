@@ -13,7 +13,7 @@ import {
 import { darken, lighten } from '@mui/material/styles';
 import DeviceModel from './DeviceModelComponent';
 import {
-  DeviceDeleteService, DeviceFetchService, CategoryFetchService, SensorDeployFetchService, ChangeDeviceMode, deviceDeployedSensors,
+  DeviceDeleteService, DeviceFetchService, CategoryFetchService, SensorDeployFetchService, ChangeDeviceMode, deviceDeployedSensors, BumpTestEnabledSensors,
 } from '../../../services/LoginPageService';
 import SensorModel from './SensorModelComponent';
 import DeviceConfigSetupModal from '../deviceConfiguration/subcomponent/DeviceConfigSetupModalComponent';
@@ -219,7 +219,7 @@ function AddDeviceListResults(props) {
   };
 
   const bumptestDeployedSensorsList = (id) => {
-    deviceDeployedSensors(id, bumptestSensorsListSuccess, bumptestSensorsListException);
+    BumpTestEnabledSensors(id, bumptestSensorsListSuccess, bumptestSensorsListException);
   };
 
   const deviceDeployedSensorsListSuccess = (dataObject) => {

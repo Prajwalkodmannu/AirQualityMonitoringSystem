@@ -31,7 +31,7 @@ function SensorSettingsMenu(props) {
 
   const updateSensorStatus = () => {
     props.setSensorStatus((oldValue) => {
-      const status = oldValue === '`0' ? '1' : '0';
+      const status = oldValue === '0' ? '1' : '0';
       return status;
     });
 

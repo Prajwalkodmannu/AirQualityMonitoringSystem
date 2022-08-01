@@ -266,6 +266,9 @@ export const deviceDeployedSensors = (id, successCallback, errorCallBack) => _fe
 // -------------DeployedSensorTable List --------------//
 export const DeployedSensorsDetailsList = (data, successCallback, errorCallBack) => _fetchService('calibrationTestResult', 'POST', data, successCallback, errorCallBack);
 
+// -------------BumpTest enabled sensors List --------------//
+export const BumpTestEnabledSensors = (id, successCallback, errorCallBack) => _fetchService(`bumptestDeviceDeployedSensors/${id}`, 'GET', {}, successCallback, errorCallBack);
+
 // ------------- Bump Test ----------------------------//
 export const BumpTestAddService = (data, successCallback, errorCallBack) => _fetchService('bumpTestResult/add', 'POST', data, successCallback, errorCallBack);
 
@@ -299,3 +302,10 @@ export const NotificationAlerts = (data, successCallback, errorCallBack) =>  _fe
 // ------------ Company Log Interval ---------------------//
 
 export const CompanyLogInterval = (data, successCallback, errorCallBack) => { return _fetchService(`updateCustomerSettings`, 'POST', data, successCallback, errorCallBack); };
+
+// ----------- Hooter Relay -----------------------------//
+
+export const HooterRelayService = (data, successCallback, errorCallBack) => { return _fetchService(`labHooterRelay`, 'POST', data, successCallback, errorCallBack); };
+
+// -------------Dynamic Unit listing --------------//
+export const DynamicUnitListService = (id, successCallback, errorCallBack) => _fetchService(`sensorCategoryUnitsDisplay/${id}`, 'GET', {}, successCallback, errorCallBack);

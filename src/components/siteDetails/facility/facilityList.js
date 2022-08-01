@@ -180,7 +180,7 @@ export function FacilityListResults(props) {
   };
   const pathList = routeStateObject.pathname.split('/').filter((x) => x);
   const pathname = pathList.map((data, index) => {
-    const path = data.replace('%20', ' ');
+    const path = data.replace(/%20/g, ' ');
     return (path);
   });
   return (

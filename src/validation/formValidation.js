@@ -778,7 +778,7 @@ const AnalogSensorValidate = (value, type, setErrorObject) => {
       break;
     case 'minRatedReading': setErrorObject((oldErrorState) => {
       let status = {};
-      if (!validate('number', value)) {
+      if (!validate('Decimalnumber', value)) {
         status = {
           errorStatus: true,
           helperText: 'Enter the Minimum Rated Reading',
@@ -797,7 +797,7 @@ const AnalogSensorValidate = (value, type, setErrorObject) => {
       break;
     case 'maxRatedReading': setErrorObject((oldErrorState) => {
       let status = {};
-      if (!validate('number', value)) {
+      if (!validate('Decimalnumber', value)) {
         status = {
           errorStatus: true,
           helperText: 'Enter the Maximum Rated Reading',

@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from '@mui/material';
 import {
-  CategoryFetchService, DeviceFetchService, SensorCategoryFetchService, SensorDeployAddService, SensorDeployEditService, SensorFetchService,
+  CategoryFetchService, DeviceFetchService, DynamicUnitListService, SensorCategoryFetchService, SensorDeployAddService, SensorDeployEditService, SensorFetchService,
 } from '../../services/LoginPageService';
 import Analog from './sensorType/AnalogComponent';
 import Modbus from './sensorType/ModbusComponent';
@@ -48,6 +48,7 @@ function DeviceAdd({
   const [sensorType, setSensorType] = useState(editData?.sensorType || '');
   const [relayOutput, setRelayOutput] = useState(editData?.relayOutput || 'ON');
   const [units, setUnits] = useState(editData?.units || '');
+  const [unitsList, setUnitsList] = useState([]);
   const [minRatedReading, setMinRatedReading] = useState(editData?.minRatedReading || '');
   const [minRatedReadingChecked, setMinRatedReadingChecked] = useState(editData?.minRatedReadingChecked || '0');
   const [minRatedReadingScale, setMinRatedReadingScale] = useState(editData?.minRatedReadingScale || '');
@@ -156,7 +157,21 @@ function DeviceAdd({
     SensorCategoryFetchService(sensorCategoryHandleSuccess, handleException);
     /* eslint-disable-next-line */
     DeviceFetchService({ ...locationDetails, sensorCategoryId: categoryId }, deviceHandleSuccess, handleException);
+    editData?.sensorCategoryId && DynamicUnitListService(editData.sensorCategoryId, handleSensorUnitSuccess, handleSensorUnitException);
   };
+
+  const handleSensorUnitSuccess = (dataObject) =>{
+    setUnitsList(JSON.parse(dataObject.data[0].measureUnitList?.replace(/\\/g, '').replace(/(^"|"$)/g, '')) || []);
+  }
+
+  const handleSensorUnitException = (errorObject, errorMessage) =>{
+    setNotification({
+      status: true,
+      type: 'error',
+      message: errorMessage,
+    });
+  }
+
   /* eslint-disable-next-line */
   const deviceChanged = (sensorCategoryId) => {
     setCategoryId(sensorCategoryId);
@@ -544,6 +559,7 @@ function DeviceAdd({
                       }}
                       options={sensorList}
                       onChange={(e, data) => {
+                        DynamicUnitListService(sensorCategoryId, handleSensorUnitSuccess, handleSensorUnitException);
                         setSensorName(data.id);
                         setSensorOutput(data.sensorOutput);
                         setSensorType(data.sensorType);
@@ -771,6 +787,7 @@ function DeviceAdd({
                   setErrorObject={setErrorObject}
                   disable
                   units={units}
+                  unitsList={unitsList}
                   setUnits={setUnits}
                   sensorType={sensorType}
                   setSensorType={setSensorType}
@@ -843,6 +860,7 @@ function DeviceAdd({
                     setErrorObject={setErrorObject}
                     disable
                     units={units}
+                    unitsList={unitsList}
                     setUnits={setUnits}
                     sensorType={sensorType}
                     setSensorType={setSensorType}
