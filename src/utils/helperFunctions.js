@@ -14,7 +14,7 @@ export function getFullTime(date) {
 }
 
 export function alertSeverityCode(alertType){
-  return alertType === 'Critical'? 1 : alertType === 'outOfRange'? 2 : alertType === 'Warning'? 3 : 4;
+  return alertType === 'Critical'? 1 : alertType === 'Warning'? 2 : alertType === 'outOfRange'? 3 : 4;
 }
 
 export function setAlertColor(newNotificationStack){
@@ -50,7 +50,7 @@ export function setAlertColor(newNotificationStack){
   }
 }
 
-export function getDeviceBackgroundColor(deviceMode, alertStatus){
+export function getDeviceBackgroundColor(deviceMode, alertStatus, disconnectedStatus){
   let colorCode = '#a5d6a7';
     if(deviceMode === 'disabled') {
       colorCode = '#9e9e9e';
@@ -61,20 +61,19 @@ export function getDeviceBackgroundColor(deviceMode, alertStatus){
         switch(alertStatus){
           case 1 : colorCode = '#ef9a9a';
             break;
-          case 2 : colorCode = '#7e57c2';
+          case 2 : colorCode = '#ffb74d';
             break;
-          case 3 : colorCode = '#ffb74d';
+          case 3 : colorCode = '#ce93d8';
             break;
-          case 4 : colorCode = '#a5d6a7';
+          default : colorCode = disconnectedStatus === 1 ? '#ce93d8' : '#a5d6a7';
             break;
-          default : break;
         }
       }
     }
   return colorCode;
 }
 
-export function getDeviceHeaderColor(deviceMode, alertStatus){
+export function getDeviceHeaderColor(deviceMode, alertStatus, disconnectedStatus){
   let colorCode = '#212121';
   if(deviceMode === 'disabled') {
     colorCode = '#212121';
@@ -85,13 +84,12 @@ export function getDeviceHeaderColor(deviceMode, alertStatus){
       switch(alertStatus){
         case 1 : colorCode = '#b71c1c';
           break;
-        case 2 : colorCode = '#ffb74d';
+        case 2 : colorCode = '#e65100';
           break;
-        case 3 : colorCode = '#ef6c00';
+        case 3 : colorCode = '#4a148c';
           break;
-        case 4 : colorCode = '#1b5e20';
+        default : colorCode = disconnectedStatus === 1 ? '#4a148c' : '#1b5e20';
           break;
-        default : break;
       }
     }
   }

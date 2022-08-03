@@ -16,7 +16,7 @@ function DeviceWidget({
 
   useEffect(() => {
     if (data) {
-      setModeColor(getDeviceBackgroundColor(data.deviceMode, alertStatus));
+      setModeColor(getDeviceBackgroundColor(data.deviceMode, alertStatus, parseInt(data.disconnectedStatus)));
     }
     let element = {
       alertLabel: 'Good',
@@ -29,23 +29,23 @@ function DeviceWidget({
     });
 
     alertObject?.map((data) => {
+      if(element.alertPriority > data.alertPriority){
+        switch(data.alertType){
+          case 'Critical' : setAlertStatus(1);
+          break;
+          case 'Warning' : setAlertStatus(2);
+          break;
+          case 'outOfRange' : setAlertStatus(3);
+          break;
+          default : break;
+        }
+      } 
       element = element.alertPriority < data.alertPriority ? element
         : {
           alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
           alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
           alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
         };
-        // if(element.alertPriority > data.alertPriority){
-          switch(data.alertType){
-            case 'Critical' : setAlertStatus(1);
-            break;
-            case 'Warning' : setAlertStatus(2);
-            break;
-            case 'outOfRange' : setAlertStatus(3);
-            break;
-            default : break;
-          }
-        // } 
     });
 
   }, []);
@@ -73,7 +73,7 @@ function DeviceWidget({
       <div
         className="left"
         style={{
-          backgroundColor: getDeviceBackgroundColor(data.deviceMode, alertStatus),
+          backgroundColor: getDeviceBackgroundColor(data.deviceMode, alertStatus, parseInt(data.disconnectedStatus)),
           borderTopRightRadius: '10px',
           borderTopLeftRadius: '10px',
           alignContent: 'space-between',
@@ -98,7 +98,7 @@ function DeviceWidget({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 width: '120px',
-                color: getDeviceHeaderColor(data.deviceMode, alertStatus),
+                color: getDeviceHeaderColor(data.deviceMode, alertStatus, parseInt(data.disconnectedStatus)),
               }}
             >
               {data.deviceName}
@@ -111,7 +111,7 @@ function DeviceWidget({
                 float: 'right',
                 marginRight: 5,
                 fontWeight: 500,
-                color: getDeviceHeaderColor(data.deviceMode, alertStatus),
+                color: getDeviceHeaderColor(data.deviceMode, alertStatus, parseInt(data.disconnectedStatus)),
               }}
             >
               {data.deviceCategory}

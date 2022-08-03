@@ -32,7 +32,7 @@ function NotificationWidget({ type, figure, handleClick }) {
     data = {
       title: 'Disconnected Devices',
       link: '',
-      figure: figure || 3,
+      figure: figure || 0,
       icon: (
         <SensorsOff
           className="icon"
@@ -48,7 +48,7 @@ function NotificationWidget({ type, figure, handleClick }) {
     data = {
       title: 'Total Devices',
       link: '',
-      figure: figure,
+      figure: figure || 0,
       icon: (
         <Sensors
           className="icon"
@@ -61,7 +61,7 @@ function NotificationWidget({ type, figure, handleClick }) {
     data = {
       title: 'Active Alerts',
       link: '',
-      figure: figure,
+      figure: figure || 0,
       icon: (
         <NotificationsActiveOutlined
           className="icon"

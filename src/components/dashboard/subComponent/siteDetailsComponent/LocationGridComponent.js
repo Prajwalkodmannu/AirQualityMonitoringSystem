@@ -44,8 +44,8 @@ function LocationGridComponent(props) {
         alertObject?.map((data)=>{
           element = element.alertPriority < data.alertPriority ? element : 
             { 
-              alertLabel: data.alertType === 'Critical'? 'Critical' : data.alertType === 'outOfRange'? 'Out Of Range' : 'Good',
-              alertColor : data.alertType === 'Critical'? 'red' : data.alertType === 'outOfRange'? 'orange' : data.alertType === 'Warning' ? '#9c27b0' : 'green',
+              alertLabel: data.alertType === 'Critical'? 'Critical' : data.alertType === 'outOfRange'? 'Out Of Range' : data.alertType === 'Warning' ? 'Warning' :'Good',
+              alertColor : data.alertType === 'Critical'? 'red' : data.alertType === 'outOfRange'? '#9c27b0' : data.alertType === 'Warning' ? 'orange' : 'green',
               alertPriority: data.alertType === 'Critical'? 1 : data.alertType === 'outOfRange'? 2 : data.alertType === 'Warning' ? 3 : 4
             }
         });
