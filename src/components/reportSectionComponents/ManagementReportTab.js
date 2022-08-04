@@ -267,37 +267,37 @@ export default function ManagementReportTab() {
                         <Box sx={{ borderBottom: 1, borderColor: 'divider', marginTop: 0 }}>
                             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" selectionFollowsFocus  >
                                 <Tab label="Sites Report" {...a11yProps(0)} />
-                                <Tab label="Individual Report" {...a11yProps(1)} />
+                                <Tab label="Sensor Report" {...a11yProps(1)} />
                                 <Tab label="Alarms" {...a11yProps(2)} />
-                                <Tab label="AQMI logs" {...a11yProps(3)} />
-                                <Tab label="Sensor logs" {...a11yProps(4)} />
-                                <Tab label="Server Utilization" {...a11yProps(5)} />
-                                <Tab label="Firmware version" {...a11yProps(6)} />
-                                <Tab label="BumpTest" {...a11yProps(7)} />
+                                {/* <Tab label="AQMI logs" {...a11yProps(3)} /> */}
+                                <Tab label="AQMI LOGS" {...a11yProps(3)} />
+                                <Tab label="Server Utilization" {...a11yProps(4)} />
+                                <Tab label="Firmware version" {...a11yProps(5)} />
+                                <Tab label="BumpTest" {...a11yProps(6)} />
                             </Tabs>
                         </Box>
                         <TabPanel value={value} index={0}>
-                            <SitesReportForm />
+                            <SitesReportForm location_id={location_id} branch_id={branch_id} facility_id={facility_id} building_id={building_id} floor_id={floor_id} lab_id={lab_id} />
                         </TabPanel>
                         <TabPanel value={value} index={1}>
-                            <IndividualReportForm />
+                            <IndividualReportForm deviceList={deviceList} />
                         </TabPanel>
                         <TabPanel value={value} index={2}>
                             <Alarm deviceList={deviceList} />
                         </TabPanel>
-                        <TabPanel value={value} index={3}>
+                        {/* <TabPanel value={value} index={3}>
                             <AqmiLog />
+                        </TabPanel> */}
+                        <TabPanel value={value} index={3}>
+                            <SensorLog deviceList={deviceList} />
                         </TabPanel>
                         <TabPanel value={value} index={4}>
-                            <SensorLog />
-                        </TabPanel>
-                        <TabPanel value={value} index={5}>
                             <ServerUtilization />
                         </TabPanel>
-                        <TabPanel value={value} index={6}>
+                        <TabPanel value={value} index={5}>
                             <FirmwareVersion />
                         </TabPanel>
-                        <TabPanel value={value} index={7}>
+                        <TabPanel value={value} index={6}>
                             <BumpTest deviceList={deviceList} />
                         </TabPanel>
                     </Box>
