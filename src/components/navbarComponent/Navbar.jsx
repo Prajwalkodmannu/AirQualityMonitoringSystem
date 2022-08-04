@@ -1,12 +1,14 @@
 import './navbar.scss';
 import {
-  NotificationsNoneOutlined,
   ChatBubbleOutlineOutlined,
   AccountCircle,
   ErrorOutlineOutlined,
   WarningAmber,
   ChevronLeft,
+  Fullscreen,
+  FullscreenExit,
   ChevronRight,
+  PriorityHigh,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import {
@@ -17,6 +19,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { LogoutService } from '../../services/LoginPageService';
 import NotificationBar from '../notification/ServiceNotificationBar';
 import ApplicationStore from '../../utils/localStorageUtil';
+import LogIntervalSetting from './LogIntervalSettingComponent';
 
 // import { DarkModeContext } from "../../context/darkModeContext";
 // import { useContext } from "react";
@@ -24,12 +27,12 @@ import ApplicationStore from '../../utils/localStorageUtil';
 function Navbar(props) {
   // const { dispatch } = useContext(DarkModeContext);
   const navigate = useNavigate();
-  const { userDetails } = ApplicationStore().getStorage('userDetails');
+  const { userDetails, intervalDetails } = ApplicationStore().getStorage('userDetails');
+  const isSystemSpecialist = userDetails?.userRole === 'systemSpecialist';
   const [userDisplayName, setUserDisplayName] = useState('');
   const [customerDisplayName, setCustomerDisplayName] = useState('Company Name Here...');
-
+  const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [anchorElNotification, setAnchorElNotification] = useState(null);
   const [openNotification, setNotification] = useState({
     status: false,
     type: '',
@@ -42,7 +45,6 @@ function Navbar(props) {
       setCustomerDisplayName(userDetails.companyName);
     }
     setInterval(() => {
-      // Alert Api here
     }, 1000);
   }, []);
 
@@ -51,12 +53,12 @@ function Navbar(props) {
   };
 
   const handleNotificationMenu = (event) => {
-    setAnchorElNotification(event.currentTarget);
+    props.setAnchorElNotification(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    setAnchorElNotification(null);
+    props.setAnchorElNotification(null);
   };
 
   const logout = () => {
@@ -75,6 +77,8 @@ function Navbar(props) {
       handleNotificationClose();
       ApplicationStore().setStorage('userDetails', '');
       ApplicationStore().setStorage('siteDetails', '');
+      ApplicationStore().setStorage('alertDetails', '');
+      ApplicationStore().setStorage('notificationDetails', '');
       navigate('/login');
     }, 2000);
   };
@@ -100,8 +104,8 @@ function Navbar(props) {
         >
           <MenuIcon sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
           {props.mobileMenu
-            ? <ChevronLeft sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />
-            : <ChevronRight sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />}
+            ? <Fullscreen sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />
+            : <FullscreenExit sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }} />}
         </IconButton>
       </Toolbar>
       <div className="wrapper">
@@ -116,106 +120,104 @@ function Navbar(props) {
           </Typography>
         </div>
         <div className="items">
-          <Tooltip title="Alerts" placement="bottom" TransitionComponent={Zoom} arrow>
-            <div className="item">
-              <NotificationsNoneOutlined
-                className="icon"
-                style={{
-                  cursor: 'pointer',
-                }}
-              />
-              <div className="counter">1</div>
-
-            </div>
-          </Tooltip>
-          <Tooltip title="Notifications" placement="bottom" TransitionComponent={Zoom} arrow>
-            <div className="item">
-              <ChatBubbleOutlineOutlined
-                className="icon"
-                onClick={handleNotificationMenu}
-                style={{
-                  cursor: 'pointer',
-                }}
-              />
-              <div className="counter">{props.notificationList.length}</div>
-            </div>
-          </Tooltip>
-          <Menu
-            id="menu-appbar1"
-            anchorEl={anchorElNotification}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-            open={Boolean(anchorElNotification)}
-            onClose={handleClose}
-            sx={{ height: '60vh', width: '100%' }}
-            style={{ overflow: 'none', marginTop: 28 }}
-            PaperProps={{
-              elevation: 0,
-              sx: {
-                overflow: 'visible',
-                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                mt: 1.5,
-                '& .MuiAvatar-root': {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
+          {userDetails.userRole !== 'superAdmin' &&
+          <>
+            <Tooltip title="Notifications" placement="bottom" TransitionComponent={Zoom} arrow>
+              <div className="item">
+                <ChatBubbleOutlineOutlined
+                  className="icon"
+                  onClick={handleNotificationMenu}
+                  style={{
+                    cursor: 'pointer',
+                  }}
+                />
+                <div className="counter">{props.notificationList.length}</div>
+              </div>
+            </Tooltip>
+            <Menu
+              id="menu-appbar1"
+              anchorEl={props.anchorElNotification}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(props.anchorElNotification)}
+              onClose={handleClose}
+              sx={{ height: 'auto', maxHeight: '60vh', width: '100%' }}
+              style={{ overflow: 'none', marginTop: 28 }}
+              PaperProps={{
+                elevation: 0,
+                sx: {
+                  overflow: 'visible',
+                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                  mt: 1.5,
+                  '& .MuiAvatar-root': {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  '&:before': {
+                    content: '""',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    right: 145,
+                    width: 10,
+                    height: 10,
+                    bgcolor: 'background.paper',
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    zIndex: 0,
+                  },
                 },
-                '&:before': {
-                  content: '""',
-                  display: 'block',
-                  position: 'absolute',
-                  top: 0,
-                  right: 145,
-                  width: 10,
-                  height: 10,
-                  bgcolor: 'background.paper',
-                  transform: 'translateY(-50%) rotate(45deg)',
-                  zIndex: 0,
-                },
-              },
-            }}
-          >
-            <div style={{ overflow: 'auto', height: '50vh' }}>
-              {props.notificationList.map(({
-                id, primary, date, secondary, type,
-              }) => (
-                <div key={id}>
-                  {/* {id === 1 && (
-                    <ListSubheader sx={{ bgcolor: 'background.paper' }}>
-                      Today
+              }}
+            >
+              <div style={{ overflow: 'auto', maxHeight: '50vh' }}>
+                {props.notificationList?.length !== 0
+                  ? props.notificationList?.map(({
+                    id, sensorTag, a_date, a_time, msg, alertType,
+                  }) => (
+                    <div key={id}>
+                      <ListSubheader
+                        sx={{ bgcolor: 'background.paper', height: '20px' }}
+                        style={{ backgroundColor: '#e6f8ff', paddingTop: '0px', lineHeight: 'inherit' }}
+                      >
+                        {a_date}
+                        <div style={{ float: 'right', height: '20px' }}>
+                          {a_time}
+                        </div>
                       </ListSubheader>
-                      )}
-
-                      {id === 3 && (
-                    <ListSubheader sx={{ bgcolor: 'background.paper' }}>
-                    Yesterday
-                    </ListSubheader>
-                  )} */}
-                  <ListSubheader sx={{ bgcolor: 'background.paper' }}>
-                    {date}
-                  </ListSubheader>
-                  <ListItem button onClick={handleClose} style={{ maxWidth: 500, minWidth: '300px' }}>
-                    <ListItemAvatar>
-                      {/* <Avatar alt="Profile Picture" src={person} /> */}
-                      {type === 'alert'
-                      // <ErrorOutlineOutlinedIcon/>
-                        ? <ErrorOutlineOutlined sx={{ color: 'red' }} />
-                        : <WarningAmber sx={{ color: 'yellow' }} />}
-                    </ListItemAvatar>
-                    <ListItemText primary={primary} secondary={secondary} />
-                  </ListItem>
-                </div>
-              ))}
-            </div>
-          </Menu>
+                      <ListItem
+                        button
+                        onClick={handleClose}
+                        style={{
+                          maxWidth: 500, minWidth: '300px', paddingTop: '0px', paddingBottom: '0px',
+                        }}
+                      >
+                        <ListItemAvatar>
+                          {alertType === 'Critical' ? <ErrorOutlineOutlined sx={{ color: 'red', fontSize: 30 }} /> :
+                          alertType === 'Warning' ?  <PriorityHigh style={{ color: 'ba68c8', fontSize: 30 }}/> :
+                          <WarningAmber sx={{ color: 'yellow', fontSize: 30 }} />}
+                        </ListItemAvatar>
+                        <ListItemText primary={sensorTag} secondary={msg} />
+                      </ListItem>
+                    </div>
+                  ))
+                  : (
+                    <div>
+                      <ListItem button onClick={handleClose} style={{ maxWidth: 500, minWidth: '300px', textAlign: 'center' }}>
+                        <ListItemText primary="" secondary="No Notifications found" />
+                      </ListItem>
+                    </div>
+                  )}
+              </div>
+            </Menu>
+          </>}
           <IconButton
             size="small"
             aria-label="account of current user"
@@ -243,6 +245,16 @@ function Navbar(props) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
+            {isSystemSpecialist
+              && (
+                <MenuItem onClick={() => {
+                  handleClose();
+                  setOpen((oldValue) => !oldValue);
+                }}
+                >
+                  Settings
+                </MenuItem>
+              )}
             <MenuItem onClick={logout}>Logout</MenuItem>
           </Menu>
           <div className="item">
@@ -250,6 +262,14 @@ function Navbar(props) {
           </div>
         </div>
       </div>
+
+      <LogIntervalSetting
+        open={open}
+        setOpen={setOpen}
+        setNotification={setNotification}
+        handleClose={handleClose}
+        intervalDetails={intervalDetails}
+      />
       <NotificationBar
         handleClose={handleNotificationClose}
         notificationContent={openNotification.message}

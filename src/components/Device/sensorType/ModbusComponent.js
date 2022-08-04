@@ -6,12 +6,12 @@ import { AnalogSensorValidate } from '../../../validation/formValidation';
 import { useUserAccess } from '../../../context/UserAccessProvider';
 
 function Modbus({
-  errorObject, setErrorObject, disable, units, setUnits, sensorType, setSensorType, minRatedReading, setMinRatedReading,
+  errorObject, setErrorObject, disable, units, unitsList, setUnits, sensorType, setSensorType, minRatedReading, setMinRatedReading,
   minRatedReadingChecked, setMinRatedReadingChecked, minRatedReadingScale, setMinRatedReadingScale,
   maxRatedReading, setMaxRatedReading, maxRatedReadingChecked, setMaxRatedReadingChecked,
   maxRatedReadingScale, setMaxRatedReadingScale, slaveId, setSlaveId,
   registerId, setRegisterId, length, setLength, registerType, setRegisterType, conversionType,
-  setConversionType, ipAddress, setIpAddress, subnetMask, setSubnetMask, relayOutput, setRelayOutput,
+  setConversionType, ipAddress, setIpAddress, subnetMask, setSubnetMask,
 }) {
   const moduleAccess = useUserAccess()('devicelocation');
   const validateForNullValue = (value, type) => {
@@ -43,13 +43,13 @@ function Modbus({
           xl={2.5}
         >
           <div className="rounded-md -space-y-px">
-            <FormControl className="float-left" disabled={disable || false}>
+            <FormControl className="float-left" disabled={disable || false} required>
               <RadioGroup
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
                 value={sensorType}
-                onClick={(e) => {
+                onChange={(e) => {
                   setSensorType(e.target.value);
                 }}
               >
@@ -70,7 +70,7 @@ function Modbus({
           lg={8}
           xl={8}
         >
-          {sensorType == 'TCP'
+          {sensorType === 'TCP'
             ? (
               <>
                 <Grid
@@ -219,13 +219,13 @@ function Modbus({
           xl={2.5}
         >
           <div className="rounded-md -space-y-px">
-            <FormControl className="float-left" disabled={disable || false}>
+            <FormControl className="float-left" disabled={disable || false} required>
               <RadioGroup
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label2"
                 name="row-radio-buttons-group-2"
                 value={length}
-                onClick={(e) => {
+                onChange={(e) => {
                   setLength(e.target.value);
                 }}
               >
@@ -249,7 +249,6 @@ function Modbus({
               Register type
             </InputLabel>
             <Select
-              sx={{ minWidth: 250 }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={registerType}
@@ -279,7 +278,6 @@ function Modbus({
               Conversion Type
             </InputLabel>
             <Select
-              sx={{ minWidth: 250 }}
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={conversionType}
@@ -327,24 +325,12 @@ function Modbus({
                 error={errorObject?.units?.errorStatus}
                 helperText={errorObject?.units?.helperText}
               >
-                <MenuItem value="ppb">ppb</MenuItem>
-                <MenuItem value="ppm">ppm</MenuItem>
-                <MenuItem value="µg/m3">µg/m3</MenuItem>
-                <MenuItem value="mg/m3">mg/m3</MenuItem>
-                <MenuItem value="%vol">%vol</MenuItem>
-                <MenuItem value="mmHg">mmHg</MenuItem>
-                <MenuItem value="Pa">Pa</MenuItem>
-                <MenuItem value="Bar">Bar</MenuItem>
-                <MenuItem value="°C">°C</MenuItem>
-                <MenuItem value="°F">°F</MenuItem>
-                <MenuItem value="CFM">CFM</MenuItem>
-                <MenuItem value="mm">mm</MenuItem>
-                <MenuItem value="m/s">m/s</MenuItem>
-                <MenuItem value="degree">degree</MenuItem>
-                <MenuItem value="W/mt2">W/mt2</MenuItem>
-                <MenuItem value="m">m</MenuItem>
-                <MenuItem value="psi">psi</MenuItem>
-                <MenuItem value="%">%</MenuItem>
+                {unitsList?.map((data, index) =>{
+                  return(
+                    <MenuItem value={data.unitLabel}>{data.unitLabel}</MenuItem>
+                  )
+                })}
+                
               </Select>
             </FormControl>
           </div>
@@ -385,16 +371,20 @@ function Modbus({
           sx={{ mt: 0, padding: 0, alignSelf: 'center' }}
           item
           xs={12}
-          sm={0.5}
+          sm={1}
           md={0.5}
           lg={0.5}
-          xl={1}
+          xl={0.5}
         >
           <div className="rounded-md -space-y-px flex">
             <Checkbox
-              checked={minRatedReadingChecked != 0 || moduleAccess.edit === false && true}
+              checked={minRatedReadingChecked !== '0'}
+              //  || (moduleAccess.edit === false && true)}
+              disabled={(moduleAccess.edit === false && true) || disable}
               onChange={(e) => {
-                setMinRatedReadingChecked(e.target.checked);
+                setMinRatedReadingChecked(()=>{
+                return e.target.checked === true ? '1' : '0'
+                });
               }}
             />
           </div>
@@ -403,7 +393,7 @@ function Modbus({
           sx={{ mt: 0, padding: 0 }}
           item
           xs={6}
-          sm={3}
+          sm={2.5}
           md={3}
           lg={3}
           xl={3}
@@ -412,7 +402,7 @@ function Modbus({
             <TextField
               sx={{ marginTop: 0 }}
               value={minRatedReadingScale}
-              disabled={minRatedReadingChecked == 0 || moduleAccess.edit === false && true}
+              disabled={minRatedReadingChecked === '0' || (moduleAccess.edit === false && true) || disable}
               type="number"
               onBlur={() => validateForNullValue(minRatedReadingScale, 'minRatedReadingScale')}
               onChange={(e) => {
@@ -439,23 +429,6 @@ function Modbus({
           lg={3}
           xl={3}
         >
-          <div className="rounded-md -space-y-px">
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Relay Output</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                label="Relay Output"
-                disabled={disable || false}
-                value={relayOutput}
-                onChange={(e) => {
-                  setRelayOutput(e.target.value);
-                }}
-              >
-                <MenuItem value="ON">On</MenuItem>
-                <MenuItem value="OFF">Off</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
         </Grid>
         <Grid
           sx={{ mt: 0, padding: 0 }}
@@ -492,15 +465,18 @@ function Modbus({
           sx={{ mt: 0, padding: 0, alignSelf: 'center' }}
           item
           xs={12}
-          sm={0.5}
+          sm={1}
           md={0.5}
           lg={0.5}
-          xl={1}
+          xl={0.5}
         >
           <div className="rounded-md -space-y-px flex">
             <Checkbox
-              checked={maxRatedReadingChecked != 0 || moduleAccess.edit === false && true}
-              onChange={(e) => { setMaxRatedReadingChecked(e.target.checked); }}
+              checked={maxRatedReadingChecked !== '0'}
+              disabled={(moduleAccess.edit === false && true) || disable}
+              onChange={(e) => { setMaxRatedReadingChecked(()=>{
+                return e.target.checked === true ? '1' : '0'
+              }); }}
             />
           </div>
         </Grid>
@@ -508,7 +484,7 @@ function Modbus({
           sx={{ mt: 0, padding: 0 }}
           item
           xs={6}
-          sm={3}
+          sm={2.5}
           md={3}
           lg={3}
           xl={3}
@@ -517,7 +493,7 @@ function Modbus({
             <TextField
               sx={{ marginTop: 0 }}
               value={maxRatedReadingScale}
-              disabled={maxRatedReadingChecked == 0 || moduleAccess.edit === false && true}
+              disabled={maxRatedReadingChecked === '0' || (moduleAccess.edit === false && true) || disable}
               onBlur={() => validateForNullValue(maxRatedReadingScale, 'maxRatedReadingScale')}
               onChange={(e) => {
                 setMaxRatedReadingScale(e.target.value);

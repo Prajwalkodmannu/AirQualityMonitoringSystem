@@ -35,6 +35,7 @@ function SensorModel({
   progressStatus,
   setProgressStatus,
   deployedSensorTagList,
+  setSensorRefresh,
 }) {
   const moduleAccess = useUserAccess()('devicelocation');
   const [editData, setEditData] = useState('');
@@ -55,7 +56,10 @@ function SensorModel({
   const [anchorEl, setAnchorEl] = useState(null);
   const [popperOpen, setPopperOpen] = useState(false);
   const [sensorUpdateId, setSensorUpdateId] = useState('');
+  const [hooterRelayStatus, setHooterRelayStatus] = useState('0');
   const [sensorStatus, setSensorStatus] = useState('0');
+  const [notificationStatus, setNotificationStatus] = useState('0');
+  const [audioDecibelLevel, setAudioDecibelLevel] = useState('65');
 
   useEffect(() => {
   }, [analogSensorList || digitalSensorList || modbusSensorList]);
@@ -198,7 +202,7 @@ function SensorModel({
   };
 
   const successSensorUpdate = () => {
-    setPopperOpen(false);
+    setSensorRefresh(oldvalue => !oldvalue);
   };
 
   const handleFailure = () => {};
@@ -207,10 +211,13 @@ function SensorModel({
     SensorPropertiesUpdateService({ ...id, ...sensorProperties }, successSensorUpdate, handleFailure);
   };
 
-  const setSensorIdForOptions = (sensorId, sensorStatus) => {
+  const setSensorIdForOptions = (data) => {
     setPopperOpen(true);
-    setSensorUpdateId(sensorId);
-    setSensorStatus(sensorStatus);
+    setSensorUpdateId(data.id);
+    setSensorStatus(data.sensorStatus || '0');
+    setNotificationStatus(data.notificationStatus || '0');
+    setHooterRelayStatus(data.hooterRelayStatus || '0');
+    setAudioDecibelLevel(data.audioDecibelLevel || '65');
   };
 
   return (
@@ -222,20 +229,25 @@ function SensorModel({
     >
       {progressStatus === 1 && (
         <>
-          <DialogTitle>Sensors for device</DialogTitle>
-          <DialogContent>
-
+          <DialogTitle style={{padding: '0px', paddingLeft: '26px', paddingTop: '10px'}}>Sensors for device</DialogTitle>
+          <DialogContent style={{padding: '10px'}}>
             <SensorSettingsMenu
               anchorEl={anchorEl}
               popperOpen={popperOpen}
               setPopperOpen={setPopperOpen}
               sensorProperties={{
                 id: sensorUpdateId,
-                sensorStatus,
-                sensorNotificationStatus: true,
+                notificationStatus_u: notificationStatus,
+                sensorStatus: sensorStatus,
+                hooterRelayStatus_u: hooterRelayStatus,
+                audioDecibelLevel_u: audioDecibelLevel,
               }}
               deleteSensor={deleteSensor}
               updateService={updateSensorProperties}
+              setHooterRelayStatus={setHooterRelayStatus}
+              setSensorStatus={setSensorStatus}
+              setAudioDecibelLevel={setAudioDecibelLevel}
+              setNotificationStatus={setNotificationStatus}
             />
             <Box sx={{ flexGrow: 1, width: '100%', height: 300 }}>
               <Grid container spacing={2}>
@@ -269,11 +281,13 @@ function SensorModel({
                                   />
                                 </Grid>
                                 {
-                                  moduleAccess.edit == true
+                                  moduleAccess.edit === true
                                     ? (
                                       <SensorSettingsButton
                                         setAnchorEl={setAnchorEl}
-                                        setPopperOpen={() => setSensorIdForOptions(data.id, data.sensorStatus)}
+                                        setPopperOpen={() => {
+                                          setSensorIdForOptions(data);
+                                        }}
                                         handleClose={handleClose}
                                       />
                                     )
@@ -324,11 +338,11 @@ function SensorModel({
                                   />
                                 </Grid>
                                 {
-                                  moduleAccess.edit == true
+                                  moduleAccess.edit === true
                                     ? (
                                       <SensorSettingsButton
                                         setAnchorEl={setAnchorEl}
-                                        setPopperOpen={() => setSensorIdForOptions(data.id)}
+                                        setPopperOpen={() => setSensorIdForOptions(data)}
                                         handleClose={handleClose}
                                       />
                                     )
@@ -386,11 +400,11 @@ function SensorModel({
                                   />
                                 </Grid>
                                 {
-                                  moduleAccess.edit == true
+                                  moduleAccess.edit === true
                                     ? (
                                       <SensorSettingsButton
                                         setAnchorEl={setAnchorEl}
-                                        setPopperOpen={() => setSensorIdForOptions(data.id)}
+                                        setPopperOpen={() => setSensorIdForOptions(data)}
                                         handleClose={handleClose}
                                       />
                                     )
@@ -439,7 +453,7 @@ function SensorModel({
       )}
       {progressStatus === 2 && (
         <div style={{ textAlign: 'center', padding: 5 }}>
-          <SensorAdd isUpdate editData={editData} locationDetails={locationDetails} setProgressStatus={setProgressStatus} />
+          <SensorAdd isUpdate editData={editData} locationDetails={locationDetails} setProgressStatus={setProgressStatus} setSensorRefresh={setSensorRefresh} />
         </div>
       )}
       {progressStatus === 3 && (

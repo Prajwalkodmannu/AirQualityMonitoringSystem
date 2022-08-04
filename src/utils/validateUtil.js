@@ -51,6 +51,8 @@ export default function validate(typeToValidate, valueToValidate) {
       return (/^(?!\s*$).+/).test(valueToValidate);
     case 'number':
       return (/^\d+$/).test(valueToValidate);
+    case 'Decimalnumber':
+      return (/^(\d{1,9}|\d{1,9}\.\d{1,9})$/).test(valueToValidate);
     default:
       return false;
   }

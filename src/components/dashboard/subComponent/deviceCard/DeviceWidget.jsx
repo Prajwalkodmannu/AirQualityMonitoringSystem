@@ -6,30 +6,48 @@ import {
 } from '@mui/icons-material';
 import { Badge, Chip } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { getDeviceBackgroundColor, getDeviceHeaderColor, getDeviceModeColor } from '../../../../utils/helperFunctions';
 
 function DeviceWidget({
-  data, setLocationDetails, setBreadCrumbLabels, setIsDashBoard,
+  data, setLocationDetails, setBreadCrumbLabels, setIsDashBoard, deviceIdList
 }) {
   const [modeColor, setModeColor] = useState('primary');
+  const [alertStatus, setAlertStatus] = useState(4);
 
   useEffect(() => {
     if (data) {
-      switch (data.deviceMode) {
-      case 'enabled': setModeColor('#1b5e20');
-        break;
-      case 'config': setModeColor('#4a148c');
-        break;
-      case 'calibration': setModeColor('#f57f17');
-        break;
-      case 'disabled': setModeColor('#b71c1c');
-        break;
-      case 'bumpTest': setModeColor('#01579b');
-        break;
-      case 'firmwareUpgradation': setModeColor('#c2185b');
-        break;
-      default: break;
-      }
+      setModeColor(getDeviceBackgroundColor(data.deviceMode, alertStatus));
     }
+    let element = {
+      alertLabel: 'Good',
+      alertColor: 'green',
+      alertPriority: 4,
+    };
+
+    const alertObject = deviceIdList?.filter((alert) => {
+      return data.id === parseInt(alert.id);
+    });
+
+    alertObject?.map((data) => {
+      element = element.alertPriority < data.alertPriority ? element
+        : {
+          alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
+          alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
+          alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
+        };
+        // if(element.alertPriority > data.alertPriority){
+          switch(data.alertType){
+            case 'Critical' : setAlertStatus(1);
+            break;
+            case 'Warning' : setAlertStatus(2);
+            break;
+            case 'outOfRange' : setAlertStatus(3);
+            break;
+            default : break;
+          }
+        // } 
+    });
+
   }, []);
 
   const handleClick = () => {
@@ -46,16 +64,16 @@ function DeviceWidget({
     <div
       className="widget"
       onClick={() => {
-        handleClick(data);
+        data.deviceMode === 'disabled' ? '' : handleClick(data);
       }}
       style={{
-        height: '190px', cursor: 'pointer', display: 'block', padding: 1,
+        height: '190px', cursor: data.deviceMode === 'disabled' ? 'not-allowed' :'pointer', display: 'block', padding: 1,
       }}
     >
       <div
         className="left"
         style={{
-          backgroundColor: data.deviceCategory === 'AQMII' ? '#dcedc8' : data.deviceCategory === 'AQMO' ? '#fff9c4' : '#e0e0e0',
+          backgroundColor: getDeviceBackgroundColor(data.deviceMode, alertStatus),
           borderTopRightRadius: '10px',
           borderTopLeftRadius: '10px',
           alignContent: 'space-between',
@@ -77,7 +95,10 @@ function DeviceWidget({
                 float: 'left',
                 marginTop: 5,
                 marginLeft: 5,
-                color: data.deviceCategory === 'AQMII' ? '#388e3c' : data.deviceCategory === 'AQMO' ? '#ffa000' : '#757575',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                width: '120px',
+                color: getDeviceHeaderColor(data.deviceMode, alertStatus),
               }}
             >
               {data.deviceName}
@@ -90,8 +111,7 @@ function DeviceWidget({
                 float: 'right',
                 marginRight: 5,
                 fontWeight: 500,
-                color: data.deviceCategory === 'AQMII' ? '#388e3c'
-                  : data.deviceCategory === 'AQMO' ? '#ffa000' : '#757575',
+                color: getDeviceHeaderColor(data.deviceMode, alertStatus),
               }}
             >
               {data.deviceCategory}
@@ -113,24 +133,21 @@ function DeviceWidget({
           }}
         >
           <div style={{
-            height: data.deviceCategory === 'AQMP' ? '100%' : '70%',
+            height: data.deviceMode === 'disabled' ? '100%' : '70%',
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
           >
-            {data.deviceCategory === 'AQMP'
+            {data.deviceMode === 'disabled'
               ? (
                 <div style={{
                   height: '100%', width: '100%', overflow: 'auto', display: 'flex', alignItems: 'center',
                 }}
                 >
                   <div style={{ width: '100%', alignContent: 'center', color: 'black' }}>
-                    {data.deviceCategory === 'AQMII'
-                      ? <WifiOutlined color="success" style={{ fontSize: '40px' }} />
-                      : <WifiOffOutlined style={{ fontSize: '70px', color: '#757575' }} />}
-
+                      <WifiOffOutlined style={{ fontSize: '70px', color: '#707070' }} />
                   </div>
                 </div>
               )
@@ -147,18 +164,18 @@ function DeviceWidget({
                   }}
                   >
                     <Badge
-                      badgeContent={data.deviceCategory === 'AQMP' ? '' : data.id}
+                      badgeContent={data.deviceMode === 'disabled' ? '' : data.alertDataCount}
                       style={{
-                        color: data.deviceCategory === 'AQMP' ? '#757575' : '#f44336',
+                        // color: data.deviceMode === 'disabled' ? '#757575' : '#f44336',
+                        color: 'green',
                       }}
-                      color={data.deviceCategory === 'AQMP' ? 'info' : 'error'}
+                      color={data.alertDataCount === '0' ? 'success' : 'error'}
                       max={999}
                     >
                       <NotificationsActiveOutlined
                         style={{ fontSize: '40px' }}
                         sx={{
-                          color: data.deviceCategory === 'AQMII' ? '#388e3c'
-                            : data.deviceCategory === 'AQMO' ? '#ffa000' : '#757575',
+                          color: '#ffa000'
                         }}
                       />
                     </Badge>
@@ -166,7 +183,7 @@ function DeviceWidget({
                 </div>
               )}
           </div>
-          {data.deviceCategory === 'AQMP' ? ''
+          {data.deviceMode === 'disabled' ? ''
             : (
               <div style={{
                 height: '30%',
@@ -192,8 +209,8 @@ function DeviceWidget({
                     label={data.deviceMode}
                     variant="outlined"
                     sx={{
-                      color: data.deviceCategory === 'AQMP' ? '#757575' : modeColor,
-                      borderColor: data.deviceCategory === 'AQMP' ? '#757575' : modeColor,
+                      color: getDeviceModeColor(data.deviceMode),
+                      borderColor: getDeviceModeColor(data.deviceMode),
                       height: '100%',
                     }}
                   />
