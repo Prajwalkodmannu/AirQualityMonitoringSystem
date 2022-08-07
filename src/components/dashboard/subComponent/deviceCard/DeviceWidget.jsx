@@ -166,7 +166,7 @@ function DeviceWidget({
                     <Badge
                       badgeContent={data.deviceMode === 'disabled' ? '' : data.alertDataCount}
                       style={{
-                        // color: data.deviceMode === 'disabled' ? '#757575' : '#f44336',
+                        // color: data.deviceMode === 'disabled' ? '#757575' : '#f44339',
                         color: 'green',
                       }}
                       color={data.alertDataCount === '0' ? 'success' : 'error'}
