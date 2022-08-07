@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -7,19 +7,66 @@ import Tooltip from '@mui/material/Tooltip';
 import { CardActionArea } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import MachineCircularProgressbar from './MachineCircularProgressbar';
+import { getSensorBackgroundColor, getSensorHeaderColor } from '../../../../utils/helperFunctions';
+import { WifiOffOutlined } from '@mui/icons-material';
 
 function MachineCard(props) {
+  const [alertStatus, setAlertStatus] = useState(4);
+
+  useEffect(()=>{
+    let element = {
+      alertLabel: 'Good',
+      alertColor: 'green',
+      alertPriority: 4,
+    };
+
+    const alertObject = props.sensorIdList?.filter((alert) => {
+      return parseInt(props.id) === parseInt(alert.id);
+    });
+    
+    alertObject?.map((data) => {
+      if(element.alertPriority > data.alertPriority){
+        switch(data.alertType){
+          case 'Critical' : setAlertStatus(1);
+          break;
+          case 'Warning' : setAlertStatus(2);
+          break;
+          case 'outOfRange' : setAlertStatus(3);
+          break;
+          default : break;
+        }
+      } 
+      element = element.alertPriority < data.alertPriority ? element
+        : {
+          alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
+          alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
+          alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
+        };
+    });
+
+  },[]);
+
+  const handleClick = () => {
+    props.setSensorTagId(props.id);
+    props.setSensorTag(props.sensorName);
+    props.setOpen(true);
+  }
   return (
-    <Card
-      sx={{ minWidth: 200, boxShadow: 5, borderRadius: 2 }}
-      onClick={() => {
-        props.setSensorTagId(props.id);
-        props.setSensorTag(props.sensorName);
-        props.setOpen(true);
-      }}
-    >
-      <CardActionArea>
-        <Grid item xs={12} style={{ backgroundColor: props.lightColor || '#cce6ff', height: '50px' }}>
+    <Card>
+      <CardActionArea
+        sx={{ minWidth: 200, boxShadow: 5, borderRadius: 2 }}
+        onClick={() => {
+          props.sensorStatus === '0' ? '' : handleClick() ;
+        }}
+        style={{
+          cursor : props.sensorStatus === '0' ? 'not-allowed' : 'pointer',
+        }}
+      >
+        <Grid 
+          item xs={12} 
+          style={{ 
+          backgroundColor: getSensorBackgroundColor(props.sensorStatus, alertStatus), //props.lightColor || '#cce6ff', 
+          height: '50px' }}>
           <Stack
             direction="row"
             justifyContent="space-evenly"
@@ -28,7 +75,7 @@ function MachineCard(props) {
           >
             <Tooltip title={props.sensorNameUnit}>
               <Typography style={{
-                color: props.color || '#004d99',
+                color: getSensorHeaderColor(props.sensorStatus, alertStatus) || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -42,7 +89,7 @@ function MachineCard(props) {
             </Tooltip>
             <Tooltip title={props.sensorName}>
               <Typography style={{
-                color: props.color || '#004d99',
+                color: getSensorHeaderColor(props.sensorStatus, alertStatus) || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -70,7 +117,9 @@ function MachineCard(props) {
               width: 90, height: 90, float: 'left', marginTop: 2,
             }}
             >
+              {props.sensorStatus === '0' ? <WifiOffOutlined style={{ fontSize: '70px', color: '#707070' }} /> :
               <MachineCircularProgressbar score={props.last} color={props.alertColor} />
+              }
             </div>
           </Stack>
           <Stack

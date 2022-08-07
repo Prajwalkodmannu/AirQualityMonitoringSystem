@@ -52,7 +52,7 @@ export function setAlertColor(newNotificationStack){
 
 export function getDeviceBackgroundColor(deviceMode, alertStatus, disconnectedStatus){
   let colorCode = '#a5d6a7';
-    if(deviceMode === 'disabled') {
+    if(deviceMode === 'disabled' || disconnectedStatus === 1) {
       colorCode = '#9e9e9e';
     } else {
       if(deviceMode === 'bumpTest' || deviceMode === 'calibration' || deviceMode === 'firmwareUpgradation' || deviceMode === 'config'){
@@ -65,7 +65,7 @@ export function getDeviceBackgroundColor(deviceMode, alertStatus, disconnectedSt
             break;
           case 3 : colorCode = '#ce93d8';
             break;
-          default : colorCode = disconnectedStatus === 1 ? '#ce93d8' : '#a5d6a7';
+          default : colorCode = '#a5d6a7';
             break;
         }
       }
@@ -75,7 +75,7 @@ export function getDeviceBackgroundColor(deviceMode, alertStatus, disconnectedSt
 
 export function getDeviceHeaderColor(deviceMode, alertStatus, disconnectedStatus){
   let colorCode = '#212121';
-  if(deviceMode === 'disabled') {
+  if(deviceMode === 'disabled' || disconnectedStatus === 1) {
     colorCode = '#212121';
   } else {
     if(deviceMode === 'bumpTest' || deviceMode === 'calibration' || deviceMode === 'firmwareUpgradation' || deviceMode === 'config'){
@@ -88,7 +88,7 @@ export function getDeviceHeaderColor(deviceMode, alertStatus, disconnectedStatus
           break;
         case 3 : colorCode = '#4a148c';
           break;
-        default : colorCode = disconnectedStatus === 1 ? '#4a148c' : '#1b5e20';
+        default : colorCode = '#1b5e20';
           break;
       }
     }
@@ -109,4 +109,41 @@ export function getDeviceModeColor(deviceMode){
   }
   return colorCode;
 }
-// 1b5e20
+
+export function getSensorBackgroundColor(sensorStatus, alertStatus){
+  let colorCode = '#a5d6a7';
+    if(sensorStatus === '0') {
+      colorCode = '#9e9e9e';
+    } else {
+        switch(alertStatus){
+          case 1 : colorCode = '#ef9a9a';
+            break;
+          case 2 : colorCode = '#ffb74d';
+            break;
+          case 3 : colorCode = '#ce93d8';
+            break;
+          default : colorCode = '#a5d6a7';
+          break;
+        }
+    }
+  return colorCode;
+}
+
+export function getSensorHeaderColor(sensorStatus, alertStatus){
+  let colorCode = '#212121';
+    if(sensorStatus === '0') {
+      colorCode = '#212121';
+    } else {
+        switch(alertStatus){
+          case 1 : colorCode = '#b71c1c';
+            break;
+          case 2 : colorCode = '#e65100';
+            break;
+          case 3 : colorCode = '#4a148c';
+            break;
+          default : colorCode = '#1b5e20';
+          break;
+        }
+    }
+  return colorCode;
+}
