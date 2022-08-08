@@ -93,6 +93,29 @@ export function getDeviceHeaderColor(deviceMode, alertStatus, disconnectedStatus
       }
     }
   }
+}
+
+export function getDeviceBackgroundColor(deviceMode, alertStatus){
+  let colorCode = '#a5d6a7';
+    if(deviceMode === 'disabled') {
+      colorCode = '#9e9e9e';
+    } else {
+      if(deviceMode === 'bumpTest' || deviceMode === 'calibration' || deviceMode === 'firmwareUpgradation' || deviceMode === 'config'){
+        colorCode = '#f8bbd0';
+      } else if(deviceMode === 'enabled'){
+        switch(alertStatus){
+          case 1 : colorCode = '#ef9a9a';
+            break;
+          case 2 : colorCode = '#7e57c2';
+            break;
+          case 3 : colorCode = '#ffb74d';
+            break;
+          case 4 : colorCode = '#a5d6a7';
+            break;
+          default : break;
+        }
+      }
+    }
   return colorCode;
 }
 
