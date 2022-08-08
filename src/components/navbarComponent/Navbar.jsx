@@ -180,7 +180,8 @@ function Navbar(props) {
               <div style={{ overflow: 'auto', maxHeight: '50vh' }}>
                 {props.notificationList?.length !== 0
                   ? props.notificationList?.map(({
-                    id, sensorTag, a_date, a_time, msg, alertType,
+                    id, sensorTag, a_date, a_time, msg, alertType, deviceName, labDepName, 
+                    floorName, buildingName, facilityName, branchName, stateName,
                   }) => (
                     <div key={id}>
                       <ListSubheader
@@ -204,7 +205,20 @@ function Navbar(props) {
                           alertType === 'Warning' ?  <PriorityHigh style={{ color: 'ba68c8', fontSize: 30 }}/> :
                           <WarningAmber sx={{ color: 'yellow', fontSize: 30 }} />}
                         </ListItemAvatar>
-                        <ListItemText primary={sensorTag} secondary={msg} />
+                        <ListItemText 
+                          primary={<div>
+                            <div><span style={{fontWeight : 'bold'}}>Sensor Name :</span>
+                            <span style={{fontWeight : 'none'}}>{sensorTag}</span></div>
+                            <div><span style={{fontWeight : 'bold'}}>Message : </span> {msg}</div>
+                          </div>} 
+                          secondary={<div>
+                            <div>Lab : {labDepName} </div>
+                            <div>Floor : {floorName} </div>
+                            <div>Building : {buildingName} </div>
+                            <div>Facility : {facilityName} </div>
+                            <div>Branch : {branchName} </div>
+                            <div>State : {stateName} </div>
+                          </div>} />
                       </ListItem>
                     </div>
                   ))
