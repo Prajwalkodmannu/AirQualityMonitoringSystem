@@ -17,6 +17,21 @@ export function alertSeverityCode(alertType){
   return alertType === 'Critical'? 1 : alertType === 'Warning'? 2 : alertType === 'outOfRange'? 3 : 4;
 }
 
+function handleSwitchcase(alertStatus, colorCode, defaultCase, case1, case2, case3){
+  let newColorCode = colorCode || '#a5d6a7';
+  switch(alertStatus){
+    case 1 : newColorCode = case1 || '#ef9a9a';
+      break;
+    case 2 : newColorCode = case2 || '#ffb74d';
+      break;
+    case 3 : newColorCode = case3 || '#ce93d8';
+      break;
+    default : newColorCode = defaultCase || '#a5d6a7';
+      break;
+  }
+  return newColorCode;
+}
+
 export function setAlertColor(newNotificationStack){
   if (newNotificationStack.length > 0) {
     let colorCode = {
@@ -58,16 +73,17 @@ export function getDeviceBackgroundColor(deviceMode, alertStatus, disconnectedSt
       if(deviceMode === 'bumpTest' || deviceMode === 'calibration' || deviceMode === 'firmwareUpgradation' || deviceMode === 'config'){
         colorCode = '#f8bbd0';
       } else if(deviceMode === 'enabled'){
-        switch(alertStatus){
-          case 1 : colorCode = '#ef9a9a';
-            break;
-          case 2 : colorCode = '#ffb74d';
-            break;
-          case 3 : colorCode = '#ce93d8';
-            break;
-          default : colorCode = '#a5d6a7';
-            break;
-        }
+        colorCode = handleSwitchcase(alertStatus, colorCode, '#a5d6a7', '#ef9a9a', '#ffb74d', '#ce93d8');
+        // switch(alertStatus){
+        //   case 1 : colorCode = '#ef9a9a';
+        //     break;
+        //   case 2 : colorCode = '#ffb74d';
+        //     break;
+        //   case 3 : colorCode = '#ce93d8';
+        //     break;
+        //   default : colorCode = '#a5d6a7';
+        //     break;
+        // }
       }
     }
   return colorCode;
@@ -81,16 +97,17 @@ export function getDeviceHeaderColor(deviceMode, alertStatus, disconnectedStatus
     if(deviceMode === 'bumpTest' || deviceMode === 'calibration' || deviceMode === 'firmwareUpgradation' || deviceMode === 'config'){
       colorCode = '#c2185b';
     } else if(deviceMode === 'enabled'){
-      switch(alertStatus){
-        case 1 : colorCode = '#b71c1c';
-          break;
-        case 2 : colorCode = '#e65100';
-          break;
-        case 3 : colorCode = '#4a148c';
-          break;
-        default : colorCode = '#1b5e20';
-          break;
-      }
+      colorCode = handleSwitchcase(alertStatus, colorCode, '#1b5e20', '#b71c1c', '#e65100', '#4a148c');
+      // switch(alertStatus){
+      //   case 1 : colorCode = '#b71c1c';
+      //     break;
+      //   case 2 : colorCode = '#e65100';
+      //     break;
+      //   case 3 : colorCode = '#4a148c';
+      //     break;
+      //   default : colorCode = '#1b5e20';
+      //     break;
+      // }
     }
   }
   return colorCode;
@@ -115,16 +132,17 @@ export function getSensorBackgroundColor(sensorStatus, alertStatus){
     if(sensorStatus === '0') {
       colorCode = '#9e9e9e';
     } else {
-        switch(alertStatus){
-          case 1 : colorCode = '#ef9a9a';
-            break;
-          case 2 : colorCode = '#ffb74d';
-            break;
-          case 3 : colorCode = '#ce93d8';
-            break;
-          default : colorCode = '#a5d6a7';
-          break;
-        }
+      colorCode = handleSwitchcase(alertStatus, colorCode, '#a5d6a7', '#ef9a9a', '#ffb74d', '#ce93d8');
+        // switch(alertStatus){
+        //   case 1 : colorCode = '#ef9a9a';
+        //     break;
+        //   case 2 : colorCode = '#ffb74d';
+        //     break;
+        //   case 3 : colorCode = '#ce93d8';
+        //     break;
+        //   default : colorCode = '#a5d6a7';
+        //   break;
+        // }
     }
   return colorCode;
 }
@@ -134,16 +152,40 @@ export function getSensorHeaderColor(sensorStatus, alertStatus){
     if(sensorStatus === '0') {
       colorCode = '#212121';
     } else {
-        switch(alertStatus){
-          case 1 : colorCode = '#b71c1c';
-            break;
-          case 2 : colorCode = '#e65100';
-            break;
-          case 3 : colorCode = '#4a148c';
-            break;
-          default : colorCode = '#1b5e20';
-          break;
-        }
+      colorCode = handleSwitchcase(alertStatus, colorCode, '#1b5e20', '#b71c1c', '#e65100', '#4a148c');
+        // switch(alertStatus){
+        //   case 1 : colorCode = '#b71c1c';
+        //     break;
+        //   case 2 : colorCode = '#e65100';
+        //     break;
+        //   case 3 : colorCode = '#4a148c';
+        //     break;
+        //   default : colorCode = '#1b5e20';
+        //   break;
+        // }
     }
   return colorCode;
+}
+
+export function setAlertStatusCode(element, data, setAlertStatus){
+  if(element.alertPriority > data.alertPriority){
+    switch(data.alertType){
+      case 'Critical' : setAlertStatus(1);
+      break;
+      case 'Warning' : setAlertStatus(2);
+      break;
+      case 'outOfRange' : setAlertStatus(3);
+      break;
+      default : break;
+    }
+  }
+}
+
+export function setAlertPriorityAndType(element, data){
+  return element.alertPriority < data.alertPriority ? element : 
+  {
+    alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : data.alertType === 'Warning' ? 'Warning' : 'Good',
+    alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? '#9c27b0' : data.alertType === 'Warning' ? 'orange' : 'green',
+    alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : data.alertType === 'Warning' ? 3: 4,
+  };
 }

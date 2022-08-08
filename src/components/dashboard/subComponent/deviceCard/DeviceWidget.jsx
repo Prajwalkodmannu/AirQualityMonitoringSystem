@@ -6,7 +6,7 @@ import {
 } from '@mui/icons-material';
 import { Badge, Chip } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getDeviceBackgroundColor, getDeviceHeaderColor, getDeviceModeColor } from '../../../../utils/helperFunctions';
+import { getDeviceBackgroundColor, getDeviceHeaderColor, getDeviceModeColor, setAlertPriorityAndType, setAlertStatusCode } from '../../../../utils/helperFunctions';
 
 function DeviceWidget({
   data, setLocationDetails, setBreadCrumbLabels, setIsDashBoard, deviceIdList
@@ -29,23 +29,25 @@ function DeviceWidget({
     });
 
     alertObject?.map((data) => {
-      if(element.alertPriority > data.alertPriority){
-        switch(data.alertType){
-          case 'Critical' : setAlertStatus(1);
-          break;
-          case 'Warning' : setAlertStatus(2);
-          break;
-          case 'outOfRange' : setAlertStatus(3);
-          break;
-          default : break;
-        }
-      } 
-      element = element.alertPriority < data.alertPriority ? element
-        : {
-          alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
-          alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
-          alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
-        };
+      setAlertStatusCode(element, data, setAlertStatus);
+      // if(element.alertPriority > data.alertPriority){
+      //   switch(data.alertType){
+      //     case 'Critical' : setAlertStatus(1);
+      //     break;
+      //     case 'Warning' : setAlertStatus(2);
+      //     break;
+      //     case 'outOfRange' : setAlertStatus(3);
+      //     break;
+      //     default : break;
+      //   }
+      // } 
+      element = setAlertPriorityAndType(element, data);
+      // element = element.alertPriority < data.alertPriority ? element
+      //   : {
+      //     alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
+      //     alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
+      //     alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
+      //   };
     });
 
   }, []);

@@ -7,7 +7,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { CardActionArea } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import MachineCircularProgressbar from './MachineCircularProgressbar';
-import { getSensorBackgroundColor, getSensorHeaderColor } from '../../../../utils/helperFunctions';
+import { getSensorBackgroundColor, getSensorHeaderColor, setAlertPriorityAndType, setAlertStatusCode } from '../../../../utils/helperFunctions';
 import { WifiOffOutlined } from '@mui/icons-material';
 
 function MachineCard(props) {
@@ -25,23 +25,25 @@ function MachineCard(props) {
     });
     
     alertObject?.map((data) => {
-      if(element.alertPriority > data.alertPriority){
-        switch(data.alertType){
-          case 'Critical' : setAlertStatus(1);
-          break;
-          case 'Warning' : setAlertStatus(2);
-          break;
-          case 'outOfRange' : setAlertStatus(3);
-          break;
-          default : break;
-        }
-      } 
-      element = element.alertPriority < data.alertPriority ? element
-        : {
-          alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
-          alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
-          alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
-        };
+      setAlertStatusCode(element, data, setAlertStatus);
+      // if(element.alertPriority > data.alertPriority){
+      //   switch(data.alertType){
+      //     case 'Critical' : setAlertStatus(1);
+      //     break;
+      //     case 'Warning' : setAlertStatus(2);
+      //     break;
+      //     case 'outOfRange' : setAlertStatus(3);
+      //     break;
+      //     default : break;
+      //   }
+      // } 
+      element = setAlertPriorityAndType(element, data);
+      // element = element.alertPriority < data.alertPriority ? element
+      //   : {
+      //     alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
+      //     alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
+      //     alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
+      //   };
     });
 
   },[]);

@@ -2,6 +2,7 @@ import { Breadcrumbs, Chip, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { BuildingFetchService } from '../../../../services/LoginPageService';
+import { setAlertPriorityAndType } from '../../../../utils/helperFunctions';
 import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -42,12 +43,13 @@ function BuildingGridComponent({
         });
 
         alertObject?.map((data) => {
-          element = element.alertPriority < data.alertPriority ? element
-            : {
-              alertLabel: data.alertType === 'Critical'? 'Critical' : data.alertType === 'outOfRange'? 'Out Of Range' : data.alertType === 'Warning' ? 'Warning' :'Good',
-              alertColor : data.alertType === 'Critical'? 'red' : data.alertType === 'outOfRange'? '#9c27b0' : data.alertType === 'Warning' ? 'orange' : 'green',
-              alertPriority: data.alertType === 'Critical'? 1 : data.alertType === 'outOfRange'? 2 : data.alertType === 'Warning' ? 3 : 4
-            };
+          element = setAlertPriorityAndType(element, data);
+          // element = element.alertPriority < data.alertPriority ? element
+          //   : {
+          //     alertLabel: data.alertType === 'Critical'? 'Critical' : data.alertType === 'outOfRange'? 'Out Of Range' : data.alertType === 'Warning' ? 'Warning' :'Good',
+          //     alertColor : data.alertType === 'Critical'? 'red' : data.alertType === 'outOfRange'? '#9c27b0' : data.alertType === 'Warning' ? 'orange' : 'green',
+          //     alertPriority: data.alertType === 'Critical'? 1 : data.alertType === 'outOfRange'? 2 : data.alertType === 'Warning' ? 3 : 4
+          //   };
         });
 
         return (
