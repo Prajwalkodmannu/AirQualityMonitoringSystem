@@ -74,16 +74,6 @@ export function getDeviceBackgroundColor(deviceMode, alertStatus, disconnectedSt
         colorCode = '#f8bbd0';
       } else if(deviceMode === 'enabled'){
         colorCode = handleSwitchcase(alertStatus, colorCode, '#a5d6a7', '#ef9a9a', '#ffb74d', '#ce93d8');
-        // switch(alertStatus){
-        //   case 1 : colorCode = '#ef9a9a';
-        //     break;
-        //   case 2 : colorCode = '#ffb74d';
-        //     break;
-        //   case 3 : colorCode = '#ce93d8';
-        //     break;
-        //   default : colorCode = '#a5d6a7';
-        //     break;
-        // }
       }
     }
   return colorCode;
@@ -98,16 +88,6 @@ export function getDeviceHeaderColor(deviceMode, alertStatus, disconnectedStatus
       colorCode = '#c2185b';
     } else if(deviceMode === 'enabled'){
       colorCode = handleSwitchcase(alertStatus, colorCode, '#1b5e20', '#b71c1c', '#e65100', '#4a148c');
-      // switch(alertStatus){
-      //   case 1 : colorCode = '#b71c1c';
-      //     break;
-      //   case 2 : colorCode = '#e65100';
-      //     break;
-      //   case 3 : colorCode = '#4a148c';
-      //     break;
-      //   default : colorCode = '#1b5e20';
-      //     break;
-      // }
     }
   }
   return colorCode;
@@ -133,16 +113,6 @@ export function getSensorBackgroundColor(sensorStatus, alertStatus){
       colorCode = '#9e9e9e';
     } else {
       colorCode = handleSwitchcase(alertStatus, colorCode, '#a5d6a7', '#ef9a9a', '#ffb74d', '#ce93d8');
-        // switch(alertStatus){
-        //   case 1 : colorCode = '#ef9a9a';
-        //     break;
-        //   case 2 : colorCode = '#ffb74d';
-        //     break;
-        //   case 3 : colorCode = '#ce93d8';
-        //     break;
-        //   default : colorCode = '#a5d6a7';
-        //   break;
-        // }
     }
   return colorCode;
 }
@@ -153,16 +123,6 @@ export function getSensorHeaderColor(sensorStatus, alertStatus){
       colorCode = '#212121';
     } else {
       colorCode = handleSwitchcase(alertStatus, colorCode, '#1b5e20', '#b71c1c', '#e65100', '#4a148c');
-        // switch(alertStatus){
-        //   case 1 : colorCode = '#b71c1c';
-        //     break;
-        //   case 2 : colorCode = '#e65100';
-        //     break;
-        //   case 3 : colorCode = '#4a148c';
-        //     break;
-        //   default : colorCode = '#1b5e20';
-        //   break;
-        // }
     }
   return colorCode;
 }
