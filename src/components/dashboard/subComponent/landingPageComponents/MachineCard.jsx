@@ -62,7 +62,7 @@ function MachineCard(props) {
             direction="row"
             justifyContent="space-evenly"
             alignItems="flex-start"
-            spacing={5}
+            spacing={2}
             mt={2}
             xs={{ justifyContent: 'space-around' }}
           >
@@ -71,6 +71,23 @@ function MachineCard(props) {
             }}
             >
               <MachineCircularProgressbar score={props.last} color={props.alertColor} />
+            </div>
+            <div style={{
+              width: 90, height: 90, float: 'left', marginTop: 2,
+            }}
+            >
+              <Typography style={{ marginLeft: 0, color: '#004d99' }} align="left" display="block" gutterBottom component="div" />
+              <Typography
+                align="left"
+                display="block"
+                gutterBottom
+                component="div"
+                style={{
+                  fontWeight: 1000, color: props.color || '#7F8487', marginLeft: 9, marginTop: 22,
+                }}
+              >
+                mg/m3
+              </Typography>
             </div>
           </Stack>
           <Stack

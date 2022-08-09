@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { LockClosedIcon } from '@heroicons/react/solid';
-import { TextField } from '@mui/material';
+import { TextField,IconButton,InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useNavigate } from 'react-router-dom';
 import loginPageWallpaper from '../images/loginPageWallpaper.svg';
@@ -17,6 +18,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const [email, setUserEmail] = useState('');
   const [password, setUserPassword] = useState('');
+  const [showPassword,setShowPassword] = useState(false);
   const [errorObject, setErrorObject] = useState({});
   const [openNotification, setNotification] = useState({
     status: false,
@@ -141,7 +143,7 @@ function LoginPage() {
               <div className="mt-2">
                 <TextField
                   label="Password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password' }
                   value={password}
                   variant="outlined"
                   placeholder="Password"
@@ -151,10 +153,27 @@ function LoginPage() {
                   required
                   error={errorObject?.password?.errorStatus}
                   helperText={errorObject?.password?.helperText}
-                  onBlur={() => validateForNullValue(password, 'password')}
+                  onBlur={() => {
+                    validateForNullValue(password, 'password')
+                    setShowPassword(false);
+                  }}
                   onChange={(e) => {
                     setUserPassword(e.target.value);
                     validateForNullValue(password, 'password');
+                  }}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={(e) => {
+                          setShowPassword(!showPassword);
+                        }}
+                        onMouseDown={(e) => { e.preventDefault(); }}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>,
                   }}
                 />
               </div>

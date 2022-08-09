@@ -1,7 +1,7 @@
 const successCaseCode = [200, 201];
 
 const _fetchServiceBumpTestData = (PATH, serviceMethod, data, successCallback, errorCallBack) => {
-    const END_POINT = 'https://varmatrix.com/Aqms/';
+    const END_POINT = 'https://68.178.163.133/aideaLabs/';
     const body = { body: JSON.stringify(data) };
   
     const bodyParameters = {
