@@ -1,6 +1,8 @@
 import React, { Fragment, useState } from 'react'
 import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button, Fab } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import SendIcon from '@mui/icons-material/Send';
+
 
 
 const sample = [
@@ -43,6 +45,9 @@ const IndividualReportForm = (props) => {
                     <DownloadIcon sx={{ mr: 1 }} />
                     Download
                 </Fab>
+                <Button variant="contained" endIcon={<SendIcon />}>
+                    Send
+                </Button>
                 <TextField sx={{ minWidth: 250 }}
                     label="From Date"
                     type="date"
@@ -94,7 +99,7 @@ const IndividualReportForm = (props) => {
                     </LocalizationProvider> */}
                 <Box sx={{ minWidth: 250 }}>
                     <FormControl fullWidth>
-                        <InputLabel >AQMI/AQMO</InputLabel>
+                        <InputLabel >Devices</InputLabel>
                         <Select
                             value={deviceId}
                             label="Age"

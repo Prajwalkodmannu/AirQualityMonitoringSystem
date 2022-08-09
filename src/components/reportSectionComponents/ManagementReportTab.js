@@ -7,8 +7,7 @@ import ServerUtilization from './ServerUtilization';
 import FirmwareVersion from './FirmwareVersion';
 import BumpTest from './BumpTest';
 import IndividualReportForm from './IndividualReportForm';
-import AqmiLog from './AqmiLog';
-import SensorLog from './SensorLog';
+import DeviceLogs from './DeviceLogs';
 
 import {
     FetchLocationService,
@@ -250,7 +249,6 @@ export default function ManagementReportTab() {
                                     value={lab_id}
                                     label="Age"
                                     onChange={(e) => {
-
                                         LabHandleChange(e.target.value);
                                     }}
                                 >
@@ -270,7 +268,7 @@ export default function ManagementReportTab() {
                                 <Tab label="Sensor Report" {...a11yProps(1)} />
                                 <Tab label="Alarms" {...a11yProps(2)} />
                                 {/* <Tab label="AQMI logs" {...a11yProps(3)} /> */}
-                                <Tab label="AQMI LOGS" {...a11yProps(3)} />
+                                <Tab label="Device LOGS" {...a11yProps(3)} />
                                 <Tab label="Server Utilization" {...a11yProps(4)} />
                                 <Tab label="Firmware version" {...a11yProps(5)} />
                                 <Tab label="BumpTest" {...a11yProps(6)} />
@@ -289,7 +287,7 @@ export default function ManagementReportTab() {
                             <AqmiLog />
                         </TabPanel> */}
                         <TabPanel value={value} index={3}>
-                            <SensorLog deviceList={deviceList} />
+                            <DeviceLogs deviceList={deviceList} />
                         </TabPanel>
                         <TabPanel value={value} index={4}>
                             <ServerUtilization />

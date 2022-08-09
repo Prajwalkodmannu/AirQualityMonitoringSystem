@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab } from '@mui/material';
+import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab, Typography } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import DownloadIcon from '@mui/icons-material/Download';
 import { DataGrid } from '@mui/x-data-grid';
@@ -17,7 +17,6 @@ const ReportSectionForm = (props) => {
 
     const AqiStatusReportHandleSuccess = (dataObject) => {
         setAqiStatusReportList(dataObject.data);
-
         // console.log(dataObject);
         // setRowCountState(dataObject.data.totalRowCount)
         // setGridLoading(false);
@@ -27,11 +26,17 @@ const ReportSectionForm = (props) => {
     const AqiStatusReportHandleException = () => { }
 
     const columns = [
-
         {
             field: 'sample_date_time',
             headerName: 'Date',
             width: 100,
+            renderCell: (params) => (
+                <Typography>
+                    {
+                        dateFormat(params.value)
+                    }
+                </Typography>
+            ),
         },
         {
             field: 'stateName',
@@ -75,6 +80,12 @@ const ReportSectionForm = (props) => {
         },
 
     ];
+    const dateFormat = (value) => {
+        const dateTime = value.split(" ")
+        const date = dateTime[0].split("-")
+        const dateValue = date[2] + "-" + date[1] + "-" + date[0]
+        return dateValue
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -83,17 +94,10 @@ const ReportSectionForm = (props) => {
     };
 
     const DownloadCsv = () => {
-        // DownloadReportAqiStatusCsv
-        DownloadReportAqiStatusCsv({ location_id: props.location_id, branch_id: props.branch_id, facility_id: props.facility_id, building_id: props.building_id, floor_id: props.floor_id, lab_id: props.lab_id }, DownloadAqiStatusReportHandleSuccess, DownloadAqiStatusReportHandleException)
-
+        DownloadReportAqiStatusCsv({ location_id: props.location_id, branch_id: props.branch_id, facility_id: props.facility_id, building_id: props.building_id, floor_id: props.floor_id, lab_id: props.lab_id }, DownloadAqiStatusReportHandleSuccess, DownloadAqiStatusReportHandleException);
     }
-    const DownloadAqiStatusReportHandleSuccess = (dataObject) => {
-        // console.log(dataObject.data);
-    };
-
-    const DownloadAqiStatusReportHandleException = (dataObject) => {
-        // console.log(dataObject.message);
-    };
+    const DownloadAqiStatusReportHandleSuccess = (dataObject) => { };
+    const DownloadAqiStatusReportHandleException = (dataObject) => { };
 
     return (
         <form onSubmit={handleSubmit}>
@@ -107,6 +111,10 @@ const ReportSectionForm = (props) => {
                         <DownloadIcon sx={{ mr: 1 }} />
                         Download
                     </Fab>
+                    <Button variant="contained" endIcon={<SendIcon />}>
+                        Send
+                    </Button>
+
                     {/* <TextField sx={{ minWidth: 250 }}
                     label="From Date"
                     type="date"
@@ -194,8 +202,6 @@ const ReportSectionForm = (props) => {
                 </div>
             </div>
         </form>
-
-
     )
 }
 

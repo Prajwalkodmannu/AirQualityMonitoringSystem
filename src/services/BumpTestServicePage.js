@@ -1,7 +1,7 @@
 const successCaseCode = [200, 201];
 
 const _fetchServiceBumpTestData = (PATH, serviceMethod, data, successCallback, errorCallBack) => {
-  const END_POINT = 'https://varmatrix.com/wAqms/';
+  const END_POINT = 'https://varmatrix.com/Aqms/';
   const body = { body: JSON.stringify(data) };
 
   const bodyParameters = {

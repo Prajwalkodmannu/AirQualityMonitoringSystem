@@ -56,7 +56,6 @@ const SensorLog = (props) => {
         DownloadReportSensorLogCsv({ deviceId, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException)
     };
 
-
     const csvReportHandleSuccess = (dataObject) => {
         console.log(dataObject.data);
     };

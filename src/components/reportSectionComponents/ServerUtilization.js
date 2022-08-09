@@ -4,10 +4,27 @@ import { DataGrid } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
 
 const columns = [
-    { field: 'id', headerName: 'Rate', width: 150 },
-    { field: 'firstName', headerName: 'AVG RAM %', width: 150 },
-    { field: 'lastName', headerName: 'AVG CPU %', width: 150 },
-    { field: 'age', headerName: 'Disk Utilization', type: 'number', width: 90, },
+    {
+        field: 'id',
+        headerName: 'Rate',
+        width: 150
+    },
+    {
+        field: 'firstName',
+        headerName: 'AVG RAM %',
+        width: 150
+    },
+    {
+        field: 'lastName',
+        headerName: 'AVG CPU %',
+        width: 150
+    },
+    {
+        field: 'age',
+        headerName: 'Disk Utilization',
+        type: 'number',
+        width: 90,
+    },
 ];
 
 const rows = [

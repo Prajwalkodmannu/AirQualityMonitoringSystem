@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { FetchAlarmReportDetails } from '../../services/LoginPageService';
-import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab } from '@mui/material';
+import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import SendIcon from '@mui/icons-material/Send';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-
 import {
     DataGrid
 } from '@mui/x-data-grid';
+import { FetchAlarmReportDetails } from '../../services/LoginPageService';
 import { DownloadReportAlarmCsv } from '../../services/DownloadCSVAlarmReport';
-
-
 
 const Alarm = (props) => {
     const [fromDate, setFromDate] = useState('');
@@ -23,7 +21,7 @@ const Alarm = (props) => {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [rowCountState, setRowCountState] = useState(0);
-
+    const [reportControlType, setReportControlType] = useState();
 
     useEffect(() => {
         FetchAlarmReportDetails({}, AlarmReportHandleSuccess, AlarmReportHandleException);
@@ -34,6 +32,13 @@ const Alarm = (props) => {
             field: 'a_date',
             headerName: 'Date',
             width: 130,
+            renderCell: (params) => (
+                <Typography>
+                    {
+                        dateFormat(params.value)
+                    }
+                </Typography>
+            ),
         },
         {
             field: 'a_time',
@@ -42,7 +47,7 @@ const Alarm = (props) => {
         },
         {
             field: 'deviceName',
-            headerName: 'AQMI/O ID',
+            headerName: 'Devices',
             width: 130,
         },
         {
@@ -67,6 +72,12 @@ const Alarm = (props) => {
         },
     ];
 
+    const dateFormat = (value) => {
+        const date = value.split("-")
+        const dateValue = date[2] + "-" + date[1] + "-" + date[0]
+        return dateValue
+    }
+
     const HandleDeviceChange = (deviceId) => {
         setDeviceId(deviceId);
     };
@@ -82,17 +93,13 @@ const Alarm = (props) => {
     }
 
     const DownloadCsv = () => {
+        // setReportControlType("download");
         DownloadReportAlarmCsv({ deviceId, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException)
     };
 
+    const csvReportHandleSuccess = (dataObject) => { };
 
-    const csvReportHandleSuccess = (dataObject) => {
-        // console.log(dataObject.data);
-    };
-
-    const csvReportHandleException = (dataObject) => {
-        // console.log(dataObject.message);
-    };
+    const csvReportHandleException = (dataObject) => { };
 
     const fetchNewData = () => {
         setGridLoading(true);
@@ -120,6 +127,12 @@ const Alarm = (props) => {
         fetchNewData();
     }
 
+    const SendEmail = () => {
+        setReportControlType("email")
+        DownloadReportAlarmCsv({ reportControlType, deviceId, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException)
+
+    }
+
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -132,7 +145,15 @@ const Alarm = (props) => {
                         <DownloadIcon sx={{ mr: 1 }} />
                         Download
                     </Fab>
-                    <TextField sx={{ minWidth: 250 }}
+                    <Button variant="contained"
+                        onClick={() => {
+                            SendEmail();
+                        }}
+                        endIcon={<SendIcon />}>
+                        Send
+                    </Button>
+
+                    <TextField sx={{ minWidth: 230 }}
                         label="From Date"
                         type="date"
                         value={fromDate}
@@ -157,7 +178,7 @@ const Alarm = (props) => {
                             }}
                         />
                     </LocalizationProvider> */}
-                    <TextField sx={{ minWidth: 250 }}
+                    <TextField sx={{ minWidth: 230 }}
                         label="to date"
                         type="date"
                         value={toDate}
@@ -181,9 +202,9 @@ const Alarm = (props) => {
                             }}
                         />
                     </LocalizationProvider> */}
-                    <Box sx={{ minWidth: 250 }}>
+                    <Box sx={{ minWidth: 230 }}>
                         <FormControl fullWidth>
-                            <InputLabel >AQMI/AQMO</InputLabel>
+                            <InputLabel >Devices</InputLabel>
                             <Select
                                 value={deviceId}
                                 label="Age"
