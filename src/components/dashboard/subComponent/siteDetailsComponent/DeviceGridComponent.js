@@ -37,10 +37,6 @@ function DeviceGridComponent({
     intervalCallFunction();
     const devicePolling = setInterval(() => {
       intervalCallFunction();
-      // if(pollingStatus === true){
-        // setPollingStatus(false);
-        // intervalCallFunction();
-      // }
     }, intervalSec);
     return () => {
       clearInterval(devicePolling);

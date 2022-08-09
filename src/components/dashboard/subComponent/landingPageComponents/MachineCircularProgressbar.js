@@ -18,7 +18,7 @@ function MachineCircularProgressbar(props) {
       {(value) => (
         <CircularProgressbar
           value={value}
-          text={`${value} mg/m3`}
+          text={`${value}`}
           circleRatio={0.7}
           styles={{
             trail: {
@@ -34,7 +34,7 @@ function MachineCircularProgressbar(props) {
             },
             text: {
               fill: '#003380',
-              fontSize: '16px',
+              fontSize: '24px',
             },
           }}
           strokeWidth={9}

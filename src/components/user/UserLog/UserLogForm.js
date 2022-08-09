@@ -10,7 +10,6 @@ import {
   FetchUserLogService,
   FetchUserLogDetails,
 } from '../../../services/LoginPageService';
-import { getFullDate, getFullTime } from '../../../utils/helperFunctions';
 
 export default function UserLogForm() {
   const [location_id, setLocation_id] = useState('');
@@ -327,7 +326,7 @@ export default function UserLogForm() {
         </Grid>
       </form>
       <Grid>
-        <div style={{ height: 400, width: '100%', marginTop: '20px' }}>
+        <div style={{ height: 250, width: '100%', marginTop: '20px' }}>
           <DataGrid
             rows={userLogList}
             columns={columns}
