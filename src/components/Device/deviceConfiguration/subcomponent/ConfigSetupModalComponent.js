@@ -1,5 +1,5 @@
 import {
-  Button, Dialog, DialogContent, DialogTitle, FormControl, Input, InputLabel, MenuItem, Select, TextField,
+  Button, Dialog, DialogContent, DialogTitle, TextField,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import DialogActions from '@mui/material/DialogActions';
@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { ConfigSetupAddService, ConfigSetupEditService } from '../../../../services/LoginPageService';
 import { AddVendorValidate } from '../../../../validation/locationValidation';
 import NotificationBar from '../../../notification/ServiceNotificationBar';
+/* eslint-disable-next-line */
 
 function ConfigSetupModal({
   open, setOpen, isAddButton, configSetupData, setRefreshData,
@@ -17,6 +18,11 @@ function ConfigSetupModal({
   const [accessPointName, setAccessPointName] = useState('');
   const [ssId, setSsId] = useState('');
   const [accessPointPassword, setAccessPointPassword] = useState('');
+ 
+  //Secondary
+  const [accessPointNameSecondary, setAccessPointNameSecondary] = useState('');
+  const [ssIdSecondary, setSsIdSecondary] = useState('');
+  const [accessPointPasswordSecondary, setAccessPointPasswordSecondary] = useState('');
 
   // FTP inputs
   const [ftpAccountName, setFtpAccountName] = useState('');
@@ -36,6 +42,7 @@ function ConfigSetupModal({
     message: '',
   });
 
+
   const [errorObject, setErrorObject] = useState({});
 
   useEffect(() => {
@@ -50,6 +57,10 @@ function ConfigSetupModal({
     setSsId(configSetupData.ssId || '');
     setAccessPointPassword(configSetupData.accessPointPassword || '');
 
+    setAccessPointNameSecondary(configSetupData.accessPointNameSecondary || ''); 
+    setSsIdSecondary(configSetupData.ssIdSecondary || '');
+    setAccessPointPasswordSecondary(configSetupData.accessPointPasswordSecondary || '');
+
     setFtpAccountName(configSetupData.ftpAccountName || '');
     setUserName(configSetupData.userName || '');
     setFtpPassword(configSetupData.ftpPassword || '');
@@ -61,6 +72,7 @@ function ConfigSetupModal({
     setApn(configSetupData.apn || '');
   };
 
+  /* eslint-disable-next-line */
   const validateForNullValue = (value, type) => {
     AddVendorValidate(value, type, setErrorObject);
   };
@@ -77,6 +89,7 @@ function ConfigSetupModal({
     }, 5000);
   };
 
+  /* eslint-disable-next-line */
   const handleException = (errorObject, errorMessage) => {
     setNotification({
       status: true,
@@ -89,11 +102,13 @@ function ConfigSetupModal({
     e.preventDefault();
     if (isAddButton) {
       await ConfigSetupAddService({
-        accessPointName, ssId, accessPointPassword, ftpAccountName, userName, ftpPassword, port, serverUrl, folderPath, serviceProvider, apn,
+        /* eslint-disable-next-line */
+        accessPointName, ssId, accessPointPassword, accessPointNameSecondary,ssIdSecondary, accessPointPasswordSecondary, ftpAccountName, userName, ftpPassword, port, serverUrl, folderPath, serviceProvider, apn,
       }, handleSuccess, handleException);
     } else {
       await ConfigSetupEditService({
-        id, accessPointName, ssId, accessPointPassword, ftpAccountName, userName, ftpPassword, port, serverUrl, folderPath, serviceProvider, apn,
+        /* eslint-disable-next-line */
+        id, accessPointName, ssId, accessPointPassword, accessPointNameSecondary,ssIdSecondary, accessPointPasswordSecondary, ftpAccountName, userName, ftpPassword, port, serverUrl, folderPath, serviceProvider, apn,
       }, handleSuccess, handleException);
     }
   };
@@ -157,7 +172,46 @@ function ConfigSetupModal({
               required
               // onBlur={() =>validateForNullValue(accessPointPassword, 'accessPointPassword')}
               onChange={(e) => { setAccessPointPassword(e.target.value); }}
+              autoComplete="new-password"
+            />
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <TextField
+              value={accessPointNameSecondary}
+              margin="dense"
+              id="outlined-basic"
+              label="Access Point Name"
+              variant="outlined"
+              fullWidth
+              required
+              // onBlur={() =>validateForNullValue(accessPointName, 'accessPointName')}
+              onChange={(e) => { setAccessPointNameSecondary(e.target.value); }}
               autoComplete="off"
+            />
+            <TextField
+              value={ssIdSecondary}
+              margin="dense"
+              id="outlined-basic"
+              label="SSID"
+              variant="outlined"
+              fullWidth
+              required
+              // onBlur={() =>validateForNullValue(ssId, 'ssId')}
+              onChange={(e) => { setSsIdSecondary(e.target.value); }}
+              autoComplete="off"
+            />
+            <TextField
+              value={accessPointPasswordSecondary}
+              margin="dense"
+              id="outlined-basic"
+              label="password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              required
+              // onBlur={() =>validateForNullValue(accessPointPassword, 'accessPointPassword')}
+              onChange={(e) => { setAccessPointPasswordSecondary(e.target.value); }}
+              autoComplete="new-password"
             />
           </div>
           <Typography variant="subtitle1" component="h6">
@@ -171,7 +225,6 @@ function ConfigSetupModal({
               label="Account Name"
               variant="outlined"
               fullWidth
-              
               // onBlur={() =>validateForNullValue(ftpAccountName, 'ftpAccountName')}
               onChange={(e) => { setFtpAccountName(e.target.value); }}
               autoComplete="off"
@@ -182,7 +235,6 @@ function ConfigSetupModal({
               id="outlined-basic"
               label="User name"
               variant="outlined"
-              
               //  onBlur={() =>validateForNullValue(userName, 'userName')}
               onChange={(e) => { setUserName(e.target.value); }}
               autoComplete="off"
@@ -196,10 +248,9 @@ function ConfigSetupModal({
               label="password"
               variant="outlined"
               fullWidth
-              
               //  onBlur={() =>validateForNullValue(ftpPassword, 'ftpPassword')}
               onChange={(e) => { setFtpPassword(e.target.value); }}
-              autoComplete="off"
+              autoComplete="new-password"
             />
           </div>
           <div className="flex items-center justify-between gap-3">
@@ -210,7 +261,6 @@ function ConfigSetupModal({
               label="Port"
               variant="outlined"
               fullWidth
-              
               //  onBlur={() =>validateForNullValue(port, 'port')}
               onChange={(e) => { setPort(e.target.value); }}
               autoComplete="off"
@@ -271,7 +321,7 @@ function ConfigSetupModal({
           <Button
             size="large"
             autoFocus
-            onClick={(e) => {
+            onClick={() => {
               setOpen(false);
               setErrorObject({});
               loadData();
@@ -280,7 +330,6 @@ function ConfigSetupModal({
             Cancel
           </Button>
           <Button
-            // disabled={errorObject?.vendorName?.errorStatus || errorObject?.companyCode?.errorStatus || errorObject?.phoneNumber?.errorStatus || errorObject?.emailId?.errorStatus || errorObject?.address?.errorStatus|| errorObject?.contactPerson?.errorStatus}
             size="large"
             type="submit"
           >

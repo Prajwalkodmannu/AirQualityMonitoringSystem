@@ -73,7 +73,7 @@ function DrawerObject() {
         <ul className="sidebarList">
           {sideBarObject[section].map((item, liIndex) => (
             <Link to={item.route} className="link" key={item.name + liIndex}>
-              <li className="sidebarListItem">
+              <li className="sidebarListItem" title={item.name}>
                 {item.icon}
                 {item.name}
               </li>

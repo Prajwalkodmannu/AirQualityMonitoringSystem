@@ -9,7 +9,6 @@ import AlertModalComponent from '../landingPageComponents/AlertModalComponent';
 import ApplicationStore from '../../../../utils/localStorageUtil';
 
 function LandingPageComponent({ locationDetails, setIsDashBoard }) {
-  
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [analogSensorList, setAnalogSensorList] = useState([]);
@@ -23,29 +22,20 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
   const [totalAlerts, setTotalALerts] = useState(0);
   const { intervalDetails } = ApplicationStore().getStorage('userDetails');
   const intervalSec = intervalDetails.sensorLogInterval * 1000;
-  const [initialLoad, setInitialLoad] = useState(true);
+
   /* eslint-disable-next-line */
   useEffect(() => {
-    // if (open === true) { /* eslint-disable-next-line */
-    // } if (initialLoad === true) {
-    //   DashboardSensorListDetails({ device_id: locationDetails.device_id }, fetchSenosorListSuccess, fetchSenosorListException);
-    // } else {
-    //   const sensorDataLoadInterval = setInterval(() => {
-    //     DashboardSensorListDetails({ device_id: locationDetails.device_id }, fetchSenosorListSuccess, fetchSenosorListException);
-    //   }, intervalSec);
-    //   return () => {
-    //     clearInterval(sensorDataLoadInterval);
-    //   };
-    // }
-
     intervalCallFunction();
-    const devicePolling = setInterval(() => {
-      intervalCallFunction();
-    }, intervalSec);
-    return () => {
-      clearInterval(devicePolling);
-    };
-  }, [locationDetails]);
+    /* eslint-disable-next-line */
+    if (open === true) {} else {
+      const devicePolling = setInterval(() => {
+        intervalCallFunction();
+      }, intervalSec);
+      return () => {
+        clearInterval(devicePolling);
+      };
+    }
+  }, [locationDetails, open]);
 
   const intervalCallFunction = () => {
     DashboardSensorListDetails({ device_id: locationDetails.device_id }, fetchSenosorListSuccess, fetchSenosorListException);
@@ -56,7 +46,6 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
     setAnalogSensorList(dataObject.Analog.data || []);
     setDigitalSensorList(dataObject.Digital.data || []);
     setModbusSensorList(dataObject.Modbus.data || []);
-    setInitialLoad(false);
   };
 
   const fetchSenosorListException = () => {
@@ -74,8 +63,8 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
       >
         Back to Data Logger
       </Button>
-      <div className="widgets" style={{ height: 'auto', backgroundColor: '#fafafa', padding: 10  }}>
-        
+      <div className="widgets" style={{ height: 'auto', backgroundColor: '#fafafa', padding: 10 }}>
+
         <Widget type="devices" totalSensors={totalSensors} />
         <Widget type="alerts" setAlertOpen={setAlertOpen} totalAlerts={totalAlerts} />
         <Widget type="time" />
@@ -88,7 +77,7 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
         setSensorTagId={setSensorTagId}
         setSensorTag={setSensorTag}
       />
-      
+
       <SensorGraphComponent
         open={open}
         setOpen={setOpen}

@@ -3,8 +3,6 @@ import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Table
 import DownloadIcon from '@mui/icons-material/Download';
 import SendIcon from '@mui/icons-material/Send';
 
-
-
 const sample = [
     { date: "04-06-2022", detail: ["Min", "Max", "Avg", "Status"], values: ["50", "100", "60", "#1234"] },
     { date: "05-06-2022", detail: ["Min", "Max", "Avg", "Status"], values: ["4", "4", "4", "4"] },

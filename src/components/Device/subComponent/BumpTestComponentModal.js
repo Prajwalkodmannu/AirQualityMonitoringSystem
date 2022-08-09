@@ -6,6 +6,8 @@ import React, { useEffect, useState } from 'react';
 import DialogActions from '@mui/material/DialogActions';
 import Grid from '@mui/material/Grid';
 import { DataGrid } from '@mui/x-data-grid';
+import LoadingButton from '@mui/lab/LoadingButton';
+import RestartAltRoundedIcon from '@mui/icons-material/RestartAltRounded';
 import { AddCategoryValidate } from '../../../validation/formValidation';
 import { BumpTestAddService, BumpTestFetchService, ChangeDeviceMode } from '../../../services/LoginPageService';
 import { BumpTestData } from '../../../services/BumpTestServicePage';
@@ -20,7 +22,7 @@ const columns = [
     renderCell: (params) => (
       <Typography>
         {
-          new Date(params.value).toLocaleDateString()
+          convertDateTime(params.value)
         }
       </Typography>
     ),
@@ -47,6 +49,14 @@ const columns = [
     ),
   },
 ];
+
+function convertDateTime(value){
+  var spaceSplit = value.split(" ");
+  var dateSplit = spaceSplit[0].split("-");
+  var date = dateSplit[2]+"-"+dateSplit[1]+"-"+dateSplit[0];
+  return date;
+}
+
 /* eslint-disable-next-line */
 function BumpTestComponentModal({
   open, setOpen, isAddButton, setRefreshData, deployedSensorTagList, device_id,
@@ -62,6 +72,8 @@ function BumpTestComponentModal({
   const [result, setResult] = useState('');
   const [deployedSensorList, setDeployedSensorList] = useState([]);
   const [bumpTestData, setBumpTestData] = useState([]);
+  const [loading, setLoading] = useState('');
+  const [progress, setProgress] = useState('start');
   let i = 0;
   let j = 0;
   /* eslint-disable-next-line */
@@ -110,10 +122,7 @@ function BumpTestComponentModal({
   const modeChangeHandleSuccess = () => {
     setRefreshData((oldvalue) => !oldvalue);
     const DurationSec = durationPeriod;
-    /* eslint-disable-next-line */
-    const myVar = setInterval(()=>{
-      bumpTestDataCall();
-    }, 2000);
+
     /* eslint-disable-next-line */
     const callCount = parseInt(DurationSec / 2);
     let count = 0;
@@ -128,7 +137,7 @@ function BumpTestComponentModal({
           clearInterval(myVar);
           /* eslint-disable-next-line */
           const dataList = bumpData.length;
-          let tot = 0;
+          let total = 0;
           let pcgValPowOfTwo = 0;
           /* eslint-disable-next-line */
           for (let i = 0; i < dataList; i++) {
@@ -137,17 +146,21 @@ function BumpTestComponentModal({
               /* eslint-disable-next-line */
               pcgVal = parseInt(Number(percentageConcentrationGas)) - parseInt(bumpData[i]);
               pcgValPowOfTwo = pcgVal * pcgVal;
-              tot += pcgValPowOfTwo;
+              total += pcgValPowOfTwo;
               /* eslint-disable-next-line */
               dataCount++;
             }
           }
           if (dataCount < 3) {
             setPercentageDeviation('NA');
+            setLoading(false);
+            setProgress('start');
           } else {
             let avg = 0;
-            avg = tot / dataList;
+            avg = total / dataList;
             setPercentageDeviation(Math.sqrt(avg));
+            setLoading(false);
+            setProgress('start');
           }
           enableDeviceMode(device_id);
         }
@@ -155,6 +168,10 @@ function BumpTestComponentModal({
         count++;
       }
     }
+
+    const myVar = setInterval(() => {
+      bumpTestDataCall();
+    }, 2000);
   };
 
   const enableDeviceMode = (id) => {
@@ -210,8 +227,10 @@ function BumpTestComponentModal({
     e.preventDefault();
     if (isAddButton) {
       await BumpTestAddService({
-        sensorTagName, lastDueDate, typeCheck, percentageConcentrationGas, durationPeriod, displayedValue, nextDueDate, result, percentageDeviation, device_id
+        /* eslint-disable-next-line */
+        sensorTagName, lastDueDate, typeCheck, percentageConcentrationGas, durationPeriod, displayedValue, nextDueDate, result, percentageDeviation, device_id,
       }, handleSuccess, handleException);
+      BumpTestFetchService({ sensorTagName }, getBumpTestResultDataSuccess, getBumpTestResultDataHandleException);
     }
   };
 
@@ -408,16 +427,20 @@ function BumpTestComponentModal({
                 lg={2}
                 xl={2}
               >
-                <Button
-                  size="large"
-                  variant="outlined"
-                  autoFocus
+                <LoadingButton
+                  // onClick={handleClick}
                   onClick={(e) => {
                     getBumpData(e);
+                    setLoading(true);
+                    setProgress('started');
                   }}
+                  endIcon={<RestartAltRoundedIcon />}
+                  loading={loading}
+                  loadingPosition="end"
+                  variant="contained"
                 >
-                  Start
-                </Button>
+                  {progress}
+                </LoadingButton>
               </Grid>
               <Grid
                 sx={{ mt: 0, padding: 0 }}

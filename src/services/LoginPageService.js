@@ -5,7 +5,11 @@ const successCaseCode = [200, 201];
 
 const _fetchService = (PATH, serviceMethod, data, successCallback, errorCallBack) => {
   const { user_token, userDetails } = ApplicationStore().getStorage('userDetails');
+<<<<<<< HEAD
   const END_POINT = 'https://varmatrix.com/wAqms/api/';
+=======
+  const END_POINT = 'https://68.178.163.133/aideaLabs/api/';
+>>>>>>> 75ee1f9df2be3ee7f7e5abafefe824654ec01fa0
   const { emailId, userRole, companyCode } = userDetails;
 
   const headers = {
@@ -57,7 +61,7 @@ const _fetchService = (PATH, serviceMethod, data, successCallback, errorCallBack
 
 export const LoginService = (data) => {
   const PATH = 'login';
-  const END_POINT = 'https://varmatrix.com/Aqms/api/';
+  const END_POINT = 'https://68.178.163.133/aideaLabs/api/';
   const SERVICE_METHOD = 'POST';
   const headers = {
     Accept: 'application/json',
