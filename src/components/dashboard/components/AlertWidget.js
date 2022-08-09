@@ -137,7 +137,7 @@ function AlertWidget({ dataList, setRefreshData }) {
         Alerts
       </Typography>
       <DataGrid
-        rows={dataList}
+        rows={dataList || []}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}

@@ -21,6 +21,7 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
   const [totalSensors, setTotalSensors] = useState(0);
   const [totalAlerts, setTotalALerts] = useState(0);
   const { intervalDetails } = ApplicationStore().getStorage('userDetails');
+  const { sensorIdList } = ApplicationStore().getStorage('alertDetails');
   const intervalSec = intervalDetails.sensorLogInterval * 1000;
 
   /* eslint-disable-next-line */
@@ -74,6 +75,7 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
         analogSensorList={analogSensorList}
         digitalSensorList={digitalSensorList}
         modbusSensorList={modbusSensorList}
+        sensorIdList={sensorIdList}
         setSensorTagId={setSensorTagId}
         setSensorTag={setSensorTag}
       />

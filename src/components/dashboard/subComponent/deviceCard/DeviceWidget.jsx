@@ -6,7 +6,7 @@ import {
 } from '@mui/icons-material';
 import { Badge, Chip } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getDeviceBackgroundColor, getDeviceHeaderColor, getDeviceModeColor } from '../../../../utils/helperFunctions';
+import { getDeviceBackgroundColor, getDeviceHeaderColor, getDeviceModeColor, setAlertPriorityAndType, setAlertStatusCode } from '../../../../utils/helperFunctions';
 
 function DeviceWidget({
   data, setLocationDetails, setBreadCrumbLabels, setIsDashBoard, deviceIdList
@@ -16,7 +16,7 @@ function DeviceWidget({
 
   useEffect(() => {
     if (data) {
-      setModeColor(getDeviceBackgroundColor(data.deviceMode, alertStatus));
+      setModeColor(getDeviceBackgroundColor(data.deviceMode, alertStatus, parseInt(data.disconnectedStatus)));
     }
     let element = {
       alertLabel: 'Good',
@@ -29,23 +29,8 @@ function DeviceWidget({
     });
 
     alertObject?.map((data) => {
-      element = element.alertPriority < data.alertPriority ? element
-        : {
-          alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
-          alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
-          alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
-        };
-        // if(element.alertPriority > data.alertPriority){
-          switch(data.alertType){
-            case 'Critical' : setAlertStatus(1);
-            break;
-            case 'Warning' : setAlertStatus(2);
-            break;
-            case 'outOfRange' : setAlertStatus(3);
-            break;
-            default : break;
-          }
-        // } 
+      setAlertStatusCode(element, data, setAlertStatus);
+      element = setAlertPriorityAndType(element, data);
     });
 
   }, []);
@@ -64,16 +49,16 @@ function DeviceWidget({
     <div
       className="widget"
       onClick={() => {
-        data.deviceMode === 'disabled' ? '' : handleClick(data);
+        data.deviceMode === 'disabled' || data.disconnectedStatus === '1' ? '' : handleClick(data);
       }}
       style={{
-        height: '190px', cursor: data.deviceMode === 'disabled' ? 'not-allowed' :'pointer', display: 'block', padding: 1,
+        height: '190px', cursor: data.deviceMode === 'disabled' || data.disconnectedStatus === '1' ? 'not-allowed' :'pointer', display: 'block', padding: 1,
       }}
     >
       <div
         className="left"
         style={{
-          backgroundColor: getDeviceBackgroundColor(data.deviceMode, alertStatus),
+          backgroundColor: getDeviceBackgroundColor(data.deviceMode, alertStatus, parseInt(data.disconnectedStatus)),
           borderTopRightRadius: '10px',
           borderTopLeftRadius: '10px',
           alignContent: 'space-between',
@@ -98,7 +83,7 @@ function DeviceWidget({
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 width: '120px',
-                color: getDeviceHeaderColor(data.deviceMode, alertStatus),
+                color: getDeviceHeaderColor(data.deviceMode, alertStatus, parseInt(data.disconnectedStatus)),
               }}
             >
               {data.deviceName}
@@ -111,7 +96,7 @@ function DeviceWidget({
                 float: 'right',
                 marginRight: 5,
                 fontWeight: 500,
-                color: getDeviceHeaderColor(data.deviceMode, alertStatus),
+                color: getDeviceHeaderColor(data.deviceMode, alertStatus, parseInt(data.disconnectedStatus)),
               }}
             >
               {data.deviceCategory}
@@ -140,7 +125,7 @@ function DeviceWidget({
             alignItems: 'center',
           }}
           >
-            {data.deviceMode === 'disabled'
+            {data.disconnectedStatus === '1'
               ? (
                 <div style={{
                   height: '100%', width: '100%', overflow: 'auto', display: 'flex', alignItems: 'center',
@@ -164,10 +149,10 @@ function DeviceWidget({
                   }}
                   >
                     <Badge
-                      badgeContent={data.deviceMode === 'disabled' ? '' : data.alertDataCount}
+                      badgeContent={data.alertDataCount}
                       style={{
                         // color: data.deviceMode === 'disabled' ? '#757575' : '#f44336',
-                        color: 'green',
+                        // color: 'green',
                       }}
                       color={data.alertDataCount === '0' ? 'success' : 'error'}
                       max={999}
@@ -175,7 +160,7 @@ function DeviceWidget({
                       <NotificationsActiveOutlined
                         style={{ fontSize: '40px' }}
                         sx={{
-                          color: '#ffa000'
+                          color: data.deviceMode === 'disabled' ? '' : '#ffa000'
                         }}
                       />
                     </Badge>
@@ -183,40 +168,37 @@ function DeviceWidget({
                 </div>
               )}
           </div>
-          {data.deviceMode === 'disabled' ? ''
-            : (
-              <div style={{
-                height: '30%',
-                width: '100%',
-                display: 'flex',
-                overflow: 'auto',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                marginRight: 15,
-              }}
-              >
-                <div style={{
-                  textAlignLast: 'left', textAlign: 'justify', paddingLeft: 10, marginRight: 5,
+          <div style={{
+            height: '30%',
+            width: '100%',
+            display: 'flex',
+            overflow: 'auto',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            marginRight: 15,
+          }}
+          >
+            <div style={{
+              textAlignLast: 'left', textAlign: 'justify', paddingLeft: 10, marginRight: 5,
+            }}
+            >
+              Device Mode :
+            </div>
+            <div style={{
+              alignContent: 'center', color: 'black', textAlignLast: 'right',
+            }}
+            >
+              <Chip
+                label={data.disconnectedStatus === '1' ? 'Disconnected': data.deviceMode}
+                variant="outlined"
+                sx={{
+                  color:data.disconnectedStatus === '1' ? '#212121' : getDeviceModeColor(data.deviceMode),
+                  borderColor:data.disconnectedStatus === '1' ? '#212121' : getDeviceModeColor(data.deviceMode),
+                  height: '100%',
                 }}
-                >
-                  Device Mode :
-                </div>
-                <div style={{
-                  alignContent: 'center', color: 'black', textAlignLast: 'right',
-                }}
-                >
-                  <Chip
-                    label={data.deviceMode}
-                    variant="outlined"
-                    sx={{
-                      color: getDeviceModeColor(data.deviceMode),
-                      borderColor: getDeviceModeColor(data.deviceMode),
-                      height: '100%',
-                    }}
-                  />
-                </div>
-              </div>
-            )}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
