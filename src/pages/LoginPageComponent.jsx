@@ -28,8 +28,8 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const { user_token } = ApplicationStore().getStorage('userDetails');
-    return user_token ? navigate('/') : {};
+    const { user_token, userDetails } = ApplicationStore().getStorage('userDetails');
+    return user_token ? userDetails.userRole === 'superAdmin' ? navigate('/UserManagement') : navigate('/Dashboard') : {} ;
   }, []);
 
   const validateForNullValue = (value, type) => {
@@ -83,7 +83,7 @@ function LoginPage() {
           if (data.userDetails.secondLevelAuthorization === 'true') {
             navigate('/otp');
           } else if (data.userDetails.forcePasswordReset === '0') {
-            navigate('/');
+            data.userDetails.userRole === 'superAdmin' ? navigate('/UserManagement') : navigate('/Dashboard') ;
           } else {
             navigate('/passwordReset');
           }

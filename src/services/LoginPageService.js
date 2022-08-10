@@ -5,11 +5,7 @@ const successCaseCode = [200, 201];
 
 const _fetchService = (PATH, serviceMethod, data, successCallback, errorCallBack) => {
   const { user_token, userDetails } = ApplicationStore().getStorage('userDetails');
-<<<<<<< HEAD
-  const END_POINT = 'https://varmatrix.com/wAqms/api/';
-=======
   const END_POINT = 'https://68.178.163.133/aideaLabs/api/';
->>>>>>> 75ee1f9df2be3ee7f7e5abafefe824654ec01fa0
   const { emailId, userRole, companyCode } = userDetails;
 
   const headers = {
@@ -300,11 +296,10 @@ export const FetchBumpTestReportDetails = (data, successCallback, errorCallBack)
 export const FetchAlarmReportDetails = (data, successCallback, errorCallBack) => _fetchService('alarmReport', 'POST', data, successCallback, errorCallBack);
 
 export const FetchSensorLogReportDetails = (data, successCallback, errorCallBack) => _fetchService('SensorLog', 'POST', data, successCallback, errorCallBack);
-// export const DownloadReportRoleCsv = (successCallback, errorCallBack) => _fetchService('export', 'POST', data, successCallback, errorCallBack);
+
+// ---------- Alert Notification --------------------------//
 
 export const NotificationAlerts = (data, successCallback, errorCallBack) => _fetchService('getAlerts', 'POST', data, successCallback, errorCallBack);
-
-// export const DownloadReportAlarmCsv = (data, successCallback, errorCallBack) => _fetchService(`export`, 'GET', {}, successCallback, errorCallBack);
 
 export const FetchAqiStatusReportDetails = (data, successCallback, errorCallBack) => _fetchService('SiteDeviceReport', 'POST', data, successCallback, errorCallBack);
 // ------------ Company Log Interval ---------------------//

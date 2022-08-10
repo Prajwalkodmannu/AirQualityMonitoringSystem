@@ -4,7 +4,7 @@ const successCaseCode = [200, 201];
 
 const _fetchServiceDownloadCsvData = (PATH, serviceMethod, data, successCallback, errorCallBack) => {
     const { user_token, userDetails } = ApplicationStore().getStorage('userDetails');
-    const END_POINT = 'https://varmatrix.com/wAqms/api/';
+    const END_POINT = 'https://68.178.163.133/aideaLabs/api/';
     const { emailId, userRole, companyCode } = userDetails;
 
     const headers = {

@@ -4,6 +4,7 @@ import { darken, lighten } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 import { FetchLocationService } from '../../../../services/LoginPageService';
 import ApplicationStore from '../../../../utils/localStorageUtil';
+import { setAlertPriorityAndType } from '../../../../utils/helperFunctions';
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -42,12 +43,7 @@ function LocationGridComponent(props) {
         });
 
         alertObject?.map((data)=>{
-          element = element.alertPriority < data.alertPriority ? element : 
-            { 
-              alertLabel: data.alertType === 'Critical'? 'Critical' : data.alertType === 'outOfRange'? 'Out Of Range' : 'Good',
-              alertColor : data.alertType === 'Critical'? 'red' : data.alertType === 'outOfRange'? 'orange' : data.alertType === 'Warning' ? '#9c27b0' : 'green',
-              alertPriority: data.alertType === 'Critical'? 1 : data.alertType === 'outOfRange'? 2 : data.alertType === 'Warning' ? 3 : 4
-            }
+          element = setAlertPriorityAndType(element, data);
         });
 
         return (

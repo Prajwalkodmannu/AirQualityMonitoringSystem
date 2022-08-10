@@ -14,7 +14,22 @@ export function getFullTime(date) {
 }
 
 export function alertSeverityCode(alertType){
-  return alertType === 'Critical'? 1 : alertType === 'outOfRange'? 2 : alertType === 'Warning'? 3 : 4;
+  return alertType === 'Critical'? 1 : alertType === 'Warning'? 2 : alertType === 'outOfRange'? 3 : 4;
+}
+
+function handleSwitchcase(alertStatus, colorCode, defaultCase, case1, case2, case3){
+  let newColorCode = colorCode || '#a5d6a7';
+  switch(alertStatus){
+    case 1 : newColorCode = case1 || '#ef9a9a';
+      break;
+    case 2 : newColorCode = case2 || '#ffb74d';
+      break;
+    case 3 : newColorCode = case3 || '#ce93d8';
+      break;
+    default : newColorCode = defaultCase || '#a5d6a7';
+      break;
+  }
+  return newColorCode;
 }
 
 export function setAlertColor(newNotificationStack){
@@ -50,49 +65,29 @@ export function setAlertColor(newNotificationStack){
   }
 }
 
-export function getDeviceBackgroundColor(deviceMode, alertStatus){
+export function getDeviceBackgroundColor(deviceMode, alertStatus, disconnectedStatus){
   let colorCode = '#a5d6a7';
-    if(deviceMode === 'disabled') {
+    if(deviceMode === 'disabled' || disconnectedStatus === 1) {
       colorCode = '#9e9e9e';
     } else {
       if(deviceMode === 'bumpTest' || deviceMode === 'calibration' || deviceMode === 'firmwareUpgradation' || deviceMode === 'config'){
         colorCode = '#f8bbd0';
       } else if(deviceMode === 'enabled'){
-        switch(alertStatus){
-          case 1 : colorCode = '#ef9a9a';
-            break;
-          case 2 : colorCode = '#7e57c2';
-            break;
-          case 3 : colorCode = '#ffb74d';
-            break;
-          case 4 : colorCode = '#a5d6a7';
-            break;
-          default : break;
-        }
+        colorCode = handleSwitchcase(alertStatus, colorCode, '#a5d6a7', '#ef9a9a', '#ffb74d', '#ce93d8');
       }
     }
   return colorCode;
 }
 
-export function getDeviceHeaderColor(deviceMode, alertStatus){
+export function getDeviceHeaderColor(deviceMode, alertStatus, disconnectedStatus){
   let colorCode = '#212121';
-  if(deviceMode === 'disabled') {
+  if(deviceMode === 'disabled' || disconnectedStatus === 1) {
     colorCode = '#212121';
   } else {
     if(deviceMode === 'bumpTest' || deviceMode === 'calibration' || deviceMode === 'firmwareUpgradation' || deviceMode === 'config'){
       colorCode = '#c2185b';
     } else if(deviceMode === 'enabled'){
-      switch(alertStatus){
-        case 1 : colorCode = '#b71c1c';
-          break;
-        case 2 : colorCode = '#ffb74d';
-          break;
-        case 3 : colorCode = '#ef6c00';
-          break;
-        case 4 : colorCode = '#1b5e20';
-          break;
-        default : break;
-      }
+      colorCode = handleSwitchcase(alertStatus, colorCode, '#1b5e20', '#b71c1c', '#e65100', '#4a148c');
     }
   }
   return colorCode;
@@ -111,4 +106,46 @@ export function getDeviceModeColor(deviceMode){
   }
   return colorCode;
 }
-// 1b5e20
+
+export function getSensorBackgroundColor(sensorStatus, alertStatus){
+  let colorCode = '#a5d6a7';
+    if(sensorStatus === '0') {
+      colorCode = '#9e9e9e';
+    } else {
+      colorCode = handleSwitchcase(alertStatus, colorCode, '#a5d6a7', '#ef9a9a', '#ffb74d', '#ce93d8');
+    }
+  return colorCode;
+}
+
+export function getSensorHeaderColor(sensorStatus, alertStatus){
+  let colorCode = '#212121';
+    if(sensorStatus === '0') {
+      colorCode = '#212121';
+    } else {
+      colorCode = handleSwitchcase(alertStatus, colorCode, '#1b5e20', '#b71c1c', '#e65100', '#4a148c');
+    }
+  return colorCode;
+}
+
+export function setAlertStatusCode(element, data, setAlertStatus){
+  if(element.alertPriority > data.alertPriority){
+    switch(data.alertType){
+      case 'Critical' : setAlertStatus(1);
+      break;
+      case 'Warning' : setAlertStatus(2);
+      break;
+      case 'outOfRange' : setAlertStatus(3);
+      break;
+      default : break;
+    }
+  }
+}
+
+export function setAlertPriorityAndType(element, data){
+  return element.alertPriority < data.alertPriority ? element : 
+  {
+    alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : data.alertType === 'Warning' ? 'Warning' : 'Good',
+    alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? '#9c27b0' : data.alertType === 'Warning' ? 'orange' : 'green',
+    alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : data.alertType === 'Warning' ? 3: 4,
+  };
+}

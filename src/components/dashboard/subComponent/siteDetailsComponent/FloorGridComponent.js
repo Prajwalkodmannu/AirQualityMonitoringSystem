@@ -2,6 +2,7 @@ import { Breadcrumbs, Chip, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { FloorfetchService } from '../../../../services/LoginPageService';
+import { setAlertPriorityAndType } from '../../../../utils/helperFunctions';
 import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -36,19 +37,14 @@ function FloorGridComponent({
         let element = {
           alertLabel: 'Good',
           alertColor: 'green',
-          alertPriority: 3,
+          alertPriority: 4,
         };
         const alertObject = floorIdList?.filter((alert) => {
           return params.row.id === parseInt(alert.id);
         });
 
         alertObject?.map((data) => {
-          element = element.alertPriority < data.alertPriority ? element
-            : {
-              alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
-              alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
-              alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
-            };
+          element = setAlertPriorityAndType(element, data);
         });
 
         return (

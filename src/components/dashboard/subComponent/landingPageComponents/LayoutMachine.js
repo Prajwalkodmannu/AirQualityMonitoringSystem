@@ -4,7 +4,7 @@ import MachineCard from './MachineCard';
 import DigitalCard from './DigitalCard';
 
 function LayoutMachine({
-  setOpen, analogSensorList, digitalSensorList, modbusSensorList, setSensorTagId, setSensorTag,
+  setOpen, analogSensorList, digitalSensorList, modbusSensorList, setSensorTagId, setSensorTag, sensorIdList
 }) {
   return (
     <div
@@ -26,6 +26,7 @@ function LayoutMachine({
               <MachineCard
                 setOpen={setOpen}
                 id={data.sensorTagId}
+                sensorStatus={data.sensorStatus}
                 sensorName={data.sensorTag}
                 sensorNameUnit={data.sensorNameUnit}
                 min={data.min}
@@ -37,6 +38,7 @@ function LayoutMachine({
                 setSensorTag={setSensorTag}
                 color={data.alertColor}
                 lightColor={data.alertLightColor}
+                sensorIdList={sensorIdList}
               />
             </Grid>
           );
@@ -46,6 +48,7 @@ function LayoutMachine({
             <Grid item xs={12} sm={6} md={3} lg={3} key={data.sensorTagId}>
               <DigitalCard
                 id={data.sensorTagId}
+                sensorStatus={data.sensorStatus}
                 sensorName={data.sensorTag}
                 sensorNameUnit={data.sensorNameUnit}
                 min={data.min}
@@ -57,6 +60,7 @@ function LayoutMachine({
                 setSensorTag={setSensorTag}
                 color={data.alertColor}
                 lightColor={data.alertLightColor}
+                sensorIdList={sensorIdList}
               />
             </Grid>
           );
@@ -67,6 +71,7 @@ function LayoutMachine({
               <MachineCard
                 setOpen={setOpen}
                 id={data.sensorTagId}
+                sensorStatus={data.sensorStatus}
                 sensorName={data.sensorTag}
                 sensorNameUnit={data.sensorNameUnit}
                 min={data.min}
@@ -78,6 +83,7 @@ function LayoutMachine({
                 setSensorTag={setSensorTag}
                 color={data.alertColor}
                 lightColor={data.alertLightColor}
+                sensorIdList={sensorIdList}
               />
             </Grid>
           );
