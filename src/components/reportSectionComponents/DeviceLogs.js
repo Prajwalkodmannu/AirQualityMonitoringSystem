@@ -1,68 +1,31 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import { FetchSensorLogReportDetails } from '../../services/LoginPageService';
 import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab, Typography } from '@mui/material';
-import { FetchBumpTestReportDetails } from '../../services/LoginPageService';
-import { createSvgIcon } from '@mui/material/utils';
+import { DataGrid } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
 import SendIcon from '@mui/icons-material/Send';
-import {
-    DataGrid,
-    gridSortedRowIdsSelector,
-    GridToolbarContainer,
-    useGridApiContext,
-} from '@mui/x-data-grid';
-import { DownloadReportBumpTestCsv } from '../../services/DownloadCSVBumpTestReport';
+import { DownloadReportSensorLogCsv } from '../../services/DownloadReportSensorLogCsv';
 
-const getUnfilteredRows = ({ apiRef }) => gridSortedRowIdsSelector(apiRef);
-
-const ExportIcon = createSvgIcon(
-    <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />,
-    'SaveAlt',
-);
-
-const CustomToolbar = () => {
-    const apiRef = useGridApiContext();
-
-    const handleExport = (options) => apiRef.current.exportDataAsCsv(options);
-
-    const buttonBaseProps = {
-        color: 'primary',
-        size: 'small',
-        startIcon: <ExportIcon />,
-    };
-
-    return (
-        <GridToolbarContainer>
-            <Button
-                {...buttonBaseProps}
-                onClick={() => handleExport({ getRowsToExport: getUnfilteredRows })}
-            >
-                Download
-            </Button>
-        </GridToolbarContainer>
-    );
-};
-
-const BumpTest = (props) => {
+const DeviceLogs = (props) => {
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
-    const [device_id, setDeviceId] = useState('');
+    const [deviceId, setDeviceId] = useState('');
     const [isLoading, setGridLoading] = useState(false);
-    const [bumpTestReportList, setBumpTestReportList] = useState([]);
-    const [unTaggedBumpTestReportList, setUnTaggedBumpTestReportList] = useState();
-
+    const [sensorLogReportList, setSensorLogReportList] = useState([]);
+    const [unTaggedSensorLogReportList, setUnTaggedSensorLogReportList] = useState();
     const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(5);
+    const [pageSize, setPageSize] = useState(10);
     const [rowCountState, setRowCountState] = useState(0);
 
     useEffect(() => {
-        FetchBumpTestReportDetails({}, BumpTestReportHandleSuccess, BumpTestReportHandleException);
-    }, [unTaggedBumpTestReportList]);
+        FetchSensorLogReportDetails({}, SensorLogReportHandleSuccess, SensorLogHandleException);
+    }, [unTaggedSensorLogReportList]);
 
     const columns = [
         {
             field: 'created_at',
             headerName: 'Date',
-            width: 100,
+            width: 170,
             renderCell: (params) => (
                 <Typography>
                     {
@@ -72,56 +35,52 @@ const BumpTest = (props) => {
             ),
         },
         {
-            field: 'stateName',
-            headerName: 'Site',
-            width: 100,
-        },
-        {
-            field: 'branchName',
-            headerName: 'Branch',
-            width: 100,
-        },
-        {
-            field: 'facilityName',
-            headerName: 'Facilities',
-            width: 100,
-        },
-        {
-            field: 'buildingName',
-            headerName: 'Building',
-            width: 100,
-        },
-        {
-            field: 'floorName',
-            headerName: 'Floor',
-            width: 100,
-        },
-        {
-            field: 'labDepName',
-            headerName: 'Zone',
-            width: 100,
+            field: 'email',
+            headerName: 'User',
+            width: 170
         },
         {
             field: 'deviceName',
-            headerName: 'AQMI/O ID',
-            width: 100,
+            headerName: 'Device',
+            width: 170
         },
         {
-            field: 'sensorTagName',
+            field: 'sensorTag',
             headerName: 'Sensor',
-            width: 100,
+            width: 70
         },
         {
-            field: 'result',
-            headerName: 'Status',
-            width: 100,
+            field: 'criticalMinValue',
+            headerName: 'Critical Min Value',
+            width: 170
         },
         {
-            field: 'lastDueDate',
-            headerName: 'Due Date',
-            width: 100,
+            field: 'criticalMaxValue',
+            headerName: 'Critical Max Value',
+            width: 170
+        },
+        {
+            field: 'warningMinValue',
+            headerName: 'Warning Min Value',
+            width: 170
+        },
+        {
+            field: 'warningMaxValue',
+            headerName: 'Warning Max Value',
+            width: 170
+        },
+        {
+            field: 'outofrangeMinValue',
+            headerName: 'Out Of Range Min Value',
+            width: 170
+        },
+        {
+            field: 'outofrangeMaxValue',
+            headerName: 'Out Of Range Max Value',
+            width: 170
         },
     ];
+
     const dateFormat = (value) => {
         const dateTime = value.split(" ")
         const date = dateTime[0].split("-")
@@ -129,48 +88,22 @@ const BumpTest = (props) => {
         return dateValue
     }
 
-    const HandleDeviceChange = (device_id) => {
-        setDeviceId(device_id);
+    const HandleDeviceChange = (deviceId) => {
+        setDeviceId(deviceId);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        fetchNewData();
     };
 
     const onPageSizeChange = (newPageSize) => {
         setPageSize(newPageSize);
-        FetchNewData();
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        FetchNewData();
-    };
-
-    const FetchNewData = () => {
-        setGridLoading(true);
-        FetchBumpTestReportDetails({ page, pageSize, device_id, fromDate, toDate }, BumpTestReportHandleSuccess, BumpTestReportHandleException);
-    };
-
-    const BumpTestReportHandleSuccess = (dataObject) => {
-        setBumpTestReportList(dataObject.data.data);
-        setRowCountState(dataObject.data.totalRowCount)
-        setGridLoading(false);
-    }
-
-    const BumpTestReportHandleException = () => { }
-
-    const handleCancel = () => {
-        setFromDate('');
-        setToDate('');
-        setDeviceId([]);
-        setGridLoading(false);
-        setUnTaggedBumpTestReportList(!unTaggedBumpTestReportList);
-    }
-
-    const OnPageChange = (newPage) => {
-        setPage(newPage)
-        FetchNewData();
+        fetchNewData();
     }
 
     const DownloadCsv = () => {
-        DownloadReportBumpTestCsv({ device_id, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException)
+        DownloadReportSensorLogCsv({ deviceId, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException)
     };
 
     const csvReportHandleSuccess = (dataObject) => {
@@ -181,6 +114,30 @@ const BumpTest = (props) => {
         console.log(dataObject.message);
     };
 
+    const fetchNewData = () => {
+        setGridLoading(true);
+        FetchSensorLogReportDetails({ page, pageSize, deviceId, fromDate, toDate }, SensorLogReportHandleSuccess, SensorLogHandleException);
+    }
+
+    const SensorLogReportHandleSuccess = (dataObject) => {
+        setSensorLogReportList(dataObject.data);
+        setRowCountState(dataObject.data.totalRowCount)
+        setGridLoading(false);
+    }
+
+    const SensorLogHandleException = () => { }
+
+    const handleCancel = () => {
+        setFromDate('');
+        setToDate('');
+        setDeviceId([]);
+        setGridLoading(false);
+        setUnTaggedSensorLogReportList(!unTaggedSensorLogReportList);
+    }
+    const onPageChange = (newPage) => {
+        setPage(newPage)
+        fetchNewData();
+    }
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -196,13 +153,11 @@ const BumpTest = (props) => {
                     <Button variant="contained" endIcon={<SendIcon />}>
                         Send
                     </Button>
-
-                    <TextField
-                        sx={{ minWidth: 230 }}
+                    <TextField sx={{ minWidth: 250 }}
                         label="From Date"
                         type="date"
-                        variant="outlined"
                         value={fromDate}
+                        variant="outlined"
                         required
                         onChange={(e) => {
                             setFromDate(e.target.value);
@@ -212,8 +167,18 @@ const BumpTest = (props) => {
                             shrink: true,
                         }}
                     />
-                    <TextField
-                        sx={{ minWidth: 230 }}
+                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DateTimePicker
+                            renderInput={(props) => <TextField {...props} />}
+                            label="From Date"
+                            value={fromDate}
+                            onChange={(newValue) => {
+
+                                setFromDate(newValue);
+                            }}
+                        />
+                    </LocalizationProvider> */}
+                    <TextField sx={{ minWidth: 230 }}
                         label="to date"
                         type="date"
                         value={toDate}
@@ -227,11 +192,21 @@ const BumpTest = (props) => {
                             shrink: true,
                         }}
                     />
+                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DateTimePicker
+                            renderInput={(props) => <TextField {...props} />}
+                            label="To Date"
+                            value={toDate}
+                            onChange={(newValue) => {
+                                setToDate(newValue);
+                            }}
+                        />
+                    </LocalizationProvider> */}
                     <Box sx={{ minWidth: 230 }}>
                         <FormControl fullWidth>
-                            <InputLabel >Device</InputLabel>
+                            <InputLabel >Devices</InputLabel>
                             <Select
-                                value={device_id}
+                                value={deviceId}
                                 label="Age"
                                 onChange={(e) => {
                                     HandleDeviceChange(e.target.value)
@@ -254,25 +229,24 @@ const BumpTest = (props) => {
                         </Button>
                     </FormControl>
                 </Stack>
-                <div style={{ height: 350, width: '100%', marginTop: 25 }}>
+                <Box sx={{ height: 400, width: '100%', marginTop: 2 }}>
                     <DataGrid
-                        rows={bumpTestReportList}
+                        rows={sensorLogReportList}
                         rowCount={rowCountState}
                         loading={isLoading}
-                        rowsPerPageOptions={[1, 10, 100]}
+                        rowsPerPageOptions={[5, 10, 100]}
                         pagination
                         page={page}
                         pageSize={pageSize}
                         paginationMode="server"
-                        onPageChange={OnPageChange}
+                        onPageChange={onPageChange}
                         onPageSizeChange={onPageSizeChange}
                         columns={columns}
-                    // initialState={initialState}
                     />
-                </div>
+                </Box>
             </form>
         </div>
     )
 }
 
-export default BumpTest
+export default DeviceLogs

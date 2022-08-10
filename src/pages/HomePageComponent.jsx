@@ -34,27 +34,27 @@ function HomePageComponent() {
     location_id, branch_id, facility_id,
   } = locationDetails;
 
-  const {  locationIdList, branchIdList, facilityIdList, buildingIdList, floorIdList,
+  const { locationIdList, branchIdList, facilityIdList, buildingIdList, floorIdList,
     labIdList, deviceIdList, sensorIdList, } = ApplicationStore().getStorage('alertDetails');
   const intervalSec = intervalDetails.alertLogInterval * 1000 || 10000;
 
   useEffect(() => {
-    if(userDetails.userRole !== 'superAdmin'){
+    if (userDetails.userRole !== 'superAdmin') {
       FetchLocationService(handleSuccess, handleException);
       FetchBranchService({ location_id }, handleBranchSuccess, handleException);
       FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
     }
-  },[]);
-  
-  useEffect(()=>{
-    if(userDetails.userRole !== 'superAdmin'){
+  }, []);
+
+  useEffect(() => {
+    if (userDetails.userRole !== 'superAdmin') {
       ApplicationStore().setStorage('siteDetails', {
         locationLabel, branchLabel, facilityLabel,
       });
       const notifierInterval = setInterval(() => {
         NotificationAlerts({ location_id, branch_id, facility_id }, handleNotificationSuccess, handleNotificationException);
       }, intervalSec); // set to 'intervalSec' after testing alert call
-    
+
       return () => {
         clearInterval(notifierInterval);
       };
@@ -83,7 +83,7 @@ function HomePageComponent() {
     });
   };
 
-  const handleException = () => {};
+  const handleException = () => { };
 
   const handleNotificationSuccess = (dataObject) => {
     // limit the notification count
@@ -97,7 +97,7 @@ function HomePageComponent() {
     // make an alert if we have new alert
     let newNotificationValue = newNotification;
     if (arraySet.length !== 0) {
-      setNewNotification((oldValue)=>{
+      setNewNotification((oldValue) => {
         newNotificationValue = !oldValue;
         return !oldValue;
       });
@@ -110,12 +110,13 @@ function HomePageComponent() {
           message: colorObject.message,
         };
       });
-      ApplicationStore().setStorage('notificationDetails', {notificationList: newDataObject, newNotification: newNotificationValue});
+      ApplicationStore().setStorage('notificationDetails', { notificationList: newDataObject, newNotification: newNotificationValue });
     }
-    
-    ApplicationStore().setStorage('notificationDetails', {notificationList: newDataObject,
-       newNotification: newNotificationValue
-      });
+
+    ApplicationStore().setStorage('notificationDetails', {
+      notificationList: newDataObject,
+      newNotification: newNotificationValue
+    });
 
     let updatedAlertDetails = {
       locationIdList: [],
@@ -173,10 +174,10 @@ function HomePageComponent() {
       };
     });
 
-    ApplicationStore().setStorage('alertDetails', {...updatedAlertDetails});
+    ApplicationStore().setStorage('alertDetails', { ...updatedAlertDetails });
   };
 
-  const handleNotificationException = () => {};
+  const handleNotificationException = () => { };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileMenu);

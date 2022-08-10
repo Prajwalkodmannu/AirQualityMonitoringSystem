@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import SendIcon from '@mui/icons-material/Send';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import {
+    DataGrid
+} from '@mui/x-data-grid';
 import { FetchAlarmReportDetails } from '../../services/LoginPageService';
+import { DownloadReportAlarmCsv } from '../../services/DownloadCSVAlarmReport';
 
 const Alarm = (props) => {
     const [fromDate, setFromDate] = useState('');
@@ -11,9 +18,10 @@ const Alarm = (props) => {
     const [isLoading, setGridLoading] = useState(false);
     const [alarmReportList, setAlarmReportList] = useState([]);
     const [unTaggedAlarmReportList, setUnTaggedAlarmReportList] = useState();
-    const [requestedPage, setRequestedPage] = useState("2");
-    const [sortedType, setSortedType] = useState('ASC');
-    const [sortColumn, setSortColumn] = useState("1");
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [rowCountState, setRowCountState] = useState(0);
+    const [reportControlType, setReportControlType] = useState();
 
     useEffect(() => {
         FetchAlarmReportDetails({}, AlarmReportHandleSuccess, AlarmReportHandleException);
@@ -24,6 +32,13 @@ const Alarm = (props) => {
             field: 'a_date',
             headerName: 'Date',
             width: 130,
+            renderCell: (params) => (
+                <Typography>
+                    {
+                        dateFormat(params.value)
+                    }
+                </Typography>
+            ),
         },
         {
             field: 'a_time',
@@ -32,7 +47,7 @@ const Alarm = (props) => {
         },
         {
             field: 'deviceName',
-            headerName: 'AQMI/O ID',
+            headerName: 'Devices',
             width: 130,
         },
         {
@@ -57,18 +72,43 @@ const Alarm = (props) => {
         },
     ];
 
+    const dateFormat = (value) => {
+        const date = value.split("-")
+        const dateValue = date[2] + "-" + date[1] + "-" + date[0]
+        return dateValue
+    }
+
     const HandleDeviceChange = (deviceId) => {
         setDeviceId(deviceId);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setGridLoading(true);
-        FetchAlarmReportDetails({ requestedPage, sortedType, sortColumn, deviceId, fromDate, toDate }, AlarmReportHandleSuccess, AlarmReportHandleException);
+        fetchNewData();
     };
 
+    const onPageSizeChange = (newPageSize) => {
+        setPageSize(newPageSize);
+        fetchNewData();
+    }
+
+    const DownloadCsv = () => {
+        // setReportControlType("download");
+        DownloadReportAlarmCsv({ deviceId, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException)
+    };
+
+    const csvReportHandleSuccess = (dataObject) => { };
+
+    const csvReportHandleException = (dataObject) => { };
+
+    const fetchNewData = () => {
+        setGridLoading(true);
+        FetchAlarmReportDetails({ page, pageSize, deviceId, fromDate, toDate }, AlarmReportHandleSuccess, AlarmReportHandleException);
+    }
+
     const AlarmReportHandleSuccess = (dataObject) => {
-        setAlarmReportList(dataObject.data);
+        setAlarmReportList(dataObject.data.data);
+        setRowCountState(dataObject.data.totalRowCount)
         setGridLoading(false);
     }
 
@@ -82,26 +122,38 @@ const Alarm = (props) => {
         setUnTaggedAlarmReportList(!unTaggedAlarmReportList);
     }
 
+    const onPageChange = (newPage) => {
+        setPage(newPage)
+        fetchNewData();
+    }
+
+    const SendEmail = () => {
+        setReportControlType("email")
+        DownloadReportAlarmCsv({ reportControlType, deviceId, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException)
+
+    }
+
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <Stack direction="row" spacing={2} marginTop={1.5}>
-                    <FormControl>
-                        <Button variant="outlined" startIcon={<DownloadIcon />}>
-                            Download
-                        </Button>
-                    </FormControl>
-                    <FormControl>
-                        <Button variant="contained" autoFocus onClick={handleCancel} >
-                            Cancel
-                        </Button>
-                    </FormControl>
-                    <FormControl >
-                        <Button variant="contained" autoFocus type="submit">
-                            Apply Filters
-                        </Button>
-                    </FormControl>
-                    <TextField sx={{ minWidth: 220 }}
+                <Stack direction="row" spacing={2} marginTop={1.5} alignItems="center" >
+                    <Fab variant="extended" size="medium" color="primary" aria-label="add"
+                        onClick={() => {
+                            DownloadCsv();
+                        }}
+                    >
+                        <DownloadIcon sx={{ mr: 1 }} />
+                        Download
+                    </Fab>
+                    <Button variant="contained"
+                        onClick={() => {
+                            SendEmail();
+                        }}
+                        endIcon={<SendIcon />}>
+                        Send
+                    </Button>
+
+                    <TextField sx={{ minWidth: 230 }}
                         label="From Date"
                         type="date"
                         value={fromDate}
@@ -115,7 +167,18 @@ const Alarm = (props) => {
                             shrink: true,
                         }}
                     />
-                    <TextField sx={{ minWidth: 220 }}
+                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DateTimePicker
+                            renderInput={(props) => <TextField {...props} />}
+                            label="From Date"
+                            value={fromDate}
+                            onChange={(newValue) => {
+
+                                setFromDate(newValue);
+                            }}
+                        />
+                    </LocalizationProvider> */}
+                    <TextField sx={{ minWidth: 230 }}
                         label="to date"
                         type="date"
                         value={toDate}
@@ -129,9 +192,19 @@ const Alarm = (props) => {
                             shrink: true,
                         }}
                     />
-                    <Box sx={{ minWidth: 220 }}>
+                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DateTimePicker
+                            renderInput={(props) => <TextField {...props} />}
+                            label="To Date"
+                            value={toDate}
+                            onChange={(newValue) => {
+                                setToDate(newValue);
+                            }}
+                        />
+                    </LocalizationProvider> */}
+                    <Box sx={{ minWidth: 230 }}>
                         <FormControl fullWidth>
-                            <InputLabel >AQMI/AQMO</InputLabel>
+                            <InputLabel >Devices</InputLabel>
                             <Select
                                 value={deviceId}
                                 label="Age"
@@ -145,14 +218,30 @@ const Alarm = (props) => {
                             </Select>
                         </FormControl>
                     </Box>
-
+                    <FormControl>
+                        <Button size="medium" variant="contained" autoFocus type="submit">
+                            Submit
+                        </Button>
+                    </FormControl>
+                    <FormControl>
+                        <Button size="medium" variant="contained" autoFocus onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                    </FormControl>
                 </Stack>
-                <div style={{ height: 270, width: '100%', marginTop: 25 }}>
+                <div style={{ height: 400, width: '100%', marginTop: 12 }}>
                     <DataGrid
                         rows={alarmReportList}
-                        columns={columns}
+                        rowCount={rowCountState}
                         loading={isLoading}
-                        disableSelectionOnClick
+                        rowsPerPageOptions={[5, 10, 100]}
+                        pagination
+                        page={page}
+                        pageSize={pageSize}
+                        paginationMode="server"
+                        onPageChange={onPageChange}
+                        onPageSizeChange={onPageSizeChange}
+                        columns={columns}
                     />
                 </div>
             </form>
