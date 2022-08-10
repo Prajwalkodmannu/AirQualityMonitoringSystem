@@ -420,7 +420,7 @@ const LabFormValidate = (value, type, setErrorObject) => {
       if (!validate('address', value)) {
         status = {
           errorStatus: true,
-          helperText: 'Enter the Zone Name',
+          helperText: 'Enter the Laboratory Name',
         };
       } else {
         status = {

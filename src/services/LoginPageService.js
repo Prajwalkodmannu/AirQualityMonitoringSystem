@@ -295,13 +295,10 @@ export const FetchBumpTestReportDetails = (data, successCallback, errorCallBack)
 
 export const FetchAlarmReportDetails = (data, successCallback, errorCallBack) => _fetchService('alarmReport', 'POST', data, successCallback, errorCallBack);
 
-export const FetchSensorLogReportDetails = (data, successCallback, errorCallBack) => _fetchService('SensorLog', 'POST', data, successCallback, errorCallBack);
-
 // ---------- Alert Notification --------------------------//
 
-export const NotificationAlerts = (data, successCallback, errorCallBack) => _fetchService('getAlerts', 'POST', data, successCallback, errorCallBack);
+export const NotificationAlerts = (data, successCallback, errorCallBack) =>  _fetchService('getAlerts', 'POST', data, successCallback, errorCallBack);
 
-export const FetchAqiStatusReportDetails = (data, successCallback, errorCallBack) => _fetchService('SiteDeviceReport', 'POST', data, successCallback, errorCallBack);
 // ------------ Company Log Interval ---------------------//
 
 export const CompanyLogInterval = (data, successCallback, errorCallBack) => { return _fetchService(`updateCustomerSettings`, 'POST', data, successCallback, errorCallBack); };

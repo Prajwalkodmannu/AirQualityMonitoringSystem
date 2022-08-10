@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TextField, Stack, Button } from '@mui/material';
+import { Button, TextField, Stack, Box, InputLabel, MenuItem, FormControl, Select, Table, TableBody, TableCell, TableContainer, TableHead } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
 
@@ -9,7 +9,6 @@ const columns = [
     { field: 'User', headerName: 'User', width: 130 },
     { field: 'Location', headerName: 'Location', width: 130 },
     { field: 'Aqmio', headerName: 'Aqmi/o', width: 130 },
-    { field: 'Sensor', headerName: 'Sensor', width: 130 },
     { field: 'PreviousValue', headerName: 'Previous Value', width: 130 },
     { field: 'UpdatedValue', headerName: 'Updated Value', width: 130 },
 ];
@@ -26,8 +25,9 @@ const rows = [
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
 
-const SensorLog = () => {
+const AqmiLog = () => {
     const [age, setAge] = useState('');
+
     const handleChange = (event) => {
         setAge(event.target.value);
     };
@@ -71,4 +71,4 @@ const SensorLog = () => {
     )
 }
 
-export default SensorLog
+export default AqmiLog

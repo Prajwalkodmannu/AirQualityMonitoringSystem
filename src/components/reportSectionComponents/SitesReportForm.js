@@ -1,207 +1,98 @@
-import React, { useState, useEffect } from 'react'
-import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab, Typography } from '@mui/material';
+import React, { useState } from 'react'
+import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import DownloadIcon from '@mui/icons-material/Download';
 import { DataGrid } from '@mui/x-data-grid';
-import { FetchAqiStatusReportDetails } from '../../services/LoginPageService';
-import { DownloadReportAqiStatusCsv } from '../../services/DownloadCsvSiteReport';
 
-const ReportSectionForm = (props) => {
-    const [isLoading, setGridLoading] = useState(false);
-    const [aqiStatusReportList, setAqiStatusReportList] = useState([]);
-    const [unTaggedAqiStatusReportList, setUnTaggedAqiStatusReportList] = useState();
+const columns = [
+    { field: 'Date', headerName: 'Date', width: 130 },
+    { field: 'Site', headerName: 'Site', width: 130 },
+    { field: 'Branch', headerName: 'Branch', width: 130 },
+    { field: 'Facilities', headerName: 'Facilities', width: 130 },
+    { field: 'Building', headerName: 'Building', width: 130 },
+    { field: 'Floor', headerName: 'Floor', width: 130 },
+    { field: 'Lab', headerName: 'Zone', width: 130 },
+    { field: 'AQI Status ', headerName: 'AQI Status', width: 130 },
+];
 
-    useEffect(() => {
-        FetchAqiStatusReportDetails({}, AqiStatusReportHandleSuccess, AqiStatusReportHandleException);
-    }, [unTaggedAqiStatusReportList]);
+const rows = [
+    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+];
 
-    const AqiStatusReportHandleSuccess = (dataObject) => {
-        setAqiStatusReportList(dataObject.data);
-        // console.log(dataObject);
-        // setRowCountState(dataObject.data.totalRowCount)
-        // setGridLoading(false);
-        setGridLoading(false);
-    }
+const ReportSectionForm = () => {
+    const [age, setAge] = useState('');
 
-    const AqiStatusReportHandleException = () => { }
-
-    const columns = [
-        {
-            field: 'sample_date_time',
-            headerName: 'Date',
-            width: 100,
-            renderCell: (params) => (
-                <Typography>
-                    {
-                        dateFormat(params.value)
-                    }
-                </Typography>
-            ),
-        },
-        {
-            field: 'stateName',
-            headerName: 'Site',
-            width: 100,
-        },
-        {
-            field: 'branchName',
-            headerName: 'Branch',
-            width: 100,
-        },
-        {
-            field: 'facilityName',
-            headerName: 'Facilities',
-            width: 100,
-        },
-        {
-            field: 'buildingName',
-            headerName: 'Building',
-            width: 100,
-        },
-        {
-            field: 'floorName',
-            headerName: 'Floor',
-            width: 100,
-        },
-        {
-            field: 'labDepName',
-            headerName: 'Zone',
-            width: 100,
-        },
-        {
-            field: 'deviceName',
-            headerName: 'Device Name',
-            width: 100,
-        },
-        {
-            field: 'alertType',
-            headerName: ' AQI Status',
-            width: 100,
-        },
-
-    ];
-    const dateFormat = (value) => {
-        const dateTime = value.split(" ")
-        const date = dateTime[0].split("-")
-        const dateValue = date[2] + "-" + date[1] + "-" + date[0]
-        return dateValue
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setGridLoading(true);
-        FetchAqiStatusReportDetails({ location_id: props.location_id, branch_id: props.branch_id, facility_id: props.facility_id, building_id: props.building_id, floor_id: props.floor_id, lab_id: props.lab_id }, AqiStatusReportHandleSuccess, AqiStatusReportHandleException);
+    const handleChange = (event) => {
+        setAge(event.target.value);
     };
 
-    const DownloadCsv = () => {
-        DownloadReportAqiStatusCsv({ location_id: props.location_id, branch_id: props.branch_id, facility_id: props.facility_id, building_id: props.building_id, floor_id: props.floor_id, lab_id: props.lab_id }, DownloadAqiStatusReportHandleSuccess, DownloadAqiStatusReportHandleException);
-    }
-    const DownloadAqiStatusReportHandleSuccess = (dataObject) => { };
-    const DownloadAqiStatusReportHandleException = (dataObject) => { };
-
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <Stack direction="row" spacing={2} marginTop={1.5} alignItems="center" >
-                    <Fab variant="extended" size="medium" color="primary" aria-label="add"
-                        onClick={() => {
-                            DownloadCsv();
-                        }}
-                    >
-                        <DownloadIcon sx={{ mr: 1 }} />
-                        Download
-                    </Fab>
-                    <Button variant="contained" endIcon={<SendIcon />}>
-                        Send
-                    </Button>
-
-                    {/* <TextField sx={{ minWidth: 250 }}
-                    label="From Date"
-                    type="date"
-                    // value={fromDate}
-                    variant="outlined"
-                    required
-                    onChange={(e) => {
-                        setFromDate(e.target.value);
-                    }}
-                    autoComplete="off"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                /> */}
-                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            label="From Date"
-                            value={fromDate}
-                            onChange={(newValue) => {
-
-                                setFromDate(newValue);
-                            }}
-                        />
-                    </LocalizationProvider> */}
-                    {/* <TextField sx={{ minWidth: 250 }}
-                    label="to date"
-                    type="date"
-                    // value={toDate}
-                    variant="outlined"
-                    required
-                    onChange={(e) => {
-                        // setToDate(e.target.value);
-                    }}
-                    autoComplete="off"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                /> */}
-                    {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            label="To Date"
-                            value={toDate}
-                            onChange={(newValue) => {
-                                setToDate(newValue);
-                            }}
-                        />
-                    </LocalizationProvider> */}
-                    {/* <Box sx={{ minWidth: 250 }}>
+        <div>
+            <Stack direction="row" spacing={2} marginTop={1.5}>
+                <Box sx={{ minWidth: 320 }}>
                     <FormControl fullWidth>
-                        <InputLabel >AQMI/AQMO</InputLabel>
+                        <InputLabel >Sites</InputLabel>
                         <Select
-                            // value={deviceId}
+                            value={age}
                             label="Age"
-                            onChange={(e) => {
-                                // HandleDeviceChange(e.target.value)
-                            }}
+                            onChange={handleChange}
                         >
-                            {props.deviceList.map((data) => (
-                                <MenuItem value={data.id}>{data.deviceName}</MenuItem>
-                            ))}
                         </Select>
                     </FormControl>
-                </Box> */}
-                    <FormControl>
-                        <Button size="medium" variant="contained" autoFocus type="submit">
-                            Submit
-                        </Button>
-                    </FormControl>
-                    <FormControl>
-                        <Button size="medium" variant="contained" autoFocus >
-                            Cancel
-                        </Button>
-                    </FormControl>
-                </Stack>
-                <div style={{ height: 300, width: '100%', marginTop: 20 }}>
-                    <DataGrid
-                        rows={aqiStatusReportList}
-                        columns={columns}
-                        loading={isLoading}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
-                    />
-                </div>
+                </Box>
+                <TextField
+                    sx={{ minWidth: 320 }}
+                    label="From Date"
+                    type="date"
+                    variant="outlined"
+                    required
+                    autoComplete="off"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+                <TextField
+                    sx={{ minWidth: 320 }}
+                    label="to date"
+                    type="date"
+                    variant="outlined"
+                    required
+                    autoComplete="off"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+            </Stack>
+            <div style={{ height: 300, width: '100%', marginTop: 20 }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                />
             </div>
-        </form>
+            <Stack direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={3}
+                marginTop={3}
+            >
+                <Button variant="contained" endIcon={<SendIcon />}>
+                    Email
+                </Button>
+                <Button variant="outlined" startIcon={<DownloadIcon />}>
+                    Download
+                </Button>
+            </Stack>
+        </div>
     )
 }
 

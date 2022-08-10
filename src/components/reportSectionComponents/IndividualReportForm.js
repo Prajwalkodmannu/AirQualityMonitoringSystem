@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from 'react'
-import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button, Fab } from '@mui/material';
+import { Box, InputLabel, FormControl, Select, TextField, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
-import SendIcon from '@mui/icons-material/Send';
 
 const sample = [
     { date: "04-06-2022", detail: ["Min", "Max", "Avg", "Status"], values: ["50", "100", "60", "#1234"] },
@@ -9,12 +8,7 @@ const sample = [
     { date: "05-06-2022", detail: ["Min", "Max", "Avg", "Status"], values: ["54", "4", "23", "54"] },
 ];
 
-const IndividualReportForm = (props) => {
-    const [fromDate, setFromDate] = useState('');
-    const [toDate, setToDate] = useState('');
-    const [deviceId, setDeviceId] = useState('');
-
-
+const IndividualReportForm = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(2);
     const [age, setAge] = useState('');
@@ -34,93 +28,40 @@ const IndividualReportForm = (props) => {
 
     return (
         <>
-            <Stack direction="row" spacing={2} marginTop={1.5} alignItems="center" >
-                <Fab variant="extended" size="medium" color="primary" aria-label="add"
-                    onClick={() => {
-                        // DownloadCsv();
-                    }}
-                >
-                    <DownloadIcon sx={{ mr: 1 }} />
-                    Download
-                </Fab>
-                <Button variant="contained" endIcon={<SendIcon />}>
-                    Send
-                </Button>
-                <TextField sx={{ minWidth: 250 }}
+            <Stack direction="row" spacing={2} marginTop={1.5}>
+                <TextField sx={{ minWidth: 320 }}
                     label="From Date"
                     type="date"
-                    value={fromDate}
                     variant="outlined"
                     required
-                    onChange={(e) => {
-                        setFromDate(e.target.value);
-                    }}
                     autoComplete="off"
                     InputLabelProps={{
                         shrink: true,
                     }}
                 />
-                {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            label="From Date"
-                            value={fromDate}
-                            onChange={(newValue) => {
-
-                                setFromDate(newValue);
-                            }}
-                        />
-                    </LocalizationProvider> */}
-                <TextField sx={{ minWidth: 250 }}
+                <TextField sx={{ minWidth: 320 }}
                     label="to date"
                     type="date"
-                    value={toDate}
                     variant="outlined"
                     required
-                    onChange={(e) => {
-                        setToDate(e.target.value);
-                    }}
                     autoComplete="off"
                     InputLabelProps={{
                         shrink: true,
                     }}
                 />
-                {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            label="To Date"
-                            value={toDate}
-                            onChange={(newValue) => {
-                                setToDate(newValue);
-                            }}
-                        />
-                    </LocalizationProvider> */}
-                <Box sx={{ minWidth: 250 }}>
+                <Box sx={{ minWidth: 320 }}>
                     <FormControl fullWidth>
-                        <InputLabel >Devices</InputLabel>
+                        <InputLabel id="demo-simple-select-label">AQMI/AQMO</InputLabel>
                         <Select
-                            value={deviceId}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={age}
                             label="Age"
-                            onChange={(e) => {
-                                // HandleDeviceChange(e.target.value)
-                            }}
+                            onChange={handleChange}
                         >
-                            {props.deviceList.map((data) => (
-                                <MenuItem value={data.id}>{data.deviceName}</MenuItem>
-                            ))}
                         </Select>
                     </FormControl>
                 </Box>
-                <FormControl>
-                    <Button size="medium" variant="contained" autoFocus type="submit">
-                        Submit
-                    </Button>
-                </FormControl>
-                <FormControl>
-                    <Button size="medium" variant="contained" autoFocus >
-                        Cancel
-                    </Button>
-                </FormControl>
             </Stack>
             <Table sx={{ marginTop: 3 }} aria-label="a dense table">
                 <TableHead>

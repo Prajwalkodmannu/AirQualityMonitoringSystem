@@ -1,46 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab, Typography } from '@mui/material';
-import { FetchBumpTestReportDetails } from '../../services/LoginPageService';
-import { createSvgIcon } from '@mui/material/utils';
+import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
-import SendIcon from '@mui/icons-material/Send';
-import {
-    DataGrid,
-    gridSortedRowIdsSelector,
-    GridToolbarContainer,
-    useGridApiContext,
-} from '@mui/x-data-grid';
-import { DownloadReportBumpTestCsv } from '../../services/DownloadCSVBumpTestReport';
-
-const getUnfilteredRows = ({ apiRef }) => gridSortedRowIdsSelector(apiRef);
-
-const ExportIcon = createSvgIcon(
-    <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />,
-    'SaveAlt',
-);
-
-const CustomToolbar = () => {
-    const apiRef = useGridApiContext();
-
-    const handleExport = (options) => apiRef.current.exportDataAsCsv(options);
-
-    const buttonBaseProps = {
-        color: 'primary',
-        size: 'small',
-        startIcon: <ExportIcon />,
-    };
-
-    return (
-        <GridToolbarContainer>
-            <Button
-                {...buttonBaseProps}
-                onClick={() => handleExport({ getRowsToExport: getUnfilteredRows })}
-            >
-                Download
-            </Button>
-        </GridToolbarContainer>
-    );
-};
+import { FetchBumpTestReportDetails } from '../../services/LoginPageService';
 
 const BumpTest = (props) => {
     const [fromDate, setFromDate] = useState('');
@@ -49,10 +11,6 @@ const BumpTest = (props) => {
     const [isLoading, setGridLoading] = useState(false);
     const [bumpTestReportList, setBumpTestReportList] = useState([]);
     const [unTaggedBumpTestReportList, setUnTaggedBumpTestReportList] = useState();
-
-    const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(5);
-    const [rowCountState, setRowCountState] = useState(0);
 
     useEffect(() => {
         FetchBumpTestReportDetails({}, BumpTestReportHandleSuccess, BumpTestReportHandleException);
@@ -63,13 +21,11 @@ const BumpTest = (props) => {
             field: 'created_at',
             headerName: 'Date',
             width: 100,
-            renderCell: (params) => (
-                <Typography>
-                    {
-                        dateFormat(params.value)
-                    }
-                </Typography>
-            ),
+        },
+        {
+            field: 'created_at',
+            headerName: 'Date',
+            width: 100,
         },
         {
             field: 'stateName',
@@ -122,35 +78,19 @@ const BumpTest = (props) => {
             width: 100,
         },
     ];
-    const dateFormat = (value) => {
-        const dateTime = value.split(" ")
-        const date = dateTime[0].split("-")
-        const dateValue = date[2] + "-" + date[1] + "-" + date[0]
-        return dateValue
-    }
 
     const HandleDeviceChange = (device_id) => {
         setDeviceId(device_id);
     };
 
-    const onPageSizeChange = (newPageSize) => {
-        setPageSize(newPageSize);
-        FetchNewData();
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        FetchNewData();
-    };
-
-    const FetchNewData = () => {
         setGridLoading(true);
-        FetchBumpTestReportDetails({ page, pageSize, device_id, fromDate, toDate }, BumpTestReportHandleSuccess, BumpTestReportHandleException);
+        FetchBumpTestReportDetails({ device_id, fromDate, toDate }, BumpTestReportHandleSuccess, BumpTestReportHandleException);
     };
 
     const BumpTestReportHandleSuccess = (dataObject) => {
-        setBumpTestReportList(dataObject.data.data);
-        setRowCountState(dataObject.data.totalRowCount)
+        setBumpTestReportList(dataObject.data);
         setGridLoading(false);
     }
 
@@ -164,41 +104,27 @@ const BumpTest = (props) => {
         setUnTaggedBumpTestReportList(!unTaggedBumpTestReportList);
     }
 
-    const OnPageChange = (newPage) => {
-        setPage(newPage)
-        FetchNewData();
-    }
-
-    const DownloadCsv = () => {
-        DownloadReportBumpTestCsv({ device_id, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException)
-    };
-
-    const csvReportHandleSuccess = (dataObject) => {
-        console.log(dataObject.data);
-    };
-
-    const csvReportHandleException = (dataObject) => {
-        console.log(dataObject.message);
-    };
-
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <Stack direction="row" spacing={2} marginTop={1.5} alignItems="center" >
-                    <Fab variant="extended" size="medium" color="primary" aria-label="add"
-                        onClick={() => {
-                            DownloadCsv();
-                        }}
-                    >
-                        <DownloadIcon sx={{ mr: 1 }} />
-                        Download
-                    </Fab>
-                    <Button variant="contained" endIcon={<SendIcon />}>
-                        Send
-                    </Button>
-
+                <Stack direction="row" spacing={2} marginTop={1.5}>
+                    <FormControl>
+                        <Button variant="outlined" startIcon={<DownloadIcon />}>
+                            Download
+                        </Button>
+                    </FormControl>
+                    <FormControl>
+                        <Button variant="contained" autoFocus onClick={handleCancel} >
+                            Cancel
+                        </Button>
+                    </FormControl>
+                    <FormControl >
+                        <Button variant="contained" autoFocus type="submit">
+                            Apply Filters
+                        </Button>
+                    </FormControl>
                     <TextField
-                        sx={{ minWidth: 230 }}
+                        sx={{ minWidth: 220 }}
                         label="From Date"
                         type="date"
                         variant="outlined"
@@ -213,7 +139,7 @@ const BumpTest = (props) => {
                         }}
                     />
                     <TextField
-                        sx={{ minWidth: 230 }}
+                        sx={{ minWidth: 220 }}
                         label="to date"
                         type="date"
                         value={toDate}
@@ -227,7 +153,7 @@ const BumpTest = (props) => {
                             shrink: true,
                         }}
                     />
-                    <Box sx={{ minWidth: 230 }}>
+                    <Box sx={{ minWidth: 220 }}>
                         <FormControl fullWidth>
                             <InputLabel >Device</InputLabel>
                             <Select
@@ -243,31 +169,21 @@ const BumpTest = (props) => {
                             </Select>
                         </FormControl>
                     </Box>
-                    <FormControl>
-                        <Button size="medium" variant="contained" autoFocus type="submit">
-                            Submit
-                        </Button>
-                    </FormControl>
-                    <FormControl>
-                        <Button size="medium" variant="contained" autoFocus onClick={handleCancel}>
-                            Cancel
-                        </Button>
-                    </FormControl>
                 </Stack>
-                <div style={{ height: 350, width: '100%', marginTop: 25 }}>
+                <Stack
+                    direction="row"
+                    justifyContent="flex-end"
+                    alignItems="center"
+                    spacing={2}
+                    marginTop={2}
+                >
+                </Stack>
+                <div style={{ height: 300, width: '100%', marginTop: 25 }}>
                     <DataGrid
                         rows={bumpTestReportList}
-                        rowCount={rowCountState}
-                        loading={isLoading}
-                        rowsPerPageOptions={[1, 10, 100]}
-                        pagination
-                        page={page}
-                        pageSize={pageSize}
-                        paginationMode="server"
-                        onPageChange={OnPageChange}
-                        onPageSizeChange={onPageSizeChange}
                         columns={columns}
-                    // initialState={initialState}
+                        loading={isLoading}
+                        disableSelectionOnClick
                     />
                 </div>
             </form>
