@@ -22,7 +22,6 @@ function AlertWidget({ dataList, setRefreshData }) {
   const columns = [
     {
       field: 'a_date',
-      type: 'date',
       headerName: 'Date',
       width: 100,
       renderCell: (params) => (
@@ -32,8 +31,7 @@ function AlertWidget({ dataList, setRefreshData }) {
           }
         </Typography>
       ),
-    }
-    ,
+    },
     {
       field: 'a_time',
       headerName: 'Time',

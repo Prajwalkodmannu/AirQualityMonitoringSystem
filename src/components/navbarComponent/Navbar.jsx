@@ -205,13 +205,6 @@ function Navbar(props) {
                               alertType === 'Warning' ? <PriorityHigh style={{ color: 'ba68c8', fontSize: 30 }} /> :
                                 <WarningAmber sx={{ color: 'yellow', fontSize: 30 }} />}
                           </ListItemAvatar>
-                          <ListItemText primary={sensorTag} secondary={msg} />
-                        </ListItem>
-                      </div>
-                    ))
-                    : (
-                      <div>
-                        <ListItem button onClick={handleClose} style={{ maxWidth: 500, minWidth: '300px', textAlign: 'center' }}>
                           <ListItemText
                             primary={<div>
                               <div><span style={{ fontWeight: 'bold' }}>Sensor Name :</span>
@@ -226,6 +219,13 @@ function Navbar(props) {
                               <div>Branch : {branchName} </div>
                               <div>State : {stateName} </div>
                             </div>} />
+                        </ListItem>
+                      </div>
+                    ))
+                    : (
+                      <div>
+                        <ListItem button onClick={handleClose} style={{ maxWidth: 500, minWidth: '300px', textAlign: 'center' }}>
+                          <ListItemText primary="" secondary="No Notifications found" />
                         </ListItem>
                       </div>
                     )}
