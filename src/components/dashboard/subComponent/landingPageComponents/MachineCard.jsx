@@ -13,7 +13,7 @@ import { WifiOffOutlined } from '@mui/icons-material';
 function MachineCard(props) {
   const [alertStatus, setAlertStatus] = useState(4);
 
-  useEffect(()=>{
+  useEffect(() => {
     let element = {
       alertLabel: 'Good',
       alertColor: 'green',
@@ -23,7 +23,7 @@ function MachineCard(props) {
     const alertObject = props.sensorIdList?.filter((alert) => {
       return parseInt(props.id) === parseInt(alert.id);
     });
-    
+
     alertObject?.map((data) => {
       setAlertStatusCode(element, data, setAlertStatus);
       // if(element.alertPriority > data.alertPriority){
@@ -46,7 +46,7 @@ function MachineCard(props) {
       //   };
     });
 
-  },[]);
+  }, []);
 
   const handleClick = () => {
     props.setSensorTagId(props.id);
@@ -58,17 +58,18 @@ function MachineCard(props) {
       <CardActionArea
         sx={{ minWidth: 200, boxShadow: 5, borderRadius: 2 }}
         onClick={() => {
-          props.sensorStatus === '0' ? '' : handleClick() ;
+          props.sensorStatus === '0' ? '' : handleClick();
         }}
         style={{
-          cursor : props.sensorStatus === '0' ? 'not-allowed' : 'pointer',
+          cursor: props.sensorStatus === '0' ? 'not-allowed' : 'pointer',
         }}
       >
-        <Grid 
-          item xs={12} 
-          style={{ 
-          backgroundColor: getSensorBackgroundColor(props.sensorStatus, alertStatus), //props.lightColor || '#cce6ff', 
-          height: '50px' }}>
+        <Grid
+          item xs={12}
+          style={{
+            backgroundColor: getSensorBackgroundColor(props.sensorStatus, alertStatus), //props.lightColor || '#cce6ff', 
+            height: '50px'
+          }}>
           <Stack
             direction="row"
             justifyContent="space-evenly"
@@ -120,25 +121,8 @@ function MachineCard(props) {
             }}
             >
               {props.sensorStatus === '0' ? <WifiOffOutlined style={{ fontSize: '70px', color: '#707070' }} /> :
-              <MachineCircularProgressbar score={props.last} color={props.alertColor} />
+                <MachineCircularProgressbar score={props.last} color={props.alertColor} />
               }
-            </div>
-            <div style={{
-              width: 90, height: 90, float: 'left', marginTop: 2,
-            }}
-            >
-              <Typography style={{ marginLeft: 0, color: '#004d99' }} align="left" display="block" gutterBottom component="div" />
-              <Typography
-                align="left"
-                display="block"
-                gutterBottom
-                component="div"
-                style={{
-                  fontWeight: 1000, color: props.color || '#7F8487', marginLeft: 9, marginTop: 22,
-                }}
-              >
-                mg/m3
-              </Typography>
             </div>
             <div style={{
               width: 90, height: 90, float: 'left', marginTop: 2,
