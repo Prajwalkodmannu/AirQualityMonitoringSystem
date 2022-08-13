@@ -19,6 +19,12 @@ function AlertWidget({ dataList, setRefreshData }) {
     message: '',
   });
 
+  function convertDateTime(value) {
+    const dateSplit = value.split('-');
+    const date = `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
+    return date;
+  }
+
   const columns = [
     {
       field: 'a_date',
@@ -76,26 +82,22 @@ function AlertWidget({ dataList, setRefreshData }) {
 
   function ClearAlert({ selectedRow }) {
     return (
-      selectedRow.alarmType === 'Latch' ?
-        <Button
-          variant="contained"
-          color="success"
-          startIcon={<Delete />}
-          onClick={(e) => {
-            setSensorId(selectedRow.sensorId);
-            setClearAlert(true);
-          }}
-        >
-          Clear
-        </Button>
+      selectedRow.alarmType === 'Latch'
+        ? (
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<Delete />}
+            onClick={(e) => {
+              setSensorId(selectedRow.sensorId);
+              setClearAlert(true);
+            }}
+          >
+            Clear
+          </Button>
+        )
         : ''
     );
-  }
-
-  function convertDateTime(value) {
-    const dateSplit = value.split("-");
-    const date = dateSplit[2] + "-" + dateSplit[1] + "-" + dateSplit[0];
-    return date;
   }
 
   const handleSubmit = async (e) => {

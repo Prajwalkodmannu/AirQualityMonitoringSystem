@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { FetchSensorLogReportDetails } from '../../services/LoginPageService';
-import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab } from '@mui/material';
+import {
+    Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Button, Fab,
+} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
-import { DownloadReportSensorLogCsv } from '../../services/DownloadReportSensorLogCsv';
+import { FetchSensorLogReportDetails } from '../../services/LoginPageService';
+import { DownloadReportSensorLogCsv } from '../../services/DownloadCsvReportsService';
+// import { DownloadReportSensorLogCsv } from '../../services/DownloadReportSensorLogCsv';
 
-const SensorLog = (props) => {
+function SensorLog(props) {
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [deviceId, setDeviceId] = useState('');
@@ -15,8 +18,6 @@ const SensorLog = (props) => {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [rowCountState, setRowCountState] = useState(0);
-
-    const [value, setValue] = React.useState(new Date());
 
     useEffect(() => {
         FetchSensorLogReportDetails({}, SensorLogReportHandleSuccess, SensorLogHandleException);
@@ -37,7 +38,6 @@ const SensorLog = (props) => {
         { field: 'outofrangeMaxValue', headerName: 'Out Of Range Max Value', width: 170 },
     ];
 
-
     const HandleDeviceChange = (deviceId) => {
         setDeviceId(deviceId);
     };
@@ -50,32 +50,30 @@ const SensorLog = (props) => {
     const onPageSizeChange = (newPageSize) => {
         setPageSize(newPageSize);
         fetchNewData();
-    }
+    };
 
     const DownloadCsv = () => {
-        DownloadReportSensorLogCsv({ deviceId, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException)
+        DownloadReportSensorLogCsv({ deviceId, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException);
     };
 
-    const csvReportHandleSuccess = (dataObject) => {
-        console.log(dataObject.data);
-    };
+    const csvReportHandleSuccess = () => { };
 
-    const csvReportHandleException = (dataObject) => {
-        console.log(dataObject.message);
-    };
+    const csvReportHandleException = () => { };
 
     const fetchNewData = () => {
         setGridLoading(true);
-        FetchSensorLogReportDetails({ page, pageSize, deviceId, fromDate, toDate }, SensorLogReportHandleSuccess, SensorLogHandleException);
-    }
+        FetchSensorLogReportDetails({
+            page, pageSize, deviceId, fromDate, toDate,
+        }, SensorLogReportHandleSuccess, SensorLogHandleException);
+    };
 
     const SensorLogReportHandleSuccess = (dataObject) => {
         setSensorLogReportList(dataObject.data);
-        setRowCountState(dataObject.data.totalRowCount)
+        setRowCountState(dataObject.data.totalRowCount);
         setGridLoading(false);
-    }
+    };
 
-    const SensorLogHandleException = () => { }
+    const SensorLogHandleException = () => { };
 
     const handleCancel = () => {
         setFromDate('');
@@ -83,16 +81,20 @@ const SensorLog = (props) => {
         setDeviceId([]);
         setGridLoading(false);
         setUnTaggedSensorLogReportList(!unTaggedSensorLogReportList);
-    }
+    };
     const onPageChange = (newPage) => {
-        setPage(newPage)
+        setPage(newPage);
         fetchNewData();
-    }
+    };
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <Stack direction="row" spacing={2} marginTop={1.5} alignItems="center" >
-                    <Fab variant="extended" size="medium" color="primary" aria-label="add"
+                <Stack direction="row" spacing={2} marginTop={1.5} alignItems="center">
+                    <Fab
+                        variant="extended"
+                        size="medium"
+                        color="primary"
+                        aria-label="add"
                         onClick={() => {
                             DownloadCsv();
                         }}
@@ -100,7 +102,8 @@ const SensorLog = (props) => {
                         <DownloadIcon sx={{ mr: 1 }} />
                         Download
                     </Fab>
-                    <TextField sx={{ minWidth: 250 }}
+                    <TextField
+                        sx={{ minWidth: 250 }}
                         label="From Date"
                         type="date"
                         value={fromDate}
@@ -125,7 +128,8 @@ const SensorLog = (props) => {
                             }}
                         />
                     </LocalizationProvider> */}
-                    <TextField sx={{ minWidth: 250 }}
+                    <TextField
+                        sx={{ minWidth: 250 }}
                         label="to date"
                         type="date"
                         value={toDate}
@@ -151,12 +155,12 @@ const SensorLog = (props) => {
                     </LocalizationProvider> */}
                     <Box sx={{ minWidth: 250 }}>
                         <FormControl fullWidth>
-                            <InputLabel >AQMI/AQMO</InputLabel>
+                            <InputLabel>AQMI/AQMO</InputLabel>
                             <Select
                                 value={deviceId}
                                 label="Age"
                                 onChange={(e) => {
-                                    HandleDeviceChange(e.target.value)
+                                    HandleDeviceChange(e.target.value);
                                 }}
                             >
                                 {props.deviceList.map((data) => (
@@ -193,7 +197,7 @@ const SensorLog = (props) => {
                 </Box>
             </form>
         </div>
-    )
+    );
 }
 
-export default SensorLog
+export default SensorLog;

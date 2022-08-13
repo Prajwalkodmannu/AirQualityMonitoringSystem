@@ -5,7 +5,7 @@ const successCaseCode = [200, 201];
 
 const _fetchService = (PATH, serviceMethod, data, successCallback, errorCallBack) => {
   const { user_token, userDetails } = ApplicationStore().getStorage('userDetails');
-  const END_POINT = 'https://68.178.163.133/aideaLabs/api/';
+  const END_POINT = 'https://wisething.in/aideaLabs/api/';
   const { emailId, userRole, companyCode } = userDetails;
 
   const headers = {
@@ -57,7 +57,7 @@ const _fetchService = (PATH, serviceMethod, data, successCallback, errorCallBack
 
 export const LoginService = (data) => {
   const PATH = 'login';
-  const END_POINT = 'https://68.178.163.133/aideaLabs/api/';
+  const END_POINT = 'https://wisething.in/aideaLabs/api/';
   const SERVICE_METHOD = 'POST';
   const headers = {
     Accept: 'application/json',

@@ -1,19 +1,20 @@
-import React, { Fragment, useState } from 'react'
-import { Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button, Fab } from '@mui/material';
+import React, { Fragment, useState } from 'react';
+import {
+    Box, InputLabel, MenuItem, FormControl, Select, TextField, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button, Fab,
+} from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import SendIcon from '@mui/icons-material/Send';
 
 const sample = [
-    { date: "04-06-2022", detail: ["Min", "Max", "Avg", "Status"], values: ["50", "100", "60", "#1234"] },
-    { date: "05-06-2022", detail: ["Min", "Max", "Avg", "Status"], values: ["4", "4", "4", "4"] },
-    { date: "05-06-2022", detail: ["Min", "Max", "Avg", "Status"], values: ["54", "4", "23", "54"] },
+    { date: '04-06-2022', detail: ['Min', 'Max', 'Avg', 'Status'], values: ['50', '100', '60', '#1234'] },
+    { date: '05-06-2022', detail: ['Min', 'Max', 'Avg', 'Status'], values: ['4', '4', '4', '4'] },
+    { date: '05-06-2022', detail: ['Min', 'Max', 'Avg', 'Status'], values: ['54', '4', '23', '54'] },
 ];
 
-const IndividualReportForm = (props) => {
+function IndividualReportForm(props) {
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [deviceId, setDeviceId] = useState('');
-
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(2);
@@ -34,8 +35,12 @@ const IndividualReportForm = (props) => {
 
     return (
         <>
-            <Stack direction="row" spacing={2} marginTop={1.5} alignItems="center" >
-                <Fab variant="extended" size="medium" color="primary" aria-label="add"
+            <Stack direction="row" spacing={2} marginTop={1.5} alignItems="center">
+                <Fab
+                    variant="extended"
+                    size="medium"
+                    color="primary"
+                    aria-label="add"
                     onClick={() => {
                         // DownloadCsv();
                     }}
@@ -46,7 +51,8 @@ const IndividualReportForm = (props) => {
                 <Button variant="contained" endIcon={<SendIcon />}>
                     Send
                 </Button>
-                <TextField sx={{ minWidth: 250 }}
+                <TextField
+                    sx={{ minWidth: 250 }}
                     label="From Date"
                     type="date"
                     value={fromDate}
@@ -71,7 +77,8 @@ const IndividualReportForm = (props) => {
                             }}
                         />
                     </LocalizationProvider> */}
-                <TextField sx={{ minWidth: 250 }}
+                <TextField
+                    sx={{ minWidth: 250 }}
                     label="to date"
                     type="date"
                     value={toDate}
@@ -97,11 +104,11 @@ const IndividualReportForm = (props) => {
                     </LocalizationProvider> */}
                 <Box sx={{ minWidth: 250 }}>
                     <FormControl fullWidth>
-                        <InputLabel >Devices</InputLabel>
+                        <InputLabel>Devices</InputLabel>
                         <Select
                             value={deviceId}
                             label="Age"
-                            onChange={(e) => {
+                            onChange={() => {
                                 // HandleDeviceChange(e.target.value)
                             }}
                         >
@@ -117,7 +124,7 @@ const IndividualReportForm = (props) => {
                     </Button>
                 </FormControl>
                 <FormControl>
-                    <Button size="medium" variant="contained" autoFocus >
+                    <Button size="medium" variant="contained" autoFocus>
                         Cancel
                     </Button>
                 </FormControl>
@@ -134,24 +141,24 @@ const IndividualReportForm = (props) => {
                 </TableHead>
                 <TableBody>
                     {sample.map((item) => (
-                        <Fragment>
+                        <>
                             <TableRow hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                                 <TableCell sx={{ width: 40 }} rowSpan={item.detail.length + 1}>
                                     {item.date}
                                 </TableCell>
                             </TableRow>
                             {item.detail.map((detail) => (
-                                <TableRow hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
-                                    <TableCell sx={{ width: 20 }} >{detail}</TableCell>
+                                <TableRow hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                    <TableCell sx={{ width: 20 }}>{detail}</TableCell>
                                     {
                                         item.values.map((val) => (
 
-                                            <TableCell sx={{ width: 20 }} >{val}</TableCell>
+                                            <TableCell sx={{ width: 20 }}>{val}</TableCell>
                                         ))
                                     }
                                 </TableRow>
                             ))}
-                        </Fragment>
+                        </>
                     ))}
                 </TableBody>
             </Table>
@@ -176,7 +183,7 @@ const IndividualReportForm = (props) => {
                 </Button>
             </Stack>
         </>
-    )
+    );
 }
 
-export default IndividualReportForm
+export default IndividualReportForm;
