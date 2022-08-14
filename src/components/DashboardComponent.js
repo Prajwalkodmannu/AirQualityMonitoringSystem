@@ -52,6 +52,7 @@ function Dashboard() {
   const [deviceCoordsList, setDeviceCoordsList] = useState([]);
   const [isdashboard, setIsDashBoard] = useState(0);
   const [isGeoMap, setIsGeoMap] = useState(true);
+  const [alertList, setAlertList] = useState([]);
 
   useEffect(() => {
     const { locationDetails } = ApplicationStore().getStorage('userDetails');
@@ -73,9 +74,12 @@ function Dashboard() {
     setProgressState((oldValue) => {
       let newValue = 0;
       if (locationDetails.facility_id) {
-        newValue = 2;
+        newValue = 3;
         fetchFacility();
       } else if (locationDetails.branch_id) {
+        newValue = 2;
+        fetchBranch();
+      } else if (locationDetails.location_id) {
         newValue = 1;
         fetchBranch();
       }
@@ -103,6 +107,7 @@ function Dashboard() {
       };
     })
       : [];
+    setAlertList(dataObject.data || []); // Alert list
     setCenterLatitude(parseFloat(newArray[0]?.position.lat));
     setCenterLongitude(parseFloat(newArray[0]?.position.lng));
   };
@@ -130,6 +135,7 @@ function Dashboard() {
       };
     })
       : [];
+    setAlertList(dataObject.data || []); // Alert list
     setCenterLatitude(parseFloat(newArray[0]?.position.lat));
     setCenterLongitude(parseFloat(newArray[0]?.position.lng));
   };
@@ -190,6 +196,7 @@ function Dashboard() {
                     setCenterLongitude={setCenterLongitude}
                     breadCrumbLabels={breadCrumbLabels}
                     setBreadCrumbLabels={setBreadCrumbLabels}
+                    setAlertList={setAlertList}
                   />
                 </Grid>
                 <Grid
@@ -217,7 +224,7 @@ function Dashboard() {
                     height: '50%',
                   }}
                 >
-                  <AlertWidget />
+                  <AlertWidget dataList={alertList} />
                 </Grid>
               </Grid>
             </Grid>

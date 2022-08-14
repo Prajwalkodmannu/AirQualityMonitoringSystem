@@ -14,7 +14,7 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 function BuildingGridComponent({
   setImg, locationDetails, setLocationDetails, setProgressState, breadCrumbLabels, setBreadCrumbLabels,
   setLocationCoordinationList, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages,
-  setZoomLevel, setCenterLatitude, setCenterLongitude,
+  setZoomLevel, setCenterLatitude, setCenterLongitude, setAlertList
 }) {
   const { buildingIdList } = ApplicationStore().getStorage('alertDetails');
 
@@ -71,6 +71,7 @@ function BuildingGridComponent({
 
   const handleSuccess = (dataObject) => {
     setDataList(dataObject.data);
+    setAlertList(dataObject.data || []);   // Alert list
     const newArray = dataObject.data ? dataObject.data.map((item) => {
       const coordinates = item.coordinates ? item.coordinates.replaceAll('"', '').split(',') : [];
       return {
@@ -120,8 +121,10 @@ function BuildingGridComponent({
     setProgressState((oldValue) => {
       let newValue = value;
       if (locationDetails.facility_id) {
-        newValue = 2;
+        newValue = 3;
       } else if (locationDetails.branch_id) {
+        newValue = 2;
+      }else if (locationDetails.location_id) {
         newValue = 1;
       }
       return newValue;

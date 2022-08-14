@@ -67,11 +67,14 @@ function LocationGridComponent(props) {
     setProgressState((oldValue)=>{
       let newValue = 0;
       if(locationDetails.facility_id){
-        newValue = 2;
+        newValue = 3;
       } 
       else if(locationDetails.branch_id){
+        newValue = 2;
+      }
+      else if(locationDetails.location_id){
         newValue = 1;
-      } 
+      }
       return newValue;
     });
   }, []);
@@ -100,6 +103,7 @@ function LocationGridComponent(props) {
   }
   const handleSuccess = (dataObject) => {
     setDataList(dataObject.data);
+    props.setAlertList(dataObject.data || []);   // Alert list
     const newArray = dataObject.data ? dataObject.data.map((item) => {
       const coordinates = item.coordinates ? item.coordinates.replaceAll('"', '').split(',') : [];
       return {
