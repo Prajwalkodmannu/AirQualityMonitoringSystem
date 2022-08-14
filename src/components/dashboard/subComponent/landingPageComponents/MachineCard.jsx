@@ -26,24 +26,7 @@ function MachineCard(props) {
     
     alertObject?.map((data) => {
       setAlertStatusCode(element, data, setAlertStatus);
-      // if(element.alertPriority > data.alertPriority){
-      //   switch(data.alertType){
-      //     case 'Critical' : setAlertStatus(1);
-      //     break;
-      //     case 'Warning' : setAlertStatus(2);
-      //     break;
-      //     case 'outOfRange' : setAlertStatus(3);
-      //     break;
-      //     default : break;
-      //   }
-      // } 
       element = setAlertPriorityAndType(element, data);
-      // element = element.alertPriority < data.alertPriority ? element
-      //   : {
-      //     alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
-      //     alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
-      //     alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
-      //   };
     });
 
   },[]);
@@ -122,23 +105,6 @@ function MachineCard(props) {
               {props.sensorStatus === '0' ? <WifiOffOutlined style={{ fontSize: '70px', color: '#707070' }} /> :
               <MachineCircularProgressbar score={props.last} color={props.alertColor} />
               }
-            </div>
-            <div style={{
-              width: 90, height: 90, float: 'left', marginTop: 2,
-            }}
-            >
-              <Typography style={{ marginLeft: 0, color: '#004d99' }} align="left" display="block" gutterBottom component="div" />
-              <Typography
-                align="left"
-                display="block"
-                gutterBottom
-                component="div"
-                style={{
-                  fontWeight: 1000, color: props.color || '#7F8487', marginLeft: 9, marginTop: 22,
-                }}
-              >
-                mg/m3
-              </Typography>
             </div>
             <div style={{
               width: 90, height: 90, float: 'left', marginTop: 2,
