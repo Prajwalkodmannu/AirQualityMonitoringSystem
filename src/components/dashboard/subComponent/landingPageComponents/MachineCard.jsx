@@ -140,6 +140,23 @@ function MachineCard(props) {
                 mg/m3
               </Typography>
             </div>
+            <div style={{
+              width: 90, height: 90, float: 'left', marginTop: 2,
+            }}
+            >
+              <Typography style={{ marginLeft: 0, color: '#004d99' }} align="left" display="block" gutterBottom component="div" />
+              <Typography
+                align="left"
+                display="block"
+                gutterBottom
+                component="div"
+                style={{
+                  fontWeight: 1000, color: props.color || '#7F8487', marginLeft: 9, marginTop: 22,
+                }}
+              >
+                mg/m3
+              </Typography>
+            </div>
           </Stack>
           <Stack
             direction="row"
