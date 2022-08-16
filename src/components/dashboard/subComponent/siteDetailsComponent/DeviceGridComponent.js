@@ -77,8 +77,10 @@ function DeviceGridComponent({
     setProgressState(() => {
       let newValue = value;
       if (locationDetails.facility_id) {
-        newValue = 2;
+        newValue = 3;
       } else if (locationDetails.branch_id) {
+        newValue = 2;
+      } else if (locationDetails.location_id) {
         newValue = 1;
       }
       return newValue;

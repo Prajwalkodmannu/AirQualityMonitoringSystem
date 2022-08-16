@@ -15,7 +15,7 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 function FloorGridComponent({
   setImg, locationDetails, setLocationDetails, setProgressState, breadCrumbLabels,
   setBreadCrumbLabels, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages,
-  setCenterLatitude, setCenterLongitude,
+  setCenterLatitude, setCenterLongitude, setAlertList,
 }) {
   const { floorIdList } = ApplicationStore().getStorage('alertDetails');
 
@@ -74,6 +74,7 @@ function FloorGridComponent({
 
   const handleSuccess = (dataObject) => {
     setDataList(dataObject.data);
+    setAlertList(dataObject.data || []);   // Alert list
   };
 
   const handleException = (errorObject) => {
@@ -109,8 +110,10 @@ function FloorGridComponent({
     setProgressState((oldValue) => {
       let newValue = value;
       if (locationDetails.facility_id) {
-        newValue = 2;
+        newValue = 3;
       } else if (locationDetails.branch_id) {
+        newValue = 2;
+      } else if (locationDetails.location_id) {
         newValue = 1;
       }
       return newValue;

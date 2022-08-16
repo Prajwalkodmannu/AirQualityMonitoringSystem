@@ -14,7 +14,7 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 function FacilityGridComponent({
   locationDetails, setLocationDetails, setProgressState, breadCrumbLabels, setBreadCrumbLabels,
   setLocationCoordinationList, setIsGeoMap, setDeviceCoordsList,
-  setZoomLevel, setCenterLatitude, setCenterLongitude,
+  setZoomLevel, setCenterLatitude, setCenterLongitude, setAlertList
 }) {
   const { facilityIdList } = ApplicationStore().getStorage('alertDetails');
 
@@ -71,6 +71,7 @@ function FacilityGridComponent({
 
   const handleSuccess = (dataObject) => {
     setDataList(dataObject.data);
+    setAlertList(dataObject.data || []);   // Alert list
     const newArray = dataObject.data ? dataObject.data.map((item) => {
       const coordinates = item.coordinates ? item.coordinates.replaceAll('"', '').split(',') : [];
       return {
@@ -122,8 +123,10 @@ function FacilityGridComponent({
             setProgressState(() => {
               let newValue = 0;
               if (locationDetails.facility_id) {
-                newValue = 2;
+                newValue = 3;
               } else if (locationDetails.branch_id) {
+                newValue = 2;
+              }else if (locationDetails.location_id) {
                 newValue = 1;
               }
               return newValue;
@@ -144,9 +147,9 @@ function FacilityGridComponent({
             setProgressState(() => {
               let newValue = 1;
               if (locationDetails.facility_id) {
-                newValue = 2;
+                newValue = 3;
               } else if (locationDetails.branch_id) {
-                newValue = 1;
+                newValue = 2;
               }
               return newValue;
             });

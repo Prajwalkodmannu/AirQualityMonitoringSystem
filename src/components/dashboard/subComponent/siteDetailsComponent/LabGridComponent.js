@@ -13,7 +13,7 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable no-shadow */
 function LabGridComponent({
   setImg, locationDetails, setLocationDetails, setProgressState, breadCrumbLabels,
-  setBreadCrumbLabels, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages, setIsDashBoard,
+  setBreadCrumbLabels, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages, setIsDashBoard, setAlertList
 }) {
   const { labIdList } = ApplicationStore().getStorage('alertDetails');
 
@@ -71,6 +71,7 @@ function LabGridComponent({
 
   const handleSuccess = (dataObject) => {
     setDataList(dataObject.data);
+    setAlertList(dataObject.data || []);   // Alert list
   };
 
   const handleException = () => {
@@ -105,8 +106,10 @@ function LabGridComponent({
     setProgressState(() => {
       let newValue = value;
       if (locationDetails.facility_id) {
-        newValue = 2;
+        newValue = 3;
       } else if (locationDetails.branch_id) {
+        newValue = 2;
+      } else if (locationDetails.location_id) {
         newValue = 1;
       }
       return newValue;
