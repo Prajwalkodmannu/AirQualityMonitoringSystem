@@ -21,6 +21,11 @@ function AlertWidget({ dataList, setRefreshData }) {
 
   const columns = [
     {
+      field: 'id',
+      headerName: 'Id',
+      width: 100,
+    },
+    {
       field: 'a_date',
       headerName: 'Date',
       width: 100,
