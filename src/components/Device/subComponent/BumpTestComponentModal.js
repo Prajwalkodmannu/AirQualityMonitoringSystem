@@ -14,6 +14,13 @@ import { BumpTestData } from '../../../services/BumpTestServicePage';
 import NotificationBar from '../../notification/ServiceNotificationBar';
 /* eslint-disable no-plusplus */
 
+const convertDateTime = (value) => {
+  const spaceSplit = value.split(' ');
+  const dateSplit = spaceSplit[0].split('-');
+  const date = `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
+  return date;
+};
+
 const columns = [
   {
     field: 'calibrationDate',
@@ -49,13 +56,6 @@ const columns = [
     ),
   },
 ];
-
-function convertDateTime(value){
-  var spaceSplit = value.split(" ");
-  var dateSplit = spaceSplit[0].split("-");
-  var date = dateSplit[2]+"-"+dateSplit[1]+"-"+dateSplit[0];
-  return date;
-}
 
 /* eslint-disable-next-line */
 function BumpTestComponentModal({
@@ -207,7 +207,7 @@ function BumpTestComponentModal({
     }
   };
   /* eslint-disable-next-line */
-  const getBumpTestResultDataHandleException = (dataObject, errorObject) => {    
+  const getBumpTestResultDataHandleException = (dataObject, errorObject) => {
   };
 
   const getBumpTestDataSuccess = (dataObject) => {
