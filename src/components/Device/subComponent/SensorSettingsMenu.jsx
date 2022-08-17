@@ -124,7 +124,7 @@ function SensorSettingsMenu(props) {
     >
       <MenuItem onClick={props.handleClose} disableRipple>
         <FormControlLabel
-          control={<Switch checked={sensorStatus === '1'} onChange={updateSensorStatus} color="warning" />}
+          control={<Switch checked={sensorStatus !== '0'} onChange={updateSensorStatus} color="warning" />}
           label="Enabled"
         />
       </MenuItem>
