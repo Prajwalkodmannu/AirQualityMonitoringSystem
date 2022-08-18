@@ -322,61 +322,61 @@ const AddCustomerValidate = (value, type, setErrorObject) => {
     });
       break;
     case 'alertLogInterval': setErrorObject((oldErrorState) => {
-        let status = {};
-        if (!validate('number', value)) {
-          status = {
-            errorStatus: true,
-            helperText: 'Enter value in sec',
-          };
-        } else {
-          status = {
-            errorStatus: false,
-            helperText: '',
-          };
-        }
-        return {
-          ...oldErrorState,
-          alertLogInterval: status,
+      let status = {};
+      if (!validate('number', value)) {
+        status = {
+          errorStatus: true,
+          helperText: 'Enter value in sec',
         };
-      });
+      } else {
+        status = {
+          errorStatus: false,
+          helperText: '',
+        };
+      }
+      return {
+        ...oldErrorState,
+        alertLogInterval: status,
+      };
+    });
       break;
     case 'deviceLogInterval': setErrorObject((oldErrorState) => {
-        let status = {};
-        if (!validate('number', value)) {
-          status = {
-            errorStatus: true,
-            helperText: 'Enter value in sec',
-          };
-        } else {
-          status = {
-            errorStatus: false,
-            helperText: '',
-          };
-        }
-        return {
-          ...oldErrorState,
-          deviceLogInterval: status,
+      let status = {};
+      if (!validate('number', value)) {
+        status = {
+          errorStatus: true,
+          helperText: 'Enter value in sec',
         };
-      });
+      } else {
+        status = {
+          errorStatus: false,
+          helperText: '',
+        };
+      }
+      return {
+        ...oldErrorState,
+        deviceLogInterval: status,
+      };
+    });
       break;
     case 'sensorLogInterval': setErrorObject((oldErrorState) => {
-        let status = {};
-        if (!validate('number', value)) {
-          status = {
-            errorStatus: true,
-            helperText: 'Enter value in sec',
-          };
-        } else {
-          status = {
-            errorStatus: false,
-            helperText: '',
-          };
-        }
-        return {
-          ...oldErrorState,
-          sensorLogInterval: status,
+      let status = {};
+      if (!validate('number', value)) {
+        status = {
+          errorStatus: true,
+          helperText: 'Enter value in sec',
         };
-      });
+      } else {
+        status = {
+          errorStatus: false,
+          helperText: '',
+        };
+      }
+      return {
+        ...oldErrorState,
+        sensorLogInterval: status,
+      };
+    });
       break;
     default: break;
   }
@@ -657,43 +657,43 @@ const AddCategoryValidate = (value, type, setErrorObject) => {
     });
       break;
     case 'unitMeasure': setErrorObject((oldErrorState) => {
-        let status = {};
-        if (!validate('categoryName', value)) {
-          status = {
-            errorStatus: true,
-            helperText: 'Enter valid unit Measure',
-          };
-        } else {
-          status = {
-            errorStatus: false,
-            helperText: '',
-          };
-        }
-        return {
-          ...oldErrorState,
-          unitMeasure: status,
+      let status = {};
+      if (!validate('categoryName', value)) {
+        status = {
+          errorStatus: true,
+          helperText: 'Enter valid unit Measure',
         };
-      });
-        break;
+      } else {
+        status = {
+          errorStatus: false,
+          helperText: '',
+        };
+      }
+      return {
+        ...oldErrorState,
+        unitMeasure: status,
+      };
+    });
+      break;
     case 'unitLabel': setErrorObject((oldErrorState) => {
-          let status = {};
-          if (!validate('categoryName', value)) {
-            status = {
-              errorStatus: true,
-              helperText: 'Enter valid unit Label',
-            };
-          } else {
-            status = {
-              errorStatus: false,
-              helperText: '',
-            };
-          }
-          return {
-            ...oldErrorState,
-            unitLabel: status,
-          };
-        });
-          break;
+      let status = {};
+      if (!validate('categoryName', value)) {
+        status = {
+          errorStatus: true,
+          helperText: 'Enter valid unit Label',
+        };
+      } else {
+        status = {
+          errorStatus: false,
+          helperText: '',
+        };
+      }
+      return {
+        ...oldErrorState,
+        unitLabel: status,
+      };
+    });
+      break;
     case 'sensorName': setErrorObject((oldErrorState) => {
       let status = {};
       if (!validate('address', value)) {
@@ -930,7 +930,7 @@ const AnalogSensorValidate = (value, type, setErrorObject) => {
       break;
     case 'criticalMinValue': setErrorObject((oldErrorState) => {
       let status = {};
-      if (!validate('number', value)) {
+      if (!validate('Decimalnumber', value)) {
         status = {
           errorStatus: true,
           helperText: 'Enter the Critical Minimum Value',
@@ -949,7 +949,7 @@ const AnalogSensorValidate = (value, type, setErrorObject) => {
       break;
     case 'criticalMaxValue': setErrorObject((oldErrorState) => {
       let status = {};
-      if (!validate('number', value)) {
+      if (!validate('Decimalnumber', value)) {
         status = {
           errorStatus: true,
           helperText: 'Enter the Critical Maximum Value',
@@ -1006,7 +1006,7 @@ const AnalogSensorValidate = (value, type, setErrorObject) => {
       break;
     case 'warningMinValue': setErrorObject((oldErrorState) => {
       let status = {};
-      if (!validate('number', value)) {
+      if (!validate('Decimalnumber', value)) {
         status = {
           errorStatus: true,
           helperText: 'Enter the Warning Minimum Value',
@@ -1025,7 +1025,7 @@ const AnalogSensorValidate = (value, type, setErrorObject) => {
       break;
     case 'warningMaxValue': setErrorObject((oldErrorState) => {
       let status = {};
-      if (!validate('number', value)) {
+      if (!validate('Decimalnumber', value)) {
         status = {
           errorStatus: true,
           helperText: 'Enter the Warning Maximum Value',
@@ -1082,7 +1082,7 @@ const AnalogSensorValidate = (value, type, setErrorObject) => {
       break;
     case 'outofrangeMinValue': setErrorObject((oldErrorState) => {
       let status = {};
-      if (!validate('number', value)) {
+      if (!validate('Decimalnumber', value)) {
         status = {
           errorStatus: true,
           helperText: 'Enter the Out-of-Range Minimum Value',
@@ -1101,7 +1101,7 @@ const AnalogSensorValidate = (value, type, setErrorObject) => {
       break;
     case 'outofrangeMaxValue': setErrorObject((oldErrorState) => {
       let status = {};
-      if (!validate('number', value)) {
+      if (!validate('Decimalnumber', value)) {
         status = {
           errorStatus: true,
           helperText: 'Enter the Out-of-Range Maximum Value',

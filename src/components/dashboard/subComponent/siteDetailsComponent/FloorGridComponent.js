@@ -18,7 +18,7 @@ function FloorGridComponent({
   setCenterLatitude, setCenterLongitude, setAlertList,
 }) {
   const { floorIdList } = ApplicationStore().getStorage('alertDetails');
-
+  const [isLoading, setGridLoading] = useState(true);
   const dataColumns = [
     {
       field: 'floorName',
@@ -64,6 +64,7 @@ function FloorGridComponent({
   const [dataList, setDataList] = useState([]);
 
   useEffect(() => {
+    setGridLoading(true);
     FloorfetchService({
       location_id: locationDetails.location_id,
       branch_id: locationDetails.branch_id,
@@ -73,6 +74,7 @@ function FloorGridComponent({
   }, [locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
     setAlertList(dataObject.data || []);   // Alert list
   };
@@ -178,6 +180,7 @@ function FloorGridComponent({
       <DataGrid
         rows={dataList}
         columns={dataColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick

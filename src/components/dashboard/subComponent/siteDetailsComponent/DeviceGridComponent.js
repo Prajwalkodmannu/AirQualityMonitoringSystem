@@ -87,11 +87,11 @@ function DeviceGridComponent({
     });
   };
 
-  const handleHooter = () =>{
-    HooterRelayService({lab_id: locationDetails.lab_id}, handleHooterSuccess, handleHooterException);
+  const handleHooter = () => {
+    HooterRelayService({ lab_id: locationDetails.lab_id }, handleHooterSuccess, handleHooterException);
   }
-  
-  const handleHooterSuccess = (dataObject) =>{
+
+  const handleHooterSuccess = (dataObject) => {
     console.log(dataObject.message);
     setLabHooterStatus('0');
     setNotification({
@@ -101,7 +101,7 @@ function DeviceGridComponent({
     });
   }
 
-  const handleHooterException = () =>{
+  const handleHooterException = () => {
     setNotification({
       status: false,
       type: 'error',
@@ -109,8 +109,8 @@ function DeviceGridComponent({
     });
   }
 
-  const handleAlert = () =>{
-    console.log(locationDetails.lab_id); 
+  const handleAlert = () => {
+    console.log(locationDetails.lab_id);
   }
 
   const handleClose = () => {
@@ -203,10 +203,10 @@ function DeviceGridComponent({
         </Typography>
       </Breadcrumbs>
       <div className="widgets" style={{ height: 'auto', backgroundColor: '#fafafa', padding: 10 }}>
-        <NotificationWidget type="hooterStatus" figure={labHooterStatus} handleClick={handleHooter}/>
-        <NotificationWidget type="disconnectedDevice" figure={disconnectedDevices}/>
+        <NotificationWidget type="hooterStatus" figure={labHooterStatus} handleClick={handleHooter} />
+        <NotificationWidget type="disconnectedDevice" figure={disconnectedDevices} />
         <NotificationWidget type="devices" figure={deviceTotal} />
-        <NotificationWidget type="alerts" figure={deviceAlert} handleClick={handleAlert}/>
+        <NotificationWidget type="alerts" figure={deviceAlert} handleClick={handleAlert} />
         <NotificationWidget type="time" />
       </div>
       <div

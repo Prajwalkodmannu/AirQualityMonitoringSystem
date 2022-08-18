@@ -62,7 +62,7 @@ function SensorConfig({
 
   // --- Alarm --- //
   const [alarm, setAlarm] = useState(editData.alarm || '');
-  const [isStel, setIsStel] = useState(editData ? editData.isStel === '1' : false);
+  const [isStel, setIsStel] = useState(editData ? editData.isStel === 1 : false);
   const [isAQI, setIsAQI] = useState(editData ? editData.isAQI === '1' : false);
   const [stelDuration, setStelDuration] = useState(editData.stelDuration || '');
   const [stelType, setStelType] = useState(editData.stelType || 'ppm');
@@ -128,123 +128,124 @@ function SensorConfig({
 
   const loadData = () => {
     CategoryFetchService(categoryHandleSuccess, handleException);
-    SensorCategoryFetchService(sensorCategoryHandleSuccess, handleException); 
+    SensorCategoryFetchService(sensorCategoryHandleSuccess, handleException);
     editData.sensorCategoryId && DynamicUnitListService(editData.sensorCategoryId, handleSensorUnitSuccess, handleSensorUnitException);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     /* eslint-disable-next-line */
-    { isAddButton
-      ? SensorAddService({
-        ...locationDetails,
-        sensorCategoryId,
-        sensorName,
-        manufacturer,
-        partId,
-        sensorOutput,
-        sensorType,
-        units,
-        // relayOutput,
-        bumpTestRequired,
-        minRatedReading,
-        minRatedReadingChecked,
-        minRatedReadingScale,
-        maxRatedReading,
-        maxRatedReadingChecked,
-        maxRatedReadingScale,
-        slaveId,
-        registerId,
-        length,
-        registerType,
-        conversionType,
-        ipAddress,
-        subnetMask,
-        alarm,
-        isStel,
-        isAQI,
-        stelDuration,
-        stelType,
-        stelLimit,
-        stelAlert,
-        twaDuration,
-        twaType,
-        twaLimit,
-        twaAlert,
-        parmGoodMinScale,
-        parmGoodMaxScale,
-        parmSatisfactoryMinScale,
-        parmSatisfactoryMaxScale,
-        parmModerateMinScale,
-        parmModerateMaxScale,
-        parmPoorMinScale,
-        parmPoorMaxScale,
-        parmVeryPoorMinScale,
-        parmVeryPoorMaxScale,
-        parmSevereMinScale,
-        parmSevereMaxScale,
-        criticalMinValue,
-        criticalMaxValue,
-        warningMinValue,
-        warningMaxValue,
-        outofrangeMinValue,
-        outofrangeMaxValue,
-      }, sensorAddSuccess, senserAddException)
-      : SensorEditService({
-        ...locationDetails,
-        id,
-        sensorCategoryId,
-        sensorName,
-        manufacturer,
-        partId,
-        sensorOutput,
-        sensorType,
-        units,
-        // relayOutput,
-        bumpTestRequired,
-        minRatedReading,
-        minRatedReadingChecked,
-        minRatedReadingScale,
-        maxRatedReading,
-        maxRatedReadingChecked,
-        maxRatedReadingScale,
-        slaveId,
-        registerId,
-        length,
-        registerType,
-        conversionType,
-        ipAddress,
-        subnetMask,
-        alarm,
-        isStel,
-        isAQI,
-        stelDuration,
-        stelType,
-        stelLimit,
-        stelAlert,
-        twaDuration,
-        twaType,
-        twaLimit,
-        twaAlert,
-        parmGoodMinScale,
-        parmGoodMaxScale,
-        parmSatisfactoryMinScale,
-        parmSatisfactoryMaxScale,
-        parmModerateMinScale,
-        parmModerateMaxScale,
-        parmPoorMinScale,
-        parmPoorMaxScale,
-        parmVeryPoorMinScale,
-        parmVeryPoorMaxScale,
-        parmSevereMinScale,
-        parmSevereMaxScale,
-        criticalMinValue,
-        criticalMaxValue,
-        warningMinValue,
-        warningMaxValue,
-        outofrangeMinValue,
-        outofrangeMaxValue,
-      }, sensorAddSuccess, senserAddException);
+    {
+      isAddButton
+        ? SensorAddService({
+          ...locationDetails,
+          sensorCategoryId,
+          sensorName,
+          manufacturer,
+          partId,
+          sensorOutput,
+          sensorType,
+          units,
+          // relayOutput,
+          bumpTestRequired,
+          minRatedReading,
+          minRatedReadingChecked,
+          minRatedReadingScale,
+          maxRatedReading,
+          maxRatedReadingChecked,
+          maxRatedReadingScale,
+          slaveId,
+          registerId,
+          length,
+          registerType,
+          conversionType,
+          ipAddress,
+          subnetMask,
+          alarm,
+          isStel,
+          isAQI,
+          stelDuration,
+          stelType,
+          stelLimit,
+          stelAlert,
+          twaDuration,
+          twaType,
+          twaLimit,
+          twaAlert,
+          parmGoodMinScale,
+          parmGoodMaxScale,
+          parmSatisfactoryMinScale,
+          parmSatisfactoryMaxScale,
+          parmModerateMinScale,
+          parmModerateMaxScale,
+          parmPoorMinScale,
+          parmPoorMaxScale,
+          parmVeryPoorMinScale,
+          parmVeryPoorMaxScale,
+          parmSevereMinScale,
+          parmSevereMaxScale,
+          criticalMinValue,
+          criticalMaxValue,
+          warningMinValue,
+          warningMaxValue,
+          outofrangeMinValue,
+          outofrangeMaxValue,
+        }, sensorAddSuccess, senserAddException)
+        : SensorEditService({
+          ...locationDetails,
+          id,
+          sensorCategoryId,
+          sensorName,
+          manufacturer,
+          partId,
+          sensorOutput,
+          sensorType,
+          units,
+          // relayOutput,
+          bumpTestRequired,
+          minRatedReading,
+          minRatedReadingChecked,
+          minRatedReadingScale,
+          maxRatedReading,
+          maxRatedReadingChecked,
+          maxRatedReadingScale,
+          slaveId,
+          registerId,
+          length,
+          registerType,
+          conversionType,
+          ipAddress,
+          subnetMask,
+          alarm,
+          isStel,
+          isAQI,
+          stelDuration,
+          stelType,
+          stelLimit,
+          stelAlert,
+          twaDuration,
+          twaType,
+          twaLimit,
+          twaAlert,
+          parmGoodMinScale,
+          parmGoodMaxScale,
+          parmSatisfactoryMinScale,
+          parmSatisfactoryMaxScale,
+          parmModerateMinScale,
+          parmModerateMaxScale,
+          parmPoorMinScale,
+          parmPoorMaxScale,
+          parmVeryPoorMinScale,
+          parmVeryPoorMaxScale,
+          parmSevereMinScale,
+          parmSevereMaxScale,
+          criticalMinValue,
+          criticalMaxValue,
+          warningMinValue,
+          warningMaxValue,
+          outofrangeMinValue,
+          outofrangeMaxValue,
+        }, sensorAddSuccess, senserAddException);
     }
   };
 
@@ -279,22 +280,22 @@ function SensorConfig({
     });
   };
 
-  const onSensorCategoryChange = (e) =>{
+  const onSensorCategoryChange = (e) => {
     setSensorCategoryId(e.target.value);
     DynamicUnitListService(e.target.value, handleSensorUnitSuccess, handleSensorUnitException);
   };
 
-  const handleSensorUnitSuccess = (dataObject) =>{
+  const handleSensorUnitSuccess = (dataObject) => {
     setUnitsList(JSON.parse(dataObject.data[0].measureUnitList?.replace(/\\/g, '').replace(/(^"|"$)/g, '')) || []);
-  }
+  };
 
-  const handleSensorUnitException = (errorObject, errorMessage) =>{
+  const handleSensorUnitException = (errorObject, errorMessage) => {
     setNotification({
       status: true,
       type: 'error',
       message: errorMessage,
     });
-  }
+  };
   return (
     <div className="w-full" style={{ marginTop: 0 }}>
       <form className="mt-0 p-0 w-full" onSubmit={handleSubmit}>
@@ -694,30 +695,31 @@ function SensorConfig({
               md={12}
               lg={12}
               xl={12}
-            > 
-              {nextPage !== true &&
-              <Button
-                sx={{ m: 2 }}
-                size="large"
-                type="submit"
-                disabled={
-                  errorObject?.sensorName?.errorStatus
-                || errorObject?.manufacturer?.errorStatus
-                || errorObject?.partId?.errorStatus
-                || errorObject?.units?.errorStatus
-                || errorObject?.minRatedReading?.errorStatus
-                || errorObject?.minRatedReadingScale?.errorStatus
-                || errorObject?.maxRatedReading?.errorStatus
-                || errorObject?.maxRatedReadingScale?.errorStatus
-                || errorObject?.ipAddress?.errorStatus
-                || errorObject?.subnetMask?.errorStatus
-                || errorObject?.slaveId?.errorStatus
-                || errorObject?.registerId?.errorStatus
-                }
-              >
-                {isAddButton ? 'ADD' : 'UPDATE'}
-              </Button>
-              }
+            >
+              {nextPage !== true
+                && (
+                  <Button
+                    sx={{ m: 2 }}
+                    size="large"
+                    type="submit"
+                    disabled={
+                      errorObject?.sensorName?.errorStatus
+                    || errorObject?.manufacturer?.errorStatus
+                    || errorObject?.partId?.errorStatus
+                    || errorObject?.units?.errorStatus
+                    || errorObject?.minRatedReading?.errorStatus
+                    || errorObject?.minRatedReadingScale?.errorStatus
+                    || errorObject?.maxRatedReading?.errorStatus
+                    || errorObject?.maxRatedReadingScale?.errorStatus
+                    || errorObject?.ipAddress?.errorStatus
+                    || errorObject?.subnetMask?.errorStatus
+                    || errorObject?.slaveId?.errorStatus
+                    || errorObject?.registerId?.errorStatus
+                    }
+                  >
+                    {isAddButton ? 'ADD' : 'UPDATE'}
+                  </Button>
+                )}
               <Button
                 sx={{ m: 2 }}
                 onClick={() => {
@@ -744,8 +746,7 @@ function SensorConfig({
           {nextPage === true
             ? ''
             : (
-              <div className="float-right">
-              </div>
+              <div className="float-right" />
             )}
         </DialogContent>
       </form>

@@ -20,6 +20,7 @@ function BranchGridComponent({
 }) {
   const [dataList, setDataList] = useState([]);
   const { branchIdList } = ApplicationStore().getStorage('alertDetails');
+  const [isLoading, setGridLoading] = useState(true);
   const branchColumns = [
     {
       field: 'branchName',
@@ -62,12 +63,14 @@ function BranchGridComponent({
     },
   ];
   useEffect(() => {
+    setGridLoading(true);
     FetchBranchService({
       location_id: locationDetails.location_id,
     }, handleSuccess, handleException);
   }, [locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
     setAlertList(dataObject.data || []); // Alert list
     setProgressState(1);
@@ -146,6 +149,7 @@ function BranchGridComponent({
       <DataGrid
         rows={dataList}
         columns={branchColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick

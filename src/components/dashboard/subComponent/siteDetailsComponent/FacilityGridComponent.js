@@ -17,7 +17,7 @@ function FacilityGridComponent({
   setZoomLevel, setCenterLatitude, setCenterLongitude, setAlertList
 }) {
   const { facilityIdList } = ApplicationStore().getStorage('alertDetails');
-
+  const [isLoading, setGridLoading] = useState(true);
   const facilityColumns = [
     {
       field: 'facilityName',
@@ -63,6 +63,7 @@ function FacilityGridComponent({
   const [dataList, setDataList] = useState([]);
 
   useEffect(() => {
+    setGridLoading(true);
     FetchFacilitiyService({
       location_id: locationDetails.location_id,
       branch_id: locationDetails.branch_id,
@@ -70,6 +71,7 @@ function FacilityGridComponent({
   }, [locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
     setAlertList(dataObject.data || []);   // Alert list
     const newArray = dataObject.data ? dataObject.data.map((item) => {
@@ -126,7 +128,7 @@ function FacilityGridComponent({
                 newValue = 3;
               } else if (locationDetails.branch_id) {
                 newValue = 2;
-              }else if (locationDetails.location_id) {
+              } else if (locationDetails.location_id) {
                 newValue = 1;
               }
               return newValue;
@@ -171,6 +173,7 @@ function FacilityGridComponent({
       <DataGrid
         rows={dataList}
         columns={facilityColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick

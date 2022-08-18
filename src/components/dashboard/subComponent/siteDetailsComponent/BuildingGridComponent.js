@@ -17,7 +17,7 @@ function BuildingGridComponent({
   setZoomLevel, setCenterLatitude, setCenterLongitude, setAlertList
 }) {
   const { buildingIdList } = ApplicationStore().getStorage('alertDetails');
-
+  const [isLoading, setGridLoading] = useState(true);
   const dataColumns = [
     {
       field: 'buildingName',
@@ -62,6 +62,7 @@ function BuildingGridComponent({
   const [dataList, setDataList] = useState([]);
 
   useEffect(() => {
+    setGridLoading(true);
     BuildingFetchService({
       location_id: locationDetails.location_id,
       branch_id: locationDetails.branch_id,
@@ -70,6 +71,7 @@ function BuildingGridComponent({
   }, [locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
     setAlertList(dataObject.data || []);   // Alert list
     const newArray = dataObject.data ? dataObject.data.map((item) => {
@@ -124,7 +126,7 @@ function BuildingGridComponent({
         newValue = 3;
       } else if (locationDetails.branch_id) {
         newValue = 2;
-      }else if (locationDetails.location_id) {
+      } else if (locationDetails.location_id) {
         newValue = 1;
       }
       return newValue;
@@ -173,6 +175,7 @@ function BuildingGridComponent({
       <DataGrid
         rows={dataList}
         columns={dataColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick

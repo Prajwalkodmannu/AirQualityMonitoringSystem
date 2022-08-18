@@ -18,6 +18,7 @@ function LabGridComponent({
   const { labIdList } = ApplicationStore().getStorage('alertDetails');
 
   const [dataList, setDataList] = useState([]);
+  const [isLoading, setGridLoading] = useState(true);
   const dataColumns = [
     {
       field: 'labDepName',
@@ -60,6 +61,7 @@ function LabGridComponent({
     },
   ];
   useEffect(() => {
+    setGridLoading(true);
     LabfetchService({
       location_id: locationDetails.location_id,
       branch_id: locationDetails.branch_id,
@@ -70,6 +72,7 @@ function LabGridComponent({
   }, [locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
     setAlertList(dataObject.data || []);   // Alert list
   };
@@ -180,6 +183,7 @@ function LabGridComponent({
       <DataGrid
         rows={dataList}
         columns={dataColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
