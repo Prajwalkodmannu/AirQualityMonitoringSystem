@@ -2,23 +2,16 @@ import React, { useEffect, useState } from 'react';
 import {
   Button, Dialog, DialogContent, DialogTitle,
 } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-
 import Grid from '@mui/material/Grid';
 import AlertWidget from '../../components/AlertWidget';
 import { DeviceIdAlerts } from '../../../../services/LoginPageService';
 
-
 function AlertModalComponent({alertOpen, setAlertOpen, locationDetails}) {
-
   const [dataList, setDataList] = useState([]);
   const [refreshData, setRefreshData] = useState(false);
 
   useEffect(() => {
-    DeviceIdAlerts({ device_id: locationDetails.device_id }, fetchAlertListSuccess, fetchAlertListException);
+    DeviceIdAlerts(locationDetails, fetchAlertListSuccess, fetchAlertListException);
   },[locationDetails,refreshData]);
 
   const fetchAlertListSuccess = (dataObject) => {  
@@ -34,10 +27,14 @@ function AlertModalComponent({alertOpen, setAlertOpen, locationDetails}) {
       maxWidth="lg"
       open={alertOpen}
     >
-      <DialogTitle>
+      <DialogTitle style={{
+        paddingBottom: '0px'
+      }}>
         Active alerts
       </DialogTitle>
-      <DialogContent>       
+      <DialogContent style={{
+        paddingTop: '0px'
+      }}>       
         <Grid
           item
           xs={12}
@@ -45,13 +42,15 @@ function AlertModalComponent({alertOpen, setAlertOpen, locationDetails}) {
           md={12}
           lg={12}
           xl={12}
-
           sx={{
             padding: 1,
             marginLeft: 1,
           }}          
         >
-          <DialogContent>
+          <DialogContent style={{
+            height : '435px',
+            paddingTop: '0px'
+          }}>
               <div style={{
                 height: 390,
                 width: '100%',
@@ -61,9 +60,10 @@ function AlertModalComponent({alertOpen, setAlertOpen, locationDetails}) {
                   color: '#1a3e72',
                   fontWeight: '600',
                 },
+                paddingTop: '0px'
               }}
               >
-                <AlertWidget dataList={dataList} setRefreshData={setRefreshData} />
+                <AlertWidget dataList={dataList} setRefreshData={setRefreshData} maxHeight='500px'/>
               </div>
           </DialogContent>  
             <div className='float-right'>

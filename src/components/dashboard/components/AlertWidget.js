@@ -8,7 +8,7 @@ import { SensorIdAlertUpdate } from '../../../services/LoginPageService';
 import NotificationBar from '../../notification/ServiceNotificationBar';
 
 /* eslint-disable no-unused-vars */
-function AlertWidget({ dataList, setRefreshData }) {
+function AlertWidget({ dataList, setRefreshData, maxHeight }) {
   const [clearAlert, setClearAlert] = useState(false);
   const [clearAlertReason, setAlertReason] = useState('');
   const [sensorId, setSensorId] = useState('');
@@ -20,11 +20,6 @@ function AlertWidget({ dataList, setRefreshData }) {
   });
 
   const columns = [
-    {
-      field: 'id',
-      headerName: 'Id',
-      width: 100,
-    },
     {
       field: 'a_date',
       headerName: 'Date',
@@ -147,7 +142,7 @@ function AlertWidget({ dataList, setRefreshData }) {
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        style={{ maxHeight: `${250}px` }}
+        style={{ maxHeight: maxHeight || '250px' }}
       />
       <Dialog
         sx={{ '& .MuiDialog-paper': { minWidth: '40%' } }}

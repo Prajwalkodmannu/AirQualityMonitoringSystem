@@ -9,7 +9,7 @@ import ImageMarkerList from './Device/subComponent/imageMarkerList';
 import LandingPageComponent from './dashboard/subComponent/siteDetailsComponent/LandingPageComponent';
 import DeviceGridComponent from './dashboard/subComponent/siteDetailsComponent/DeviceGridComponent';
 import ApplicationStore from '../utils/localStorageUtil';
-import { FetchFacilitiyService, FetchBranchService } from '../services/LoginPageService';
+import { FetchFacilitiyService, FetchBranchService, FetchLocationService, DeviceIdAlerts } from '../services/LoginPageService';
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
@@ -76,22 +76,51 @@ function Dashboard() {
       if (locationDetails.facility_id) {
         newValue = 3;
         fetchFacility();
+        locationAlerts({facility_id: locationDetails.facility_id});
       } else if (locationDetails.branch_id) {
         newValue = 2;
         fetchBranch();
+        locationAlerts({branch_id: locationDetails.branch_id});
       } else if (locationDetails.location_id) {
         newValue = 1;
         fetchBranch();
+        locationAlerts({location_id: locationDetails.location_id});
+      } else {
+        fetchLocation();
+        locationAlerts({});
       }
       return newValue;
     });
   }, []);
+
+  const fetchLocation = () => {
+    FetchLocationService(handleLocationSuccess, handleBranchException);
+    locationAlerts({});
+  };
+
+  const handleLocationSuccess = (dataObject) => {
+    const newArray = dataObject.data ? dataObject.data.map((item) => {
+      const coordinates = item.coordinates ? item.coordinates.replaceAll('"', '').split(',') : [];
+      return {
+        id: item.id,
+        name: item.stateName,
+        position: {
+          lat: parseFloat(coordinates[0]),
+          lng: parseFloat(coordinates[1]),
+        },
+      };
+    })
+      : [];
+    setCenterLatitude(parseFloat(newArray[0]?.position.lat));
+    setCenterLongitude(parseFloat(newArray[0]?.position.lng));
+  };
 
   const fetchBranch = () => {
     const { locationDetails } = ApplicationStore().getStorage('userDetails');
     FetchBranchService({
       location_id: locationDetails.location_id,
     }, handleBranchSuccess, handleBranchException);
+    locationAlerts({location_id: locationDetails.location_id});
   };
 
   const handleBranchSuccess = (dataObject) => {
@@ -107,7 +136,6 @@ function Dashboard() {
       };
     })
       : [];
-    setAlertList(dataObject.data || []); // Alert list
     setCenterLatitude(parseFloat(newArray[0]?.position.lat));
     setCenterLongitude(parseFloat(newArray[0]?.position.lng));
   };
@@ -120,6 +148,10 @@ function Dashboard() {
       location_id: locationDetails?.location_id,
       branch_id: locationDetails?.branch_id,
     }, handleFetchSuccess, handleFetchException);
+    locationAlerts({
+      location_id: locationDetails?.location_id,
+      branch_id: locationDetails?.branch_id,
+    });
   };
 
   const handleFetchSuccess = (dataObject) => {
@@ -135,12 +167,21 @@ function Dashboard() {
       };
     })
       : [];
-    setAlertList(dataObject.data || []); // Alert list
     setCenterLatitude(parseFloat(newArray[0]?.position.lat));
     setCenterLongitude(parseFloat(newArray[0]?.position.lng));
   };
 
   const handleFetchException = (errorObject) => { };
+
+  const locationAlerts = (alertLocationDetails) =>{
+    DeviceIdAlerts(alertLocationDetails, handleSuccessAlerts, handleExceptionAlerts);
+  }
+
+  const handleSuccessAlerts = (dataObject) => {  
+    setAlertList(dataObject.data || []);
+  }
+
+  const handleExceptionAlerts = () => { };
 
   return (
     <Grid container spacing={1} style={{ height: '100%', width: '100%', padding: 2 }}>
@@ -197,6 +238,7 @@ function Dashboard() {
                     breadCrumbLabels={breadCrumbLabels}
                     setBreadCrumbLabels={setBreadCrumbLabels}
                     setAlertList={setAlertList}
+                    locationAlerts={locationAlerts}
                   />
                 </Grid>
                 <Grid
@@ -258,6 +300,7 @@ function Dashboard() {
             setSiteImages={setSiteImages}
             setCenterLatitude={setCenterLatitude}
             setCenterLongitude={setCenterLongitude}
+            locationAlerts={locationAlerts}
           />
         )}
     </Grid>

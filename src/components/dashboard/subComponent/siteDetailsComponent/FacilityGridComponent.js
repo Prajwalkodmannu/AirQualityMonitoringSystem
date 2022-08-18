@@ -11,11 +11,11 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable no-nested-ternary */
 /* eslint-disable array-callback-return */
 
-function FacilityGridComponent({
-  locationDetails, setLocationDetails, setProgressState, breadCrumbLabels, setBreadCrumbLabels,
-  setLocationCoordinationList, setIsGeoMap, setDeviceCoordsList,
-  setZoomLevel, setCenterLatitude, setCenterLongitude, setAlertList
-}) {
+function FacilityGridComponent(props) {
+  const { setLocationDetails, setProgressState, breadCrumbLabels, setBreadCrumbLabels,
+    setLocationCoordinationList, setIsGeoMap, setDeviceCoordsList,
+    setZoomLevel, setCenterLatitude, setCenterLongitude, setAlertList, locationAlerts
+  } = props;
   const { facilityIdList } = ApplicationStore().getStorage('alertDetails');
 
   const facilityColumns = [
@@ -64,14 +64,13 @@ function FacilityGridComponent({
 
   useEffect(() => {
     FetchFacilitiyService({
-      location_id: locationDetails.location_id,
-      branch_id: locationDetails.branch_id,
+      location_id: props.locationDetails.location_id,
+      branch_id: props.locationDetails.branch_id,
     }, handleSuccess, handleException);
-  }, [locationDetails]);
+  }, [props.locationDetails]);
 
   const handleSuccess = (dataObject) => {
     setDataList(dataObject.data);
-    setAlertList(dataObject.data || []);   // Alert list
     const newArray = dataObject.data ? dataObject.data.map((item) => {
       const coordinates = item.coordinates ? item.coordinates.replaceAll('"', '').split(',') : [];
       return {
@@ -95,6 +94,7 @@ function FacilityGridComponent({
       <h3
         style={{ cursor: 'pointer' }}
         onClick={() => {
+          locationAlerts({facility_id: selectedRow.id});
           setLocationDetails((oldValue) => {
             return { ...oldValue, facility_id: selectedRow.id };
           });
@@ -124,14 +124,18 @@ function FacilityGridComponent({
               let newValue = 0;
               if (locationDetails.facility_id) {
                 newValue = 3;
+                locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
               } else if (locationDetails.branch_id) {
                 newValue = 2;
+                locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
               }else if (locationDetails.location_id) {
                 newValue = 1;
+                locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+              } else {
+                locationAlerts({});
               }
               return newValue;
             });
-            // setProgressState(0);
             setDeviceCoordsList([]);
             // setCenterLatitude(23.500);
             // setCenterLongitude(80.000);
@@ -148,12 +152,16 @@ function FacilityGridComponent({
               let newValue = 1;
               if (locationDetails.facility_id) {
                 newValue = 3;
+                locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
               } else if (locationDetails.branch_id) {
                 newValue = 2;
+                locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+              } else {
+                newValue = 1;
+                locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
               }
               return newValue;
             });
-            // setProgressState(1);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
           }}
