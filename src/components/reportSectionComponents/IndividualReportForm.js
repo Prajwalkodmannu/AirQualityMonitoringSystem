@@ -52,7 +52,7 @@ function IndividualReportForm(props) {
                     Send
                 </Button>
                 <TextField
-                    sx={{ minWidth: 250 }}
+                    sx={{ minWidth: 230 }}
                     label="From Date"
                     type="date"
                     value={fromDate}
@@ -78,7 +78,7 @@ function IndividualReportForm(props) {
                         />
                     </LocalizationProvider> */}
                 <TextField
-                    sx={{ minWidth: 250 }}
+                    sx={{ minWidth: 230 }}
                     label="to date"
                     type="date"
                     value={toDate}
