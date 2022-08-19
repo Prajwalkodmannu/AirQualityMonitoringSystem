@@ -22,7 +22,7 @@ function DeviceGridComponent({
   const [disconnectedDevices, setDisconnectedDevices] = useState('0');
   const [labHooterStatus, setLabHooterStatus] = useState('0');
   const [expanded, setExpanded] = useState(false);
-  const { intervalDetails } = ApplicationStore().getStorage('userDetails');
+  const { intervalDetails, userDetails } = ApplicationStore().getStorage('userDetails');
   const { deviceIdList } = ApplicationStore().getStorage('alertDetails');
   const intervalSec = intervalDetails.deviceLogInterval * 1000;
   const [pollingStatus, setPollingStatus] = useState(false);
@@ -88,7 +88,7 @@ function DeviceGridComponent({
   };
 
   const handleHooter = () => {
-    HooterRelayService({ lab_id: locationDetails.lab_id }, handleHooterSuccess, handleHooterException);
+    userDetails?.userRole === 'systemSpecialist' && HooterRelayService({ lab_id: locationDetails.lab_id }, handleHooterSuccess, handleHooterException);
   }
 
   const handleHooterSuccess = (dataObject) => {
