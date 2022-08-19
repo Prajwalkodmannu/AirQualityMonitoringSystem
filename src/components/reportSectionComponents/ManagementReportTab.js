@@ -20,6 +20,7 @@ import {
     LabfetchService,
     DeviceFetchService,
 } from '../../services/LoginPageService';
+import SoftwareVersion from './SoftwareVersion';
 
 function TabPanel(props) {
     const { children, value, index } = props;
@@ -286,8 +287,9 @@ export default function ManagementReportTab() {
                             {/* <Tab label="AQMI logs" {...a11yProps(3)} /> */}
                             <Tab label="Device LOGS" {...a11yProps(3)} />
                             <Tab label="Server Utilization" {...a11yProps(4)} />
-                            <Tab label="Firmware version" {...a11yProps(5)} />
-                            <Tab label="BumpTest" {...a11yProps(6)} />
+                            <Tab label="Application version" {...a11yProps(5)} />
+                            <Tab label="Firmware version" {...a11yProps(6)} />
+                            <Tab label="BumpTest" {...a11yProps(7)} />
                         </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
@@ -309,9 +311,12 @@ export default function ManagementReportTab() {
                         <ServerUtilization />
                     </TabPanel>
                     <TabPanel value={value} index={5}>
-                        <FirmwareVersion />
+                        <SoftwareVersion />
                     </TabPanel>
                     <TabPanel value={value} index={6}>
+                        <FirmwareVersion />
+                    </TabPanel>
+                    <TabPanel value={value} index={7}>
                         <BumpTest deviceList={deviceList} />
                     </TabPanel>
                 </Box>
