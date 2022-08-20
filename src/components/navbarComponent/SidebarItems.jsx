@@ -1,6 +1,6 @@
 import {
   Dashboard, Group, BusinessOutlined, LockReset, Map,
-  Storefront,
+  Storefront, BrowserUpdated,
   ChatBubbleOutline
 } from '@mui/icons-material';
 import SummarizeIcon from '@mui/icons-material/Summarize';
@@ -40,6 +40,11 @@ const SidebarItems = {
     name: 'ChangePassword ',
     route: 'ChangePassword',
     icon: <LockReset className="sidebarIcon" />,
+  },
+  {
+    name: 'App Version ',
+    route: 'AppVersion',
+    icon: <BrowserUpdated className="sidebarIcon" />,
   }],
   'Site Details': [{
     name: 'Location',
