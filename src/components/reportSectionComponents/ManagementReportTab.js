@@ -314,7 +314,7 @@ export default function ManagementReportTab() {
                         <SoftwareVersion />
                     </TabPanel>
                     <TabPanel value={value} index={6}>
-                        <FirmwareVersion />
+                        <FirmwareVersion deviceList={deviceList} />
                     </TabPanel>
                     <TabPanel value={value} index={7}>
                         <BumpTest deviceList={deviceList} />
