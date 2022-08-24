@@ -1,7 +1,7 @@
 const successCaseCode = [200, 201];
 
 const _fetchServiceBumpTestData = (PATH, serviceMethod, data, successCallback, errorCallBack) => {
-    const END_POINT = 'https://wisething.in/aideaLabs/api/';
+    const END_POINT = 'https://wisething.in/aideaLabs/';
     const body = { body: JSON.stringify(data) };
   
     const bodyParameters = {
