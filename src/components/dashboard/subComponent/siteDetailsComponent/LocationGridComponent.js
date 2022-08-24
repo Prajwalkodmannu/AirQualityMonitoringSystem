@@ -13,7 +13,7 @@ import { setAlertPriorityAndType } from '../../../../utils/helperFunctions';
 function LocationGridComponent(props) {
   const {
     setLocationDetails, setProgressState, setBreadCrumbLabels, setLocationCoordinationList,
-    setZoomLevel, setCenterLatitude, setCenterLongitude
+    setZoomLevel, setCenterLatitude, setCenterLongitude, locationAlerts
   } = props;
   const [dataList, setDataList] = useState([]);
   let { locationIdList } = ApplicationStore().getStorage('alertDetails');
@@ -68,22 +68,30 @@ function LocationGridComponent(props) {
       let newValue = 0;
       if(locationDetails.facility_id){
         newValue = 3;
+        locationAlerts({facility_id: locationDetails.facility_id});
       } 
       else if(locationDetails.branch_id){
         newValue = 2;
+        locationAlerts({branch_id: locationDetails.branch_id});
       }
       else if(locationDetails.location_id){
         newValue = 1;
+        locationAlerts({location_id: locationDetails.location_id});
+      } 
+      else {
+        locationAlerts({});
       }
       return newValue;
     });
   }, []);
 
   function LinkTo({ selectedRow }) {
+    const { locationDetails } = ApplicationStore().getStorage('userDetails');
     return (
       <h3
         style={{ cursor: 'pointer' }}
         onClick={() => {
+          locationAlerts({location_id: selectedRow.id});
           setLocationDetails((oldValue) => {
             return { ...oldValue, location_id: selectedRow.id };
           });
@@ -103,7 +111,6 @@ function LocationGridComponent(props) {
   }
   const handleSuccess = (dataObject) => {
     setDataList(dataObject.data);
-    props.setAlertList(dataObject.data || []);   // Alert list
     const newArray = dataObject.data ? dataObject.data.map((item) => {
       const coordinates = item.coordinates ? item.coordinates.replaceAll('"', '').split(',') : [];
       return {
@@ -135,11 +142,6 @@ function LocationGridComponent(props) {
         </h3>
       </Breadcrumbs>
 
-      {/* <GridStylingWrapper
-        dataList={dataList}
-        columns={columns}
-        locationIdList={locationIdList}
-      /> */}
       <DataGrid
         rows={dataList}
         columns={columns}
@@ -147,14 +149,6 @@ function LocationGridComponent(props) {
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
         style={{ maxHeight: `${93}%` }}
-        // getRowClassName={(params) => {
-        //   let alertObject = {alertType: 'Normal'};
-        //   alertObject = locationIdList?.find((alert)=>{
-        //     return alert.id == params.row.id;
-        //   });
-        //   // console.log(alertObject);
-        //   return `super-app-theme--${alertObject?.alertType}`
-        // }}
       />
     </div>
   );

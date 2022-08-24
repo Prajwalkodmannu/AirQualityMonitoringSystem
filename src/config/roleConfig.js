@@ -1,5 +1,5 @@
 export const sidebarConfig = {
-  superadmin: ['CustomerManagement', 'UserManagement', 'ChangePassword', 'AddDevice', 'DeviceLocation'],
+  superadmin: ['CustomerManagement', 'UserManagement', 'ChangePassword', 'AddDevice', 'DeviceLocation', 'AppVersion'],
   systemspecialist: ['Dashboard', 'Location', 'UserManagement', 'Vendor', 'Report', 'ChangePassword',
     'Device', 'AddDevice', 'DeviceLocation'],
   admin: ['Dashboard', 'Location', 'UserManagement', 'Vendor', 'Report', 'ChangePassword', 'AddDevice', 'DeviceLocation'],

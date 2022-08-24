@@ -7,15 +7,21 @@ import DeviceWidget from '../deviceCard/DeviceWidget';
 import NotificationWidget from '../deviceCard/NotificationWidget';
 import ApplicationStore from '../../../../utils/localStorageUtil';
 import NotificationBar from '../../../notification/ServiceNotificationBar';
+import AlertModalComponent from '../landingPageComponents/AlertModalComponent';
 
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable no-shadow */
 
-function DeviceGridComponent({
-  setImg, locationDetails, setLocationDetails, setProgressState, breadCrumbLabels, setBreadCrumbLabels,
-  setDeviceCoordsList, setIsDashBoard, setIsGeoMap, siteImages,
-}) {
+function DeviceGridComponent(props) {
+  const {
+    setImg, setLocationDetails, setProgressState, breadCrumbLabels, setBreadCrumbLabels,
+    setDeviceCoordsList, setIsDashBoard, setIsGeoMap, siteImages, locationAlerts
+  } = props;
+  const [labId, setlabId] = useState({
+    lab_id : props.locationDetails.lab_id
+  });
+  const [alertOpen, setAlertOpen] = useState(false);
   const [deviceList, setDeviceList] = useState([]);
   const [deviceTotal, setDeviceTotal] = useState('0');
   const [deviceAlert, setAlertTotal] = useState('0');
@@ -41,21 +47,20 @@ function DeviceGridComponent({
     return () => {
       clearInterval(devicePolling);
     };
-  }, [locationDetails]);
+  }, [props.locationDetails]);
 
   const intervalCallFunction = () => {
     DeviceFetchService({
-      location_id: locationDetails.location_id,
-      branch_id: locationDetails.branch_id,
-      facility_id: locationDetails.facility_id,
-      building_id: locationDetails.building_id,
-      floor_id: locationDetails.floor_id,
-      lab_id: locationDetails.lab_id,
+      location_id: props.locationDetails.location_id,
+      branch_id: props.locationDetails.branch_id,
+      facility_id: props.locationDetails.facility_id,
+      building_id: props.locationDetails.building_id,
+      floor_id: props.locationDetails.floor_id,
+      lab_id: props.locationDetails.lab_id,
     }, handleSuccess, handleException);
   };
 
   const handleSuccess = (dataObject) => {
-    // setPollingStatus(true);
     setDeviceList(dataObject.data);
     const deviceCoordinationsList = dataObject.data.map((data) => {
       const coordination = data.floorCords;
@@ -82,13 +87,15 @@ function DeviceGridComponent({
         newValue = 2;
       } else if (locationDetails.location_id) {
         newValue = 1;
+      } else {
+        // locationAlerts({});
       }
       return newValue;
     });
   };
 
   const handleHooter = () =>{
-    userDetails?.userRole === 'systemSpecialist' && HooterRelayService({lab_id: locationDetails.lab_id}, handleHooterSuccess, handleHooterException);
+    userDetails?.userRole === 'systemSpecialist' && HooterRelayService({lab_id: props.locationDetails.lab_id}, handleHooterSuccess, handleHooterException);
   }
   
   const handleHooterSuccess = (dataObject) =>{
@@ -110,7 +117,7 @@ function DeviceGridComponent({
   }
 
   const handleAlert = () =>{
-    console.log(locationDetails.lab_id); 
+    setAlertOpen(true);
   }
 
   const handleClose = () => {
@@ -129,6 +136,16 @@ function DeviceGridComponent({
       <Breadcrumbs aria-label="breadcrumb" separator="›">
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            }else if (locationDetails.location_id) {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+            } else {
+              locationAlerts({});
+            }
             setDeviceCoordsList([]);
             setIsGeoMap(true);
             setLocationlabel(0);
@@ -140,6 +157,14 @@ function DeviceGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            } else {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+            }
             setDeviceCoordsList([]);
             setIsGeoMap(true);
             setLocationlabel(1);
@@ -151,6 +176,12 @@ function DeviceGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            }
             setDeviceCoordsList([]);
             setIsGeoMap(true);
             setLocationlabel(2);
@@ -162,6 +193,8 @@ function DeviceGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
             setDeviceCoordsList([]);
             setIsGeoMap(true);
             setProgressState(3);
@@ -173,6 +206,8 @@ function DeviceGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
             setIsGeoMap(false);
             setDeviceCoordsList([]);
             setImg(siteImages.buildingImage);
@@ -185,6 +220,8 @@ function DeviceGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
             setImg(siteImages.floorImage);
             setDeviceCoordsList([]);
             setIsGeoMap(false);
@@ -251,6 +288,7 @@ function DeviceGridComponent({
         openNotification={openNotification.status}
         type={openNotification.type}
       />
+      <AlertModalComponent alertOpen={alertOpen} setAlertOpen={setAlertOpen} locationDetails={labId} />
     </div>
   );
 }
