@@ -22,6 +22,7 @@ import { useUserAccess } from '../../../context/UserAccessProvider';
 import BumpTestComponentModal from './BumpTestComponentModal';
 import DeleteConfirmationDailog from '../../../utils/confirmDeletion';
 import ImageMarkerList from './imageMarkerList';
+import DeviceModeModal from './DeviceModeModal';
 /* eslint-disable no-shadow */
 /* eslint-disable no-useless-concat */
 
@@ -94,6 +95,7 @@ function AddDeviceListResults(props) {
   const [device_id, setDeviceId] = useState('0');
   const [sensorRefresh, setSensorRefresh] = useState(false);
   const [open, setOpen] = useState(false);
+  const [deviceModalOpen, setDeviceModalOpen] = useState(false);
   const [deleteDailogOpen, setDeleteDailogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState('');
   const [deployedSensorTagList, setDeployedSensorTagList] = useState([]);
@@ -110,6 +112,8 @@ function AddDeviceListResults(props) {
   const [digitalSensorList, setDigitalSensorList] = useState([]);
   const [modbusSensorList, setModbusSensorList] = useState([]);
   const [refreshData, setRefreshData] = useState(false);
+  const [deviceModeHeader, setDeviceModeHeader] = useState('');
+  const [deviceModeSubHeader, setDeviceModeSubHeader] = useState('');
   const moduleAccess = useUserAccess()('devicelocation');
   const [deviceCoordsList, setDeviceCoordsList] = useState([]);
   const [openNotification, setNotification] = useState({
@@ -209,6 +213,16 @@ function AddDeviceListResults(props) {
       case 'bumpTest':
         bumptestDeployedSensorsList(dataObject.deviceId);
         break;
+      case 'firmwareUpgradation':
+        setDeviceModeHeader('Firmware Upgradation');
+        setDeviceModeSubHeader('Upgrading...');
+        setDeviceModalOpen(true);
+        break;
+      case 'config':
+      setDeviceModeHeader('Device configuration');
+      setDeviceModeSubHeader('Configuring...');
+      setDeviceModalOpen(true);
+      break;
       default: break;
       }
     }, 3000);
@@ -520,6 +534,12 @@ function AddDeviceListResults(props) {
         deviceData={editDevice}
         open={configSetupOpen}
         setOpen={setConfigSetupOpen}
+      />
+      <DeviceModeModal
+        deviceModalOpen={deviceModalOpen}
+        setDeviceModalOpen={setDeviceModalOpen}
+        deviceModeHeader={deviceModeHeader}
+        deviceModeSubHeader={deviceModeSubHeader}
       />
       <NotificationBar
         handleClose={handleClose}
