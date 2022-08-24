@@ -128,21 +128,14 @@ function AlertWidget({ dataList, setRefreshData, maxHeight }) {
   };
 
   return (
-    <div style={{ height: '100%', width: '100%' }}>
-      <Typography
-        underline="hover"
-        color="inherit"
-        component="h1"
-      >
-        Alerts
-      </Typography>
+    <div style={{ height: '100%', width: '100%' }}>      
       <DataGrid
         rows={dataList || []}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        style={{ maxHeight: maxHeight || '250px' }}
+        style={{ maxHeight: `${500}px` }}
       />
       <Dialog
         sx={{ '& .MuiDialog-paper': { minWidth: '40%' } }}

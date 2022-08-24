@@ -381,6 +381,30 @@ const AddCustomerValidate = (value, type, setErrorObject) => {
     default: break;
   }
 };
+const BumptestValidate = (value, type, setErrorObject) => {
+  switch (type) {
+      case 'durationPeriod': setErrorObject((oldErrorState) => {
+        let status = {};
+        if (!validate('number', value)) {
+          status = {
+            errorStatus: true,
+            helperText: 'Enter value in sec',
+          };
+        } else {
+          status = {
+            errorStatus: false,
+            helperText: '',
+          };
+        }
+        return {
+          ...oldErrorState,
+          durationPeriod: status,
+        };
+      });
+      break;
+    default: break;
+  }
+};
 
 const PasswordResetValidate = (value, type, setErrorObject) => {
   switch (type) {
@@ -1169,4 +1193,5 @@ export {
   PasswordResetValidate,
   AddCategoryValidate,
   AnalogSensorValidate,
+  BumptestValidate,
 };
