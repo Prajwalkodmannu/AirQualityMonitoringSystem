@@ -17,7 +17,7 @@ function FacilityGridComponent(props) {
     setZoomLevel, setCenterLatitude, setCenterLongitude, setAlertList, locationAlerts
   } = props;
   const { facilityIdList } = ApplicationStore().getStorage('alertDetails');
-
+  const [isLoading, setGridLoading] = useState(true);
   const facilityColumns = [
     {
       field: 'facilityName',
@@ -63,6 +63,7 @@ function FacilityGridComponent(props) {
   const [dataList, setDataList] = useState([]);
 
   useEffect(() => {
+    setGridLoading(true);
     FetchFacilitiyService({
       location_id: props.locationDetails.location_id,
       branch_id: props.locationDetails.branch_id,
@@ -70,6 +71,7 @@ function FacilityGridComponent(props) {
   }, [props.locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
     const newArray = dataObject.data ? dataObject.data.map((item) => {
       const coordinates = item.coordinates ? item.coordinates.replaceAll('"', '').split(',') : [];
@@ -94,7 +96,7 @@ function FacilityGridComponent(props) {
       <h3
         style={{ cursor: 'pointer' }}
         onClick={() => {
-          locationAlerts({facility_id: selectedRow.id});
+          locationAlerts({ facility_id: selectedRow.id });
           setLocationDetails((oldValue) => {
             return { ...oldValue, facility_id: selectedRow.id };
           });
@@ -124,13 +126,13 @@ function FacilityGridComponent(props) {
               let newValue = 0;
               if (locationDetails.facility_id) {
                 newValue = 3;
-                locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+                locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
               } else if (locationDetails.branch_id) {
                 newValue = 2;
-                locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
-              }else if (locationDetails.location_id) {
+                locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
+              } else if (locationDetails.location_id) {
                 newValue = 1;
-                locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+                locationAlerts({ location_id: locationDetails.location_id || props.locationDetails.location_id });
               } else {
                 locationAlerts({});
               }
@@ -152,13 +154,13 @@ function FacilityGridComponent(props) {
               let newValue = 1;
               if (locationDetails.facility_id) {
                 newValue = 3;
-                locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+                locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
               } else if (locationDetails.branch_id) {
                 newValue = 2;
-                locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+                locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
               } else {
                 newValue = 1;
-                locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+                locationAlerts({ location_id: locationDetails.location_id || props.locationDetails.location_id });
               }
               return newValue;
             });
@@ -179,6 +181,7 @@ function FacilityGridComponent(props) {
       <DataGrid
         rows={dataList}
         columns={facilityColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
