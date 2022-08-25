@@ -11,7 +11,7 @@ function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
   const [refreshData, setRefreshData] = useState(false);
 
   useEffect(() => {
-    DeviceIdAlerts({ device_id: locationDetails.device_id }, fetchAlertListSuccess, fetchAlertListException);
+    DeviceIdAlerts(locationDetails, fetchAlertListSuccess, fetchAlertListException);
   }, [locationDetails, refreshData]);
 
   const fetchAlertListSuccess = (dataObject) => {
@@ -27,10 +27,14 @@ function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
       maxWidth="lg"
       open={alertOpen}
     >
-      <DialogTitle>
+      <DialogTitle style={{
+        paddingBottom: '0px'
+      }}>
         Active alerts
       </DialogTitle>
-      <DialogContent>
+      <DialogContent style={{
+        paddingTop: '0px'
+      }}>
         <Grid
           item
           xs={12}
@@ -43,7 +47,10 @@ function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
             marginLeft: 1,
           }}
         >
-          <DialogContent>
+          <DialogContent style={{
+            height: '435px',
+            paddingTop: '0px'
+          }}>
             <div style={{
               height: 390,
               width: '100%',
@@ -53,12 +60,13 @@ function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
                 color: '#1a3e72',
                 fontWeight: '600',
               },
+              paddingTop: '0px'
             }}
             >
-              <AlertWidget dataList={dataList} setRefreshData={setRefreshData} />
+              <AlertWidget dataList={dataList} setRefreshData={setRefreshData} maxHeight='500px' />
             </div>
           </DialogContent>
-          <div className="float-right">
+          <div className='float-right'>
             <Button
               sx={{ m: 1 }}
               size="large"

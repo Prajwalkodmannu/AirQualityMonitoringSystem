@@ -5,7 +5,8 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import {
-  FetchBranchService, FetchFacilitiyService, FetchLocationService, UnblockUserService, UserAddService, UserUpdateService,
+  BuildingFetchService,
+  FetchBranchService, FetchFacilitiyService, FetchLocationService, FloorfetchService, LabfetchService, UnblockUserService, UserAddService, UserUpdateService,
 } from '../../services/LoginPageService';
 import ApplicationStore from '../../utils/localStorageUtil';
 import { AddUserValidate } from '../../validation/formValidation';
@@ -31,9 +32,15 @@ function UserModal({
   const [location_id, setLocationId] = useState('');
   const [branch_id, setBranchId] = useState('');
   const [facility_id, setFacilityId] = useState('');
+  const [building_id, setBuildingId] = useState('');
+  const [floor_id, setFloorId] = useState('');
+  const [lab_id, setLabId] = useState('');
   const [locationList, setLocationList] = useState([]);
   const [branchList, setBranchList] = useState([]);
   const [facilityList, setFacilityList] = useState([]);
+  const [buildingList, setBuildingList] = useState([]);
+  const [floorList, setFloorList] = useState([]);
+  const [labList, setLabList] = useState([]);
   const [password, setConfirmPassword] = useState('');
   const [btnReset, setBtnReset] = useState(false);
   const [errorObject, setErrorObject] = useState({});
@@ -58,8 +65,14 @@ function UserModal({
   const loaddata = () => {
     setBranchList([]);
     setFacilityList([]);
+    setBuildingList([]);
+    setFloorList([]);
+    setLabList([]);
     setBranchId('');
     setFacilityId('');
+    setBuildingId('');
+    setFloorId('');
+    setLabId('');
     if (!isAddButton) {
       if (userData?.location_id) {
         setBackdrop(true);
@@ -77,11 +90,46 @@ function UserModal({
               }, (facilityRespObj) => {
                 setBranchId(userData.branch_id);
                 facilityHandleSuccess(facilityRespObj);
-
                 if (userData?.facility_id) {
-                  setFacilityId(userData.facility_id);
+                  BuildingFetchService({
+                    location_id: userData?.location_id,
+                    branch_id: userData?.branch_id,
+                    facility_id: userData?.facility_id,
+                  },(buildingRespObj)=>{
+                    setFacilityId(userData.facility_id);
+                    buildingHandleSuccess(buildingRespObj);
+                    if(userData?.building_id){
+                      FloorfetchService({
+                        location_id: userData?.location_id,
+                        branch_id: userData?.branch_id,
+                        facility_id: userData?.facility_id,
+                        building_id: userData?.building_id,
+                      },(floorRespObj)=>{
+                        setBuildingId(userData.building_id);
+                        floorHandleSuccess(floorRespObj);
+                        if(userData?.floor_id){
+                          LabfetchService({
+                            location_id: userData?.location_id,
+                            branch_id: userData?.branch_id,
+                            facility_id: userData?.facility_id,
+                            building_id: userData?.building_id,
+                            floor_id: userData?.floor_id,
+                          },(labRespObj)=>{
+                            LabfetchService(labRespObj);
+                          },locationHandleException);
+                          setFloorId(userData.floor_id);
+                        }
+                      }, locationHandleException);
+                      setBuildingId(userData.building_id);
+                    }
+                    else{
+                      setBackdrop(false);
+                    }
+                  },locationHandleException)
                 }
-                setBackdrop(false);
+                else{
+                  setBackdrop(false);
+                }
               }, locationHandleException);
             } else {
               setBackdrop(false);
@@ -96,8 +144,14 @@ function UserModal({
         locationHandleSuccess(locationRespObj);
         setBranchList([]);
         setFacilityList([]);
+        setBuildingList([]);
+        setFloorList([]);
+        setLabList([]);
         setBranchId('');
         setFacilityId('');
+        setBuildingId('');
+        setFloorId('');
+        setLabId('');
       }, locationHandleException);
     }
     setId(userData?.id || '');
@@ -115,6 +169,9 @@ function UserModal({
     setLocationId(userData?.location_id || '');
     setBranchId(userData?.branch_id || '');
     setFacilityId(userData?.facility_id || '');
+    setBuildingId(userData?.building_id || '');
+    setFloorId(userData?.floor_id || '');
+    setLabId(userData?.lab_id || '');
   };
 
   const validateForNullValue = (value, type) => {
@@ -197,6 +254,11 @@ function UserModal({
 
   const locationHandleSuccess = (dataObject) => {
     setLocationList(dataObject.data);
+    setBranchList([]);
+    setFacilityList([]);
+    setBuildingList([]);
+    setFloorList([]);
+    setLabList([]);
   };
 
   const locationHandleException = () => {};
@@ -204,16 +266,37 @@ function UserModal({
   const branchHandleSuccess = (dataObject) => {
     setBranchList(dataObject.data);
     setFacilityList([]);
+    setBuildingList([]);
+    setFloorList([]);
+    setLabList([]);
   };
 
   const branchHandleException = () => {};
 
   const facilityHandleSuccess = (dataObject) => {
     setFacilityList(dataObject.data);
+    setBuildingList([]);
+    setFloorList([]);
+    setLabList([]);
   };
 
   const facilityHandleException = () => {};
 
+  const buildingHandleSuccess = (dataObject) =>{
+    setBuildingList(dataObject.data);
+    setFloorList([]);
+    setLabList([]);
+  }
+
+  const floorHandleSuccess = (dataObject) =>{
+    setFloorList(dataObject.data);
+    setLabList([]);
+  }
+
+  const labHandleSuccess = (dataObject) =>{
+    setLabList(dataObject.data);
+  }
+  
   const onLocationChange = (location_id) => {
     setLocationId(location_id);
     if (location_id) {
@@ -221,6 +304,9 @@ function UserModal({
     } else {
       setBranchList([]);
       setFacilityList([]);
+      setBuildingList([]);
+      setFloorList([]);
+      setLabList([]);
     }
   };
 
@@ -230,12 +316,44 @@ function UserModal({
       FetchFacilitiyService({ location_id, branch_id }, facilityHandleSuccess, facilityHandleException);
     } else {
       setFacilityList([]);
+      setBuildingList([]);
+      setFloorList([]);
+      setLabList([]);
     }
   };
 
   const onFacilityChange = (facility_id) => {
     setFacilityId(facility_id);
+    if (facility_id) {
+      BuildingFetchService({ location_id, branch_id, facility_id }, buildingHandleSuccess, locationHandleException);
+    } else {
+      setBuildingList([]);
+      setFloorList([]);
+      setLabList([]);
+    }
   };
+
+  const onBuildingChange = (building_id) =>{
+    setBuildingId(building_id);
+    if (facility_id) {
+      FloorfetchService({ location_id, branch_id, facility_id, building_id }, floorHandleSuccess, locationHandleException);
+    } else {
+      setFloorList([]);
+      setLabList([]);
+    }
+  }
+  const onFloorChange = (floor_id) =>{
+    setFloorId(floor_id);
+    if (floor_id) {
+      LabfetchService({ location_id, branch_id, facility_id, building_id, floor_id }, labHandleSuccess, locationHandleException);
+    } else {
+      setLabList([]);
+    }
+  }
+  
+  const onLabChange = (lab_id) =>{
+    setLabId(lab_id);
+  }
 
   return (
     <Dialog
@@ -333,6 +451,93 @@ function UserModal({
                           {facilityList?.map((data, index) => {
                             return (
                               <MenuItem value={data.id} key={index + 1}>{data.facilityName}</MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid
+                    sx={{ mt: 0, padding: 0 }}
+                    item
+                    xs={12}
+                    sm={12}
+                    md={4}
+                    lg={4}
+                    xl={4}
+                  >
+                    <div className="rounded-md -space-y-px">
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-standard-label">Building</InputLabel>
+                        <Select
+                          value={building_id}
+                          onChange={(e) => onBuildingChange(e.target.value)}
+                          label="Building"
+                        >
+                          <MenuItem value="" key={0}>
+                            <em>N/A</em>
+                          </MenuItem>
+                          {buildingList?.map((data, index) => {
+                            return (
+                              <MenuItem value={data.id} key={index + 1}>{data.buildingName}</MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid
+                    sx={{ mt: 0, padding: 0 }}
+                    item
+                    xs={12}
+                    sm={12}
+                    md={4}
+                    lg={4}
+                    xl={4}
+                  >
+                    <div className="rounded-md -space-y-px">
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-standard-label">Floor</InputLabel>
+                        <Select
+                          value={floor_id}
+                          onChange={(e) => onFloorChange(e.target.value)}
+                          label="Floor"
+                        >
+                          <MenuItem value="" key={0}>
+                            <em>N/A</em>
+                          </MenuItem>
+                          {floorList?.map((data, index) => {
+                            return (
+                              <MenuItem value={data.id} key={index + 1}>{data.floorName}</MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </div>
+                  </Grid>
+                  <Grid
+                    sx={{ mt: 0, padding: 0 }}
+                    item
+                    xs={12}
+                    sm={12}
+                    md={4}
+                    lg={4}
+                    xl={4}
+                  >
+                    <div className="rounded-md -space-y-px">
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-standard-label">Lab</InputLabel>
+                        <Select
+                          value={lab_id}
+                          onChange={(e) => onLabChange(e.target.value)}
+                          label="Lab"
+                        >
+                          <MenuItem value="" key={0}>
+                            <em>N/A</em>
+                          </MenuItem>
+                          {labList?.map((data, index) => {
+                            return (
+                              <MenuItem value={data.id} key={index + 1}>{data.labDepName}</MenuItem>
                             );
                           })}
                         </Select>
@@ -512,8 +717,12 @@ function UserModal({
                   setErrorObject({});
                   setBranchList([]);
                   setFacilityList([]);
+                  setBuildingList([]);
                   setBranchId('');
                   setFacilityId('');
+                  setBuildingId('');
+                  setFloorId('');
+                  setLabId('');
                   loaddata();
                   setOpen(false);
                 }}

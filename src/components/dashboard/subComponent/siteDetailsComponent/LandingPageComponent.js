@@ -9,6 +9,9 @@ import AlertModalComponent from '../landingPageComponents/AlertModalComponent';
 import ApplicationStore from '../../../../utils/localStorageUtil';
 
 function LandingPageComponent({ locationDetails, setIsDashBoard }) {
+  const [deviceId, setDeviceId] = useState({
+    device_id : locationDetails.device_id
+  });
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [analogSensorList, setAnalogSensorList] = useState([]);
@@ -90,7 +93,7 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
         setRangeInterval={setRangeInterval}
         sensorTag={sensorTag}
       />
-      <AlertModalComponent alertOpen={alertOpen} setAlertOpen={setAlertOpen} locationDetails={locationDetails} />
+      <AlertModalComponent alertOpen={alertOpen} setAlertOpen={setAlertOpen} locationDetails={deviceId} />
     </div>
   );
 }

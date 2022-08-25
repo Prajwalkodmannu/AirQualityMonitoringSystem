@@ -8,7 +8,7 @@ import { SensorIdAlertUpdate } from '../../../services/LoginPageService';
 import NotificationBar from '../../notification/ServiceNotificationBar';
 
 /* eslint-disable no-unused-vars */
-function AlertWidget({ dataList, setRefreshData }) {
+function AlertWidget({ dataList, setRefreshData, maxHeight }) {
   const [clearAlert, setClearAlert] = useState(false);
   const [clearAlertReason, setAlertReason] = useState('');
   const [sensorId, setSensorId] = useState('');
@@ -20,11 +20,6 @@ function AlertWidget({ dataList, setRefreshData }) {
   });
 
   const columns = [
-    {
-      field: 'id',
-      headerName: 'Id',
-      width: 100,
-    },
     {
       field: 'a_date',
       headerName: 'Date',
@@ -133,21 +128,14 @@ function AlertWidget({ dataList, setRefreshData }) {
   };
 
   return (
-    <div style={{ height: '100%', width: '100%' }}>
-      <Typography
-        underline="hover"
-        color="inherit"
-        component="h1"
-      >
-        Alerts
-      </Typography>
+    <div style={{ height: '100%', width: '100%' }}>      
       <DataGrid
         rows={dataList || []}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        style={{ maxHeight: `${250}px` }}
+        style={{ maxHeight: `${500}px` }}
       />
       <Dialog
         sx={{ '& .MuiDialog-paper': { minWidth: '40%' } }}

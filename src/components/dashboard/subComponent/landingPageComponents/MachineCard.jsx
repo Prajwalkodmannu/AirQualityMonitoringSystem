@@ -123,7 +123,7 @@ function MachineCard(props) {
               >
                 mg/m3
               </Typography>
-            </div>
+            </div>            
           </Stack>
           <Stack
             direction="row"

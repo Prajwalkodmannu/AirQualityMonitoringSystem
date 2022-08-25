@@ -12,11 +12,12 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-shadow */
-function FloorGridComponent({
-  setImg, locationDetails, setLocationDetails, setProgressState, breadCrumbLabels,
-  setBreadCrumbLabels, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages,
-  setCenterLatitude, setCenterLongitude, setAlertList,
-}) {
+function FloorGridComponent(props) {
+  const {
+    setImg, setLocationDetails, setProgressState, breadCrumbLabels,
+    setBreadCrumbLabels, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages,
+    setCenterLatitude, setCenterLongitude, setAlertList, locationAlerts
+  } = props;
   const { floorIdList } = ApplicationStore().getStorage('alertDetails');
   const [isLoading, setGridLoading] = useState(true);
   const dataColumns = [
@@ -66,17 +67,16 @@ function FloorGridComponent({
   useEffect(() => {
     setGridLoading(true);
     FloorfetchService({
-      location_id: locationDetails.location_id,
-      branch_id: locationDetails.branch_id,
-      facility_id: locationDetails.facility_id,
-      building_id: locationDetails.building_id,
+      location_id: props.locationDetails.location_id,
+      branch_id: props.locationDetails.branch_id,
+      facility_id: props.locationDetails.facility_id,
+      building_id: props.locationDetails.building_id,
     }, handleSuccess, handleException);
-  }, [locationDetails]);
+  }, [props.locationDetails]);
 
   const handleSuccess = (dataObject) => {
     setGridLoading(false);
     setDataList(dataObject.data);
-    setAlertList(dataObject.data || []);   // Alert list
   };
 
   const handleException = (errorObject) => {
@@ -87,6 +87,7 @@ function FloorGridComponent({
       <h3
         style={{ cursor: 'pointer' }}
         onClick={() => {
+          locationAlerts({floor_id: selectedRow.id});
           setLocationDetails((oldValue) => {
             return { ...oldValue, floor_id: selectedRow.id };
           });
@@ -117,6 +118,8 @@ function FloorGridComponent({
         newValue = 2;
       } else if (locationDetails.location_id) {
         newValue = 1;
+      } else {
+        // locationAlerts({});
       }
       return newValue;
     });
@@ -127,11 +130,18 @@ function FloorGridComponent({
       <Breadcrumbs aria-label="breadcrumb" separator="›">
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            }else if (locationDetails.location_id) {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+            } else {
+              locationAlerts({});
+            }
             setLocationlabel(0);
-            // setProgressState(0);
             setDeviceCoordsList([]);
-            // setCenterLatitude(23.500);
-            // setCenterLongitude(80.000);
             setIsGeoMap(true);
           }}
           style={{ cursor: 'pointer' }}
@@ -140,8 +150,15 @@ function FloorGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            } else {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+            }
             setLocationlabel(1);
-            // setProgressState(1);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
           }}
@@ -151,8 +168,13 @@ function FloorGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            }
             setLocationlabel(2);
-            // setProgressState(2);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
           }}
@@ -162,6 +184,8 @@ function FloorGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
             setProgressState(3);
             setDeviceCoordsList([]);
             setIsGeoMap(true);

@@ -23,6 +23,7 @@ import UserResetPassword from './components/UserResetPassword';
 import AddDeviceSensor from './components/AddDeviceSensorComponent';
 import ApplicationStore from './utils/localStorageUtil';
 import ManagementReportTab from './components/reportSectionComponents/ManagementReportTab';
+import AppVersion from './components/AppVersion';
 
 function ProtectedRoutes() {
   const { user_token } = ApplicationStore().getStorage('userDetails');
@@ -44,6 +45,7 @@ function App() {
               <Route path="Vendor/*" element={<VendorManagement />} />
               <Route path="Report/*" element={<ManagementReportTab />} />
               <Route path="ChangePassword/*" element={<UserResetPassword />} />
+              <Route path="AppVersion/*" element={<AppVersion />} />
               <Route path="Dashboard/*" element={<Dashboard />} />
               <Route path="Location/*" element={<SiteDetails />} />
               <Route path="Location/:locationId" element={<Branch />} />
