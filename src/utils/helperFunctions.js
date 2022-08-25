@@ -50,13 +50,13 @@ export function setAlertColor(newNotificationStack){
       } else if(newNotificationStack[i].alertType === 'Warning') {
         colorCode = {
           priority: 2,
-          color: '#ab47bc',
+          color: '#ff9800',
           message: 'Warning'
         }
       } else if(newNotificationStack[i].alertType === 'outOfRange') {
         colorCode = {
           priority: 3,
-          color: '#ff9800',
+          color: '#ab47bc',
           message: 'Out Of Range Alert'
         }
       }
