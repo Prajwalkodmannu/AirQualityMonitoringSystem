@@ -10,7 +10,7 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 
 function LandingPageComponent({ locationDetails, setIsDashBoard }) {
   const [deviceId, setDeviceId] = useState({
-    device_id : locationDetails.device_id
+    device_id: locationDetails.device_id
   });
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -19,7 +19,7 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
   const [modbusSensorList, setModbusSensorList] = useState([]);
   const [sensorTagId, setSensorTagId] = useState('');
   const [sensorTag, setSensorTag] = useState('');
-  const [segretionInterval, setSegretionInterval] = useState('10');
+  const [segretionInterval, setSegretionInterval] = useState('1');
   const [rangeInterval, setRangeInterval] = useState('500*60');
   const [totalSensors, setTotalSensors] = useState(0);
   const [totalAlerts, setTotalALerts] = useState(0);
@@ -31,7 +31,7 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
   useEffect(() => {
     intervalCallFunction();
     /* eslint-disable-next-line */
-    if (open === true) {} else {
+    if (open === true) { } else {
       const devicePolling = setInterval(() => {
         intervalCallFunction();
       }, intervalSec);
