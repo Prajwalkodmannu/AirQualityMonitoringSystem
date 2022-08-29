@@ -38,6 +38,9 @@ function LayoutMachine({
                 setSensorTag={setSensorTag}
                 color={data.alertColor}
                 lightColor={data.alertLightColor}
+                maxRatedReadingScale={data.maxRatedReadingScale}
+                minRatedReadingScale={data.minRatedReadingScale}
+                units={data.units}
                 sensorIdList={sensorIdList}
               />
             </Grid>
@@ -60,6 +63,9 @@ function LayoutMachine({
                 setSensorTag={setSensorTag}
                 color={data.alertColor}
                 lightColor={data.alertLightColor}
+                maxRatedReadingScale={data.maxRatedReadingScale}
+                minRatedReadingScale={data.minRatedReadingScale}
+                units={data.units}
                 sensorIdList={sensorIdList}
               />
             </Grid>
@@ -83,6 +89,9 @@ function LayoutMachine({
                 setSensorTag={setSensorTag}
                 color={data.alertColor}
                 lightColor={data.alertLightColor}
+                maxRatedReadingScale={data.maxRatedReadingScale}
+                minRatedReadingScale={data.minRatedReadingScale}
+                units={data.units}
                 sensorIdList={sensorIdList}
               />
             </Grid>

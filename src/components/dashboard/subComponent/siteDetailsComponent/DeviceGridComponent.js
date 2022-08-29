@@ -98,6 +98,9 @@ function DeviceGridComponent(props) {
     userDetails?.userRole === 'systemSpecialist' && HooterRelayService({lab_id: props.locationDetails.lab_id}, handleHooterSuccess, handleHooterException);
   }
   
+  const testHooter = () =>{
+    // Hooter test API call
+  }
   const handleHooterSuccess = (dataObject) =>{
     console.log(dataObject.message);
     setLabHooterStatus('0');
@@ -240,7 +243,7 @@ function DeviceGridComponent(props) {
         </Typography>
       </Breadcrumbs>
       <div className="widgets" style={{ height: 'auto', backgroundColor: '#fafafa', padding: 10 }}>
-        <NotificationWidget type="hooterStatus" figure={labHooterStatus} handleClick={handleHooter}/>
+        <NotificationWidget type="hooterStatus" figure={labHooterStatus} handleClick={handleHooter} userRole={userDetails?.userRole} testHooter={testHooter}/>
         <NotificationWidget type="disconnectedDevice" figure={disconnectedDevices}/>
         <NotificationWidget type="devices" figure={deviceTotal} />
         <NotificationWidget type="alerts" figure={deviceAlert} handleClick={handleAlert}/>

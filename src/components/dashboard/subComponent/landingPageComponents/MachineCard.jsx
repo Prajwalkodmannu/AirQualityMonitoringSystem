@@ -50,7 +50,8 @@ function MachineCard(props) {
         <Grid
           item xs={12}
           style={{
-            backgroundColor: getSensorBackgroundColor(props.sensorStatus, alertStatus), //props.lightColor || '#cce6ff', 
+            // backgroundColor: getSensorBackgroundColor(props.sensorStatus, alertStatus), //props.lightColor || '#cce6ff', 
+            backgroundColor: props.lightColor || '#a5d6a7',
             height: '50px'
           }}>
           <Stack
@@ -61,7 +62,8 @@ function MachineCard(props) {
           >
             <Tooltip title={props.sensorNameUnit}>
               <Typography style={{
-                color: getSensorHeaderColor(props.sensorStatus, alertStatus) || '#004d99',
+                // color: getSensorHeaderColor(props.sensorStatus, alertStatus) || '#004d99',
+                color: props.alertColor || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -75,7 +77,8 @@ function MachineCard(props) {
             </Tooltip>
             <Tooltip title={props.sensorName}>
               <Typography style={{
-                color: getSensorHeaderColor(props.sensorStatus, alertStatus) || '#004d99',
+                // color: getSensorHeaderColor(props.sensorStatus, alertStatus) || '#004d99',
+                color: props.alertColor || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -104,7 +107,7 @@ function MachineCard(props) {
             }}
             >
               {props.sensorStatus === '0' ? <WifiOffOutlined style={{ fontSize: '70px', color: '#707070' }} /> :
-                <MachineCircularProgressbar score={props.last} color={props.alertColor} />
+                <MachineCircularProgressbar score={props.last} color={props.alertColor} minReading={props.minRatedReadingScale} maxReading={props.maxRatedReadingScale} />
               }
             </div>
             <div style={{
@@ -121,7 +124,7 @@ function MachineCard(props) {
                   fontWeight: 1000, color: props.color || '#7F8487', marginLeft: 9, marginTop: 22,
                 }}
               >
-                mg/m3
+                {props.units}
               </Typography>
             </div>
           </Stack>
@@ -140,7 +143,7 @@ function MachineCard(props) {
                 display="block"
                 gutterBottom
                 component="div"
-                style={{ fontWeight: 600, color: props.color || '#7F8487', marginLeft: 9 }}
+                style={{ fontWeight: 600, color: '#004d99' || '#7F8487', marginLeft: 9 }}
               >
                 {props.min}
               </Typography>
@@ -154,7 +157,7 @@ function MachineCard(props) {
                 display="block"
                 gutterBottom
                 component="div"
-                style={{ fontWeight: 600, color: props.color || '#7F8487', marginLeft: 9 }}
+                style={{ fontWeight: 600, color: "#004d99" || '#7F8487', marginLeft: 9 }}
               >
                 {props.max}
               </Typography>
@@ -168,7 +171,7 @@ function MachineCard(props) {
                 display="block"
                 gutterBottom
                 component="div"
-                style={{ fontWeight: 600, color: props.color || '#7F8487', marginLeft: 9 }}
+                style={{ fontWeight: 600, color: "#004d99" || '#7F8487', marginLeft: 9 }}
               >
                 {props.avg}
               </Typography>
