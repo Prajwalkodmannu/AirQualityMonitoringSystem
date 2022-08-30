@@ -12,7 +12,13 @@ import {
   DialogTitle,
 } from '@mui/material';
 import {
-  CategoryFetchService, DeviceFetchService, DynamicUnitListService, SensorCategoryFetchService, SensorDeployAddService, SensorDeployEditService, SensorFetchService,
+  CategoryFetchService,
+  DeviceFetchService,
+  DynamicUnitListService,
+  SensorCategoryFetchService,
+  SensorDeployAddService,
+  SensorDeployEditService,
+  SensorFetchService,
 } from '../../services/LoginPageService';
 import Analog from './sensorType/AnalogComponent';
 import Modbus from './sensorType/ModbusComponent';
@@ -93,7 +99,7 @@ function DeviceAdd({
   const [alarm, setAlarm] = useState(editData?.alarm || '');
 
   const [isAQI, setIsAQI] = useState(editData ? editData.isAQI === '1' : false);
-  const [isStel, setIsStel] = useState(editData ? editData.isStel === '1' : false);
+  const [isStel, setIsStel] = useState(editData ? editData.isStel === 1 : false);
   const [stelDuration, setStelDuration] = useState(editData?.stelDuration || '');
   const [stelType, setStelType] = useState(editData?.stelType || 'ppm');
   const [stelLimit, setStelLimit] = useState(editData?.stelLimit || 0);
@@ -160,17 +166,17 @@ function DeviceAdd({
     editData?.sensorCategoryId && DynamicUnitListService(editData.sensorCategoryId, handleSensorUnitSuccess, handleSensorUnitException);
   };
 
-  const handleSensorUnitSuccess = (dataObject) =>{
+  const handleSensorUnitSuccess = (dataObject) => {
     setUnitsList(JSON.parse(dataObject.data[0].measureUnitList?.replace(/\\/g, '').replace(/(^"|"$)/g, '')) || []);
-  }
+  };
 
-  const handleSensorUnitException = (errorObject, errorMessage) =>{
+  const handleSensorUnitException = (errorObject, errorMessage) => {
     setNotification({
       status: true,
       type: 'error',
       message: errorMessage,
     });
-  }
+  };
 
   /* eslint-disable-next-line */
   const deviceChanged = (sensorCategoryId) => {
@@ -583,7 +589,7 @@ function DeviceAdd({
                         // -- STEL&TWA -- //
                         setAlarm(data.alarm);
                         setIsAQI(data.isAQI === '1');
-                        setIsStel(data.isStel === '1');
+                        setIsStel(data.isStel === 1);
                         setStelDuration(data.stelDuration);
                         setStelType(data.stelType);
                         setStelLimit(data.stelLimit);

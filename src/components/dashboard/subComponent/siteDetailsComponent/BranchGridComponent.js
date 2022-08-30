@@ -22,6 +22,7 @@ function BranchGridComponent(props) {
   } = props;
   const [dataList, setDataList] = useState([]);
   const { branchIdList } = ApplicationStore().getStorage('alertDetails');
+  const [isLoading, setGridLoading] = useState(true);
   const branchColumns = [
     {
       field: 'branchName',
@@ -64,12 +65,14 @@ function BranchGridComponent(props) {
     },
   ];
   useEffect(() => {
+    setGridLoading(true);
     FetchBranchService({
       location_id: props.locationDetails.location_id,
     }, handleSuccess, handleException);
   }, [props.locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
     setProgressState(1);
     const newArray = dataObject.data ? dataObject.data.map((item) => {
@@ -153,6 +156,7 @@ function BranchGridComponent(props) {
       <DataGrid
         rows={dataList}
         columns={branchColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick

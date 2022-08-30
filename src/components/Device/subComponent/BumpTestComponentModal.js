@@ -15,6 +15,13 @@ import NotificationBar from '../../notification/ServiceNotificationBar';
 import { BumptestValidate } from '../../../validation/formValidation';
 /* eslint-disable no-plusplus */
 
+const convertDateTime = (value) => {
+  const spaceSplit = value.split(' ');
+  const dateSplit = spaceSplit[0].split('-');
+  const date = `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
+  return date;
+};
+
 const columns = [
   {
     field: 'calibrationDate',
@@ -51,13 +58,6 @@ const columns = [
     ),
   },
 ];
-
-function convertDateTime(value) {
-  const spaceSplit = value.split(' ');
-  const dateSplit = spaceSplit[0].split('-');
-  const date = `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
-  return date;
-}
 
 /* eslint-disable-next-line */
 function BumpTestComponentModal({
@@ -211,7 +211,7 @@ function BumpTestComponentModal({
     }
   };
   /* eslint-disable-next-line */
-  const getBumpTestResultDataHandleException = (dataObject, errorObject) => {    
+  const getBumpTestResultDataHandleException = (dataObject, errorObject) => {
   };
 
   const getBumpTestDataSuccess = (dataObject) => {
@@ -230,9 +230,9 @@ function BumpTestComponentModal({
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isAddButton) {
-      if(durationPeriod == ''){
+      if (durationPeriod == '') {
         validateForNullValue(durationPeriod, 'durationPeriod')
-      }else{
+      } else {
         await BumpTestAddService({
           /* eslint-disable-next-line */
           sensorTagName, lastDueDate, typeCheck, percentageConcentrationGas, durationPeriod, displayedValue, nextDueDate, result, percentageDeviation, device_id,
@@ -398,7 +398,7 @@ function BumpTestComponentModal({
                   defaultValue=""
                   fullWidth
                   disabled={typeCheck === 'zeroCheck'}
-                  value={typeCheck === 'zeroCheck' ? 0 : percentageConcentrationGas}                  
+                  value={typeCheck === 'zeroCheck' ? 0 : percentageConcentrationGas}
                   required
                   onChange={(e) => { setPercentrationConcentrationGas(e.target.value); }}
                   autoComplete="off"
@@ -415,20 +415,20 @@ function BumpTestComponentModal({
               >
                 <TextField
                   sx={{ marginTop: 0 }}
-                  value={durationPeriod}                 
+                  value={durationPeriod}
                   id="dense"
                   label="Duration (sec)"
                   autoComplete="off"
                   fullWidth
                   type="text"
-                  onBlur={() => validateForNullValue(durationPeriod, 'durationPeriod')}    
+                  onBlur={() => validateForNullValue(durationPeriod, 'durationPeriod')}
                   onChange={(e) => {
                     setDurationPeriod(e.target.value);
                   }}
                   InputLabelProps={{
                     shrink: true,
-                  }}                               
-                  margin="normal"                  
+                  }}
+                  margin="normal"
                   error={errorObject?.durationPeriod?.errorStatus}
                   helperText={errorObject?.durationPeriod?.helperText}
                 />
@@ -443,13 +443,13 @@ function BumpTestComponentModal({
                 xl={2}
               >
                 <LoadingButton
-                  disabled = {errorObject?.durationPeriod?.errorStatus}
+                  disabled={errorObject?.durationPeriod?.errorStatus}
                   onClick={(e) => {
-                    if(durationPeriod == ''){
+                    if (durationPeriod == '') {
                       validateForNullValue(durationPeriod, 'durationPeriod')
-                    }else{
+                    } else {
                       getBumpData(e);
-                    }    
+                    }
                   }}
                   endIcon={<RestartAltRoundedIcon />}
                   loading={loading}

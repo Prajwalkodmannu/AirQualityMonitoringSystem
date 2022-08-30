@@ -19,7 +19,7 @@ function DeviceGridComponent(props) {
     setDeviceCoordsList, setIsDashBoard, setIsGeoMap, siteImages, locationAlerts
   } = props;
   const [labId, setlabId] = useState({
-    lab_id : props.locationDetails.lab_id
+    lab_id: props.locationDetails.lab_id
   });
   const [alertOpen, setAlertOpen] = useState(false);
   const [deviceList, setDeviceList] = useState([]);
@@ -94,14 +94,14 @@ function DeviceGridComponent(props) {
     });
   };
 
-  const handleHooter = () =>{
-    userDetails?.userRole === 'systemSpecialist' && HooterRelayService({lab_id: props.locationDetails.lab_id}, handleHooterSuccess, handleHooterException);
+  const handleHooter = () => {
+    userDetails?.userRole === 'systemSpecialist' && HooterRelayService({ lab_id: props.locationDetails.lab_id }, handleHooterSuccess, handleHooterException);
   }
-  
+
   const testHooter = () =>{
     // Hooter test API call
   }
-  const handleHooterSuccess = (dataObject) =>{
+  const handleHooterSuccess = (dataObject) => {
     console.log(dataObject.message);
     setLabHooterStatus('0');
     setNotification({
@@ -111,7 +111,7 @@ function DeviceGridComponent(props) {
     });
   }
 
-  const handleHooterException = () =>{
+  const handleHooterException = () => {
     setNotification({
       status: false,
       type: 'error',
@@ -119,7 +119,7 @@ function DeviceGridComponent(props) {
     });
   }
 
-  const handleAlert = () =>{
+  const handleAlert = () => {
     setAlertOpen(true);
   }
 
@@ -141,11 +141,11 @@ function DeviceGridComponent(props) {
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
             if (locationDetails.facility_id) {
-              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+              locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
             } else if (locationDetails.branch_id) {
-              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
-            }else if (locationDetails.location_id) {
-              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+              locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
+            } else if (locationDetails.location_id) {
+              locationAlerts({ location_id: locationDetails.location_id || props.locationDetails.location_id });
             } else {
               locationAlerts({});
             }
@@ -162,11 +162,11 @@ function DeviceGridComponent(props) {
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
             if (locationDetails.facility_id) {
-              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+              locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
             } else if (locationDetails.branch_id) {
-              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+              locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
             } else {
-              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+              locationAlerts({ location_id: locationDetails.location_id || props.locationDetails.location_id });
             }
             setDeviceCoordsList([]);
             setIsGeoMap(true);
@@ -181,9 +181,9 @@ function DeviceGridComponent(props) {
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
             if (locationDetails.facility_id) {
-              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+              locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
             } else {
-              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+              locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
             }
             setDeviceCoordsList([]);
             setIsGeoMap(true);
@@ -197,7 +197,7 @@ function DeviceGridComponent(props) {
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
             setDeviceCoordsList([]);
             setIsGeoMap(true);
             setProgressState(3);
@@ -210,7 +210,7 @@ function DeviceGridComponent(props) {
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+            locationAlerts({ building_id: locationDetails.building_id || props.locationDetails.building_id });
             setIsGeoMap(false);
             setDeviceCoordsList([]);
             setImg(siteImages.buildingImage);
@@ -224,7 +224,7 @@ function DeviceGridComponent(props) {
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+            locationAlerts({ floor_id: locationDetails.floor_id || props.locationDetails.floor_id });
             setImg(siteImages.floorImage);
             setDeviceCoordsList([]);
             setIsGeoMap(false);
@@ -243,10 +243,10 @@ function DeviceGridComponent(props) {
         </Typography>
       </Breadcrumbs>
       <div className="widgets" style={{ height: 'auto', backgroundColor: '#fafafa', padding: 10 }}>
-        <NotificationWidget type="hooterStatus" figure={labHooterStatus} handleClick={handleHooter} userRole={userDetails?.userRole} testHooter={testHooter}/>
-        <NotificationWidget type="disconnectedDevice" figure={disconnectedDevices}/>
+        <NotificationWidget type="hooterStatus" figure={labHooterStatus} handleClick={handleHooter}  userRole={userDetails?.userRole} testHooter={testHooter}/>
+        <NotificationWidget type="disconnectedDevice" figure={disconnectedDevices} />
         <NotificationWidget type="devices" figure={deviceTotal} />
-        <NotificationWidget type="alerts" figure={deviceAlert} handleClick={handleAlert}/>
+        <NotificationWidget type="alerts" figure={deviceAlert} handleClick={handleAlert} />
         <NotificationWidget type="time" />
       </div>
       <div
