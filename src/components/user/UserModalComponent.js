@@ -115,9 +115,12 @@ function UserModal({
                             building_id: userData?.building_id,
                             floor_id: userData?.floor_id,
                           },(labRespObj)=>{
-                            LabfetchService(labRespObj);
+                            labHandleSuccess(labRespObj);
                           },locationHandleException);
                           setFloorId(userData.floor_id);
+                        }
+                        else{
+                          setBackdrop(false);
                         }
                       }, locationHandleException);
                       setBuildingId(userData.building_id);
@@ -125,7 +128,7 @@ function UserModal({
                     else{
                       setBackdrop(false);
                     }
-                  },locationHandleException)
+                  },locationHandleException);
                 }
                 else{
                   setBackdrop(false);
@@ -204,11 +207,11 @@ function UserModal({
     event.preventDefault();
     if (isAddButton) {
       await UserAddService({
-        location_id, branch_id, facility_id, empId, email, phoneNo, empRole, empName, empNotification,
+        location_id, branch_id, facility_id, building_id, floor_id, lab_id, empId, email, phoneNo, empRole, empName, empNotification,
       }, handleSuccess, handleException);
     } else {
       await UserUpdateService({
-        location_id, branch_id, facility_id, empId, email, phoneNo, empRole, empName, empNotification, id,
+        location_id, branch_id, facility_id, building_id, floor_id, lab_id, empId, email, phoneNo, empRole, empName, empNotification, id,
       }, handleSuccess, handleException);
     }
   };
@@ -295,6 +298,7 @@ function UserModal({
 
   const labHandleSuccess = (dataObject) =>{
     setLabList(dataObject.data);
+    setBackdrop(false);
   }
   
   const onLocationChange = (location_id) => {

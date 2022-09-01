@@ -258,9 +258,10 @@ function Modbus({
                 setRegisterType(e.target.value);
               }}
             >
-              <MenuItem value="Holding Register">Holding Register</MenuItem>
-              <MenuItem value="Input Coil">Input Coil</MenuItem>
-              <MenuItem value="Output Coil">Output Coil</MenuItem>
+              <MenuItem value="1">Input Coil</MenuItem>
+              <MenuItem value="2">Discreate Input</MenuItem>
+              <MenuItem value="3">Holding Register</MenuItem>
+              <MenuItem value="4">Input Register</MenuItem>
             </Select>
           </FormControl>
         </Grid>
