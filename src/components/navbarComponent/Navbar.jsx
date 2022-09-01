@@ -201,8 +201,8 @@ function Navbar(props) {
                       >
                         <ListItemAvatar>
                           {alertType === 'Critical' ? <ErrorOutlineOutlined sx={{ color: 'red', fontSize: 30 }} /> :
-                          alertType === 'Warning' ?  <PriorityHigh style={{ color: 'ba68c8', fontSize: 30 }}/> :
-                          <WarningAmber sx={{ color: 'yellow', fontSize: 30 }} />}
+                          alertType === 'Warning' ?  <PriorityHigh style={{ color: 'yellow', fontSize: 30 }}/> :
+                          <WarningAmber sx={{ color: '#ba68c8', fontSize: 30 }} />}
                         </ListItemAvatar>
                         <ListItemText 
                           primary={<div>

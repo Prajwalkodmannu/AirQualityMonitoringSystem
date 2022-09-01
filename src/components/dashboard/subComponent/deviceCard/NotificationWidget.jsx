@@ -6,11 +6,12 @@ import {
   NotificationsActiveOutlined,
   SensorsOff,
   VolumeOff,
+  Campaign,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-function NotificationWidget({ type, figure, handleClick }) {
+function NotificationWidget({ type, figure, handleClick, userRole, testHooter }) {
   let data;
   const [dateTime, setDateTime] = useState({
     time: '',
@@ -24,7 +25,14 @@ function NotificationWidget({ type, figure, handleClick }) {
       (<VolumeOff style={{fontSize: '70px', color : '#808080'}}/>) :
       (<VolumeUp style={{fontSize: '70px', color : 'goldenrod', animation: 'flash 1s infinite '}}/>) , 
       link: '',
-      icon: ''
+      icon: userRole === 'systemSpecialist' ? 
+        (
+          <Campaign
+            className="icon"
+            style={{ backgroundColor: 'rgba(179, 157, 219, 0.5)', color: '#512da8' }}
+          />
+        )
+      : ''
       ,
     };
     break;
@@ -109,24 +117,28 @@ function NotificationWidget({ type, figure, handleClick }) {
     <div
       className="widget"
       onClick={() => {
-        handleClick();
+        type === 'alerts' && handleClick();
       }}
-      style={{ cursor: type === 'alerts' && 'pointer', justifyContent: type === 'hooterStatus' && 'center' }}
+      style={{ cursor: type === 'alerts' && 'pointer', justifyContent: type === 'hooterStatus' && userRole !== 'systemSpecialist' ? 'center' : '' }}
     >
-      <div className="left">
+      <div className="left" onClick={()=>{
+        type === 'hooterStatus' && handleClick();
+      }}>
         <span className="title">{data.title}</span>
         <span className="counter">
           {data.figure}
         </span>
         <span className="link">{data.link}</span>
       </div>
-      {type !== 'hooterStatus' && 
       <div className="right">
         <div className="percentage positive">
         </div>
-        {data.icon}
+        <div onClick={()=>{
+          userRole === 'systemSpecialist' && type === 'hooterStatus' ? testHooter() : {};
+        }}>
+          {data.icon}
+        </div>
       </div>
-      }
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Chip, Dialog, DialogTitle, Grid, LinearProgress } from '@mui/material'
+import { Alert, Box, Chip, Dialog, DialogTitle, Grid, LinearProgress } from '@mui/material'
 import React from 'react'
 
 const DeviceModeModal = ({deviceModalOpen, setDeviceModalOpen, deviceModeHeader, deviceModeSubHeader}) => {
@@ -12,16 +12,20 @@ const DeviceModeModal = ({deviceModalOpen, setDeviceModalOpen, deviceModeHeader,
         <Grid>
           <DialogTitle style={{padding: '0px', paddingLeft: '26px', paddingTop: '10px'}}>
             {deviceModeHeader}
-          </DialogTitle>
-          <Grid container spacing={1} sx={{ p: 3}}>
-            <Box style={{
-              width: '100%'
-            }}>
-              <div style={{
+              
+            <div style={{
                 float: 'right',
-                fontWeight: 'bold'
+                paddingRight: '5px',
+                fontSize: 'medium',
+                fontWeight: 'normal',
+                display: 'inline'
               }}>
-                Device Status : 
+                <div style={{
+                  marginRight: 2,
+                  display: 'inline'
+                }}>
+                  Device Status : 
+                </div>
                 <Chip
                   variant="outlined"
                   label="Connected"
@@ -31,6 +35,27 @@ const DeviceModeModal = ({deviceModalOpen, setDeviceModalOpen, deviceModeHeader,
                   }}
                 />
               </div>
+          </DialogTitle>
+          <Grid container spacing={1} sx={{ p: 3}}>
+            <Box style={{
+              textAlign: 'center',
+              width: '100%'
+            }}>
+              <div style={{
+                textAlign: 'center',
+                width: '100%'
+              }}>
+                <Alert 
+                  // icon={false} 
+                  severity="warning" style={{
+                  textAlign: 'center',
+                  width: '100%',
+                }}>
+                  
+                  Do not turn off the device and make sure that you have a stable network
+                </Alert>
+              </div>
+              
             </Box>
             <Grid style={{ 
                 width: '100%', 
