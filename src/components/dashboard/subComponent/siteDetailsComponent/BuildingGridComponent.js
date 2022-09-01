@@ -11,13 +11,14 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable no-nested-ternary */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-shadow */
-function BuildingGridComponent({
-  setImg, locationDetails, setLocationDetails, setProgressState, breadCrumbLabels, setBreadCrumbLabels,
-  setLocationCoordinationList, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages,
-  setZoomLevel, setCenterLatitude, setCenterLongitude,
-}) {
+function BuildingGridComponent(props) {
+  const {
+    setImg, setLocationDetails, setProgressState, breadCrumbLabels, setBreadCrumbLabels,
+    setLocationCoordinationList, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages,
+    setZoomLevel, setCenterLatitude, setCenterLongitude, setAlertList, locationAlerts
+  } = props;
   const { buildingIdList } = ApplicationStore().getStorage('alertDetails');
-
+  const [isLoading, setGridLoading] = useState(true);
   const dataColumns = [
     {
       field: 'buildingName',
@@ -62,14 +63,16 @@ function BuildingGridComponent({
   const [dataList, setDataList] = useState([]);
 
   useEffect(() => {
+    setGridLoading(true);
     BuildingFetchService({
-      location_id: locationDetails.location_id,
-      branch_id: locationDetails.branch_id,
-      facility_id: locationDetails.facility_id,
+      location_id: props.locationDetails.location_id,
+      branch_id: props.locationDetails.branch_id,
+      facility_id: props.locationDetails.facility_id,
     }, handleSuccess, handleException);
-  }, [locationDetails]);
+  }, [props.locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
     const newArray = dataObject.data ? dataObject.data.map((item) => {
       const coordinates = item.coordinates ? item.coordinates.replaceAll('"', '').split(',') : [];
@@ -95,6 +98,7 @@ function BuildingGridComponent({
       <h3
         style={{ cursor: 'pointer' }}
         onClick={() => {
+          locationAlerts({building_id: selectedRow.id});
           setLocationDetails((oldValue) => {
             return { ...oldValue, building_id: selectedRow.id };
           });
@@ -120,9 +124,13 @@ function BuildingGridComponent({
     setProgressState((oldValue) => {
       let newValue = value;
       if (locationDetails.facility_id) {
-        newValue = 2;
+        newValue = 3;
       } else if (locationDetails.branch_id) {
+        newValue = 2;
+      } else if (locationDetails.location_id) {
         newValue = 1;
+      }else {
+        // locationAlerts({});
       }
       return newValue;
     });
@@ -132,6 +140,16 @@ function BuildingGridComponent({
       <Breadcrumbs aria-label="breadcrumb" separator="›">
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            }else if (locationDetails.location_id) {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+            } else {
+              locationAlerts({});
+            }
             setLocationlabel(0);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
@@ -142,6 +160,14 @@ function BuildingGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            } else {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+            }
             setLocationlabel(1);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
@@ -152,6 +178,12 @@ function BuildingGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            }
             setLocationlabel(2);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
@@ -170,6 +202,7 @@ function BuildingGridComponent({
       <DataGrid
         rows={dataList}
         columns={dataColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick

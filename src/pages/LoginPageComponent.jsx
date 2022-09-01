@@ -82,7 +82,7 @@ function LoginPage() {
           setLoading(false);
           if (data.userDetails.secondLevelAuthorization === 'true') {
             navigate('/otp');
-          } else if (data.userDetails.forcePasswordReset === '0') {
+          } else if (data.userDetails.forcePasswordReset === 0) {
             data.userDetails.userRole === 'superAdmin' ? navigate('/UserManagement') : navigate('/Dashboard') ;
           } else {
             navigate('/passwordReset');

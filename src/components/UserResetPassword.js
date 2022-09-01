@@ -55,6 +55,9 @@ function UserResetPassword(props) {
 
   const logoutSuccessCallback = (data) => {
     ApplicationStore().setStorage('userDetails', '');
+    ApplicationStore().setStorage('alertDetails', '');
+    ApplicationStore().setStorage('siteDetails', '');
+    ApplicationStore().setStorage('notificationDetails', '');
     navigate('/login');
   };
 

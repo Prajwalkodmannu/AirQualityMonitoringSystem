@@ -4,10 +4,8 @@ import {
   AccountCircle,
   ErrorOutlineOutlined,
   WarningAmber,
-  ChevronLeft,
   Fullscreen,
   FullscreenExit,
-  ChevronRight,
   PriorityHigh,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
@@ -23,6 +21,7 @@ import LogIntervalSetting from './LogIntervalSettingComponent';
 
 // import { DarkModeContext } from "../../context/darkModeContext";
 // import { useContext } from "react";
+/* eslint-disable no-nested-ternary */
 
 function Navbar(props) {
   // const { dispatch } = useContext(DarkModeContext);
@@ -212,6 +211,7 @@ function Navbar(props) {
                               <div><span style={{ fontWeight: 'bold' }}>Message : </span> {msg}</div>
                             </div>}
                             secondary={<div>
+                              <div>Device Name : {deviceName} </div>
                               <div>Lab : {labDepName} </div>
                               <div>Floor : {floorName} </div>
                               <div>Building : {buildingName} </div>

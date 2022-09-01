@@ -12,7 +12,15 @@ import { AddCategoryValidate } from '../../../validation/formValidation';
 import { BumpTestAddService, BumpTestFetchService, ChangeDeviceMode } from '../../../services/LoginPageService';
 import { BumpTestData } from '../../../services/BumpTestServicePage';
 import NotificationBar from '../../notification/ServiceNotificationBar';
+import { BumptestValidate } from '../../../validation/formValidation';
 /* eslint-disable no-plusplus */
+
+const convertDateTime = (value) => {
+  const spaceSplit = value.split(' ');
+  const dateSplit = spaceSplit[0].split('-');
+  const date = `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
+  return date;
+};
 
 const columns = [
   {
@@ -22,6 +30,7 @@ const columns = [
     renderCell: (params) => (
       <Typography>
         {
+          /* eslint-disable-next-line */
           convertDateTime(params.value)
         }
       </Typography>
@@ -50,13 +59,6 @@ const columns = [
   },
 ];
 
-function convertDateTime(value){
-  var spaceSplit = value.split(" ");
-  var dateSplit = spaceSplit[0].split("-");
-  var date = dateSplit[2]+"-"+dateSplit[1]+"-"+dateSplit[0];
-  return date;
-}
-
 /* eslint-disable-next-line */
 function BumpTestComponentModal({
   open, setOpen, isAddButton, setRefreshData, deployedSensorTagList, device_id,
@@ -72,7 +74,7 @@ function BumpTestComponentModal({
   const [result, setResult] = useState('');
   const [deployedSensorList, setDeployedSensorList] = useState([]);
   const [bumpTestData, setBumpTestData] = useState([]);
-  const [loading, setLoading] = useState('');
+  const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState('start');
   let i = 0;
   let j = 0;
@@ -112,6 +114,8 @@ function BumpTestComponentModal({
 
   const getBumpData = (e) => {
     e.preventDefault();
+    setLoading(true);
+    setProgress('started');
     setBumpData([]);
     setInputDisable(true);
     ChangeDeviceMode({ id: device_id, deviceMode: 'bumpTest' }, modeChangeHandleSuccess, modeChangeHandleException);
@@ -207,7 +211,7 @@ function BumpTestComponentModal({
     }
   };
   /* eslint-disable-next-line */
-  const getBumpTestResultDataHandleException = (dataObject, errorObject) => {    
+  const getBumpTestResultDataHandleException = (dataObject, errorObject) => {
   };
 
   const getBumpTestDataSuccess = (dataObject) => {
@@ -220,17 +224,21 @@ function BumpTestComponentModal({
   };
   /* eslint-disable-next-line */
   const validateForNullValue = (value, type) => {
-    AddCategoryValidate(value, type, setErrorObject);
+    BumptestValidate(value, type, setErrorObject);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isAddButton) {
-      await BumpTestAddService({
-        /* eslint-disable-next-line */
-        sensorTagName, lastDueDate, typeCheck, percentageConcentrationGas, durationPeriod, displayedValue, nextDueDate, result, percentageDeviation, device_id,
-      }, handleSuccess, handleException);
-      BumpTestFetchService({ sensorTagName }, getBumpTestResultDataSuccess, getBumpTestResultDataHandleException);
+      if (durationPeriod == '') {
+        validateForNullValue(durationPeriod, 'durationPeriod')
+      } else {
+        await BumpTestAddService({
+          /* eslint-disable-next-line */
+          sensorTagName, lastDueDate, typeCheck, percentageConcentrationGas, durationPeriod, displayedValue, nextDueDate, result, percentageDeviation, device_id,
+        }, handleSuccess, handleException);
+        BumpTestFetchService({ sensorTagName }, getBumpTestResultDataSuccess, getBumpTestResultDataHandleException);
+      }
     }
   };
 
@@ -264,6 +272,10 @@ function BumpTestComponentModal({
 
   const onCancel = () => {
     ChangeDeviceMode({ id: device_id, deviceMode: 'enabled' }, cancelHandleSuccess, modeChangeHandleException);
+    setPercentageDeviation('');
+    setDisplayedValue('');
+    setLoading(false);
+    setProgress('start');
   };
   const cancelHandleSuccess = () => {
     setRefreshData((oldvalue) => !oldvalue);
@@ -298,6 +310,7 @@ function BumpTestComponentModal({
                 <FormControl fullWidth sx={{ mt: 0, padding: 0 }}>
                   <InputLabel id="demo-simple-select-label">Deployed Sensors</InputLabel>
                   <Select
+                    required
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={sensorTagName}
@@ -403,7 +416,12 @@ function BumpTestComponentModal({
                 <TextField
                   sx={{ marginTop: 0 }}
                   value={durationPeriod}
+                  id="dense"
+                  label="Duration (sec)"
+                  autoComplete="off"
+                  fullWidth
                   type="text"
+                  onBlur={() => validateForNullValue(durationPeriod, 'durationPeriod')}
                   onChange={(e) => {
                     setDurationPeriod(e.target.value);
                   }}
@@ -411,11 +429,8 @@ function BumpTestComponentModal({
                     shrink: true,
                   }}
                   margin="normal"
-                  required
-                  id="outlined-required"
-                  label="Duration (sec)"
-                  autoComplete="off"
-                  fullWidth
+                  error={errorObject?.durationPeriod?.errorStatus}
+                  helperText={errorObject?.durationPeriod?.helperText}
                 />
               </Grid>
               <Grid
@@ -428,11 +443,13 @@ function BumpTestComponentModal({
                 xl={2}
               >
                 <LoadingButton
-                  // onClick={handleClick}
+                  disabled={errorObject?.durationPeriod?.errorStatus}
                   onClick={(e) => {
-                    getBumpData(e);
-                    setLoading(true);
-                    setProgress('started');
+                    if (durationPeriod == '') {
+                      validateForNullValue(durationPeriod, 'durationPeriod')
+                    } else {
+                      getBumpData(e);
+                    }
                   }}
                   endIcon={<RestartAltRoundedIcon />}
                   loading={loading}

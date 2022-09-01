@@ -10,7 +10,8 @@ import ApplicationStore from '../../../utils/localStorageUtil';
 function LocationGridWidget({
   locationDetails, setLocationDetails, locationState, setProgressState, setImageState, setImg,
   setDeviceCoordsList, setLocationCoordinationList, setIsDashBoard, setIsGeoMap, siteImages, setSiteImages,
-  setZoomLevel, setCenterLatitude, setCenterLongitude, breadCrumbLabels, setBreadCrumbLabels,
+  setZoomLevel, setCenterLatitude, setCenterLongitude, breadCrumbLabels, setBreadCrumbLabels, setAlertList,
+  locationAlerts
 }) {
   const { newNotification } = ApplicationStore().getStorage('notificationDetails');
 
@@ -25,6 +26,7 @@ function LocationGridWidget({
         locationState === 0
           ? (
             <LocationGridComponent
+              setAlertList={setAlertList}
               newNotification={newNotification}
               setLocationCoordinationList={setLocationCoordinationList}
               setLocationDetails={setLocationDetails}
@@ -34,6 +36,7 @@ function LocationGridWidget({
               setZoomLevel={setZoomLevel}
               setCenterLatitude={setCenterLatitude}
               setCenterLongitude={setCenterLongitude}
+              locationAlerts={locationAlerts}
             />
           ) : ''
       }
@@ -41,6 +44,7 @@ function LocationGridWidget({
         locationState === 1
           ? (
             <BranchGridComponent
+              setAlertList={setAlertList}
               setLocationCoordinationList={setLocationCoordinationList}
               locationDetails={locationDetails}
               setLocationDetails={setLocationDetails}
@@ -52,6 +56,7 @@ function LocationGridWidget({
               setZoomLevel={setZoomLevel}
               setCenterLatitude={setCenterLatitude}
               setCenterLongitude={setCenterLongitude}
+              locationAlerts={locationAlerts}
             />
           ) : ''
       }
@@ -59,6 +64,7 @@ function LocationGridWidget({
         locationState === 2
           ? (
             <FacilityGridComponent
+              setAlertList={setAlertList}
               setLocationCoordinationList={setLocationCoordinationList}
               locationDetails={locationDetails}
               setLocationDetails={setLocationDetails}
@@ -70,6 +76,7 @@ function LocationGridWidget({
               setZoomLevel={setZoomLevel}
               setCenterLatitude={setCenterLatitude}
               setCenterLongitude={setCenterLongitude}
+              locationAlerts={locationAlerts}
             />
           ) : ''
       }
@@ -77,6 +84,7 @@ function LocationGridWidget({
         locationState === 3
           ? (
             <BuildingGridComponent
+              setAlertList={setAlertList}
               setImg={setImg}
               setLocationCoordinationList={setLocationCoordinationList}
               locationDetails={locationDetails}
@@ -91,6 +99,7 @@ function LocationGridWidget({
               setZoomLevel={setZoomLevel}
               setCenterLatitude={setCenterLatitude}
               setCenterLongitude={setCenterLongitude}
+              locationAlerts={locationAlerts}
             />
           ) : ''
       }
@@ -98,6 +107,7 @@ function LocationGridWidget({
         locationState === 4
           ? (
             <FloorGridComponent
+              setAlertList={setAlertList}
               setImg={setImg}
               locationDetails={locationDetails}
               setLocationDetails={setLocationDetails}
@@ -110,12 +120,14 @@ function LocationGridWidget({
               setSiteImages={setSiteImages}
               setCenterLatitude={setCenterLatitude}
               setCenterLongitude={setCenterLongitude}
+              locationAlerts={locationAlerts}
             />
           ) : ''
       }
       {locationState === 5
         ? (
           <LabGridComponent
+            setAlertList={setAlertList}
             setImg={setImg}
             locationDetails={locationDetails}
             setLocationDetails={setLocationDetails}
@@ -129,6 +141,7 @@ function LocationGridWidget({
             setSiteImages={setSiteImages}
             setCenterLatitude={setCenterLatitude}
             setCenterLongitude={setCenterLongitude}
+            locationAlerts={locationAlerts}
           />
         ) : ''}
     </div>

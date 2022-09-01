@@ -13,13 +13,16 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-shadow */
 
-function BranchGridComponent({
-  locationDetails, setLocationDetails, setProgressState, breadCrumbLabels,
-  setBreadCrumbLabels, setLocationCoordinationList, setIsGeoMap, setDeviceCoordsList,
-  setZoomLevel, setCenterLatitude, setCenterLongitude,
-}) {
+function BranchGridComponent(props) {
+  const {
+    setLocationDetails, setProgressState, breadCrumbLabels,
+    setBreadCrumbLabels, setLocationCoordinationList, setIsGeoMap, setDeviceCoordsList,
+    setZoomLevel, setCenterLatitude, setCenterLongitude, setAlertList, 
+    locationAlerts
+  } = props;
   const [dataList, setDataList] = useState([]);
   const { branchIdList } = ApplicationStore().getStorage('alertDetails');
+  const [isLoading, setGridLoading] = useState(true);
   const branchColumns = [
     {
       field: 'branchName',
@@ -62,12 +65,14 @@ function BranchGridComponent({
     },
   ];
   useEffect(() => {
+    setGridLoading(true);
     FetchBranchService({
-      location_id: locationDetails.location_id,
+      location_id: props.locationDetails.location_id,
     }, handleSuccess, handleException);
-  }, [locationDetails]);
+  }, [props.locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
     setProgressState(1);
     const newArray = dataObject.data ? dataObject.data.map((item) => {
@@ -94,6 +99,7 @@ function BranchGridComponent({
       <h3
         style={{ cursor: 'pointer' }}
         onClick={(e) => {
+          locationAlerts({branch_id: selectedRow.id});
           setLocationDetails((oldValue) => {
             return { ...oldValue, branch_id: selectedRow.id };
           });
@@ -121,9 +127,16 @@ function BranchGridComponent({
             setProgressState((oldValue) => {
               let newValue = 0;
               if (locationDetails.facility_id) {
-                newValue = 2;
+                newValue = 3;
+                locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
               } else if (locationDetails.branch_id) {
+                newValue = 2;
+                locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+              } else if (locationDetails.location_id) {
                 newValue = 1;
+                locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+              } else {
+                locationAlerts({});
               }
               return newValue;
             });
@@ -143,6 +156,7 @@ function BranchGridComponent({
       <DataGrid
         rows={dataList}
         columns={branchColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick

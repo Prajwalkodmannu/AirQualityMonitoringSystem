@@ -11,13 +11,16 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable no-shadow */
-function LabGridComponent({
-  setImg, locationDetails, setLocationDetails, setProgressState, breadCrumbLabels,
-  setBreadCrumbLabels, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages, setIsDashBoard,
-}) {
+function LabGridComponent(props) {
+  const {
+    setImg, setLocationDetails, setProgressState, breadCrumbLabels,
+    setBreadCrumbLabels, setIsGeoMap, setDeviceCoordsList, siteImages, setSiteImages, setIsDashBoard, setAlertList,
+    locationAlerts
+  } = props;
   const { labIdList } = ApplicationStore().getStorage('alertDetails');
 
   const [dataList, setDataList] = useState([]);
+  const [isLoading, setGridLoading] = useState(true);
   const dataColumns = [
     {
       field: 'labDepName',
@@ -60,16 +63,18 @@ function LabGridComponent({
     },
   ];
   useEffect(() => {
+    setGridLoading(true);
     LabfetchService({
-      location_id: locationDetails.location_id,
-      branch_id: locationDetails.branch_id,
-      facility_id: locationDetails.facility_id,
-      building_id: locationDetails.building_id,
-      floor_id: locationDetails.floor_id,
+      location_id: props.locationDetails.location_id,
+      branch_id: props.locationDetails.branch_id,
+      facility_id: props.locationDetails.facility_id,
+      building_id: props.locationDetails.building_id,
+      floor_id: props.locationDetails.floor_id,
     }, handleSuccess, handleException);
-  }, [locationDetails]);
+  }, [props.locationDetails]);
 
   const handleSuccess = (dataObject) => {
+    setGridLoading(false);
     setDataList(dataObject.data);
   };
 
@@ -81,6 +86,7 @@ function LabGridComponent({
       <h3
         style={{ cursor: 'pointer' }}
         onClick={() => {
+          locationAlerts({lab_id: selectedRow.id});
           setLocationDetails((oldValue) => {
             return { ...oldValue, lab_id: selectedRow.id };
           });
@@ -105,9 +111,13 @@ function LabGridComponent({
     setProgressState(() => {
       let newValue = value;
       if (locationDetails.facility_id) {
-        newValue = 2;
+        newValue = 3;
       } else if (locationDetails.branch_id) {
+        newValue = 2;
+      } else if (locationDetails.location_id) {
         newValue = 1;
+      } else {
+        // locationAlerts({});
       }
       return newValue;
     });
@@ -118,6 +128,16 @@ function LabGridComponent({
       <Breadcrumbs aria-label="breadcrumb" separator="›">
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            }else if (locationDetails.location_id) {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+            } else {
+              locationAlerts({});
+            }
             setLocationlabel(0);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
@@ -128,6 +148,14 @@ function LabGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            } else {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+            }
             setLocationlabel(1);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
@@ -138,6 +166,12 @@ function LabGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            } else {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+            }
             setLocationlabel(2);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
@@ -148,6 +182,8 @@ function LabGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
             setProgressState(3);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
@@ -158,6 +194,8 @@ function LabGridComponent({
         </h3>
         <h3
           onClick={() => {
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
             setProgressState(4);
             setDeviceCoordsList([]);
             setImg(siteImages.buildingImage);
@@ -177,6 +215,7 @@ function LabGridComponent({
       <DataGrid
         rows={dataList}
         columns={dataColumns}
+        loading={isLoading}
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick

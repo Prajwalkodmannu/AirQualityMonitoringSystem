@@ -13,7 +13,7 @@ import { WifiOffOutlined } from '@mui/icons-material';
 function MachineCard(props) {
   const [alertStatus, setAlertStatus] = useState(4);
 
-  useEffect(()=>{
+  useEffect(() => {
     let element = {
       alertLabel: 'Good',
       alertColor: 'green',
@@ -23,30 +23,13 @@ function MachineCard(props) {
     const alertObject = props.sensorIdList?.filter((alert) => {
       return parseInt(props.id) === parseInt(alert.id);
     });
-    
+
     alertObject?.map((data) => {
       setAlertStatusCode(element, data, setAlertStatus);
-      // if(element.alertPriority > data.alertPriority){
-      //   switch(data.alertType){
-      //     case 'Critical' : setAlertStatus(1);
-      //     break;
-      //     case 'Warning' : setAlertStatus(2);
-      //     break;
-      //     case 'outOfRange' : setAlertStatus(3);
-      //     break;
-      //     default : break;
-      //   }
-      // } 
       element = setAlertPriorityAndType(element, data);
-      // element = element.alertPriority < data.alertPriority ? element
-      //   : {
-      //     alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : 'Good',
-      //     alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? 'orange' : 'green',
-      //     alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : 3,
-      //   };
     });
 
-  },[]);
+  }, []);
 
   const handleClick = () => {
     props.setSensorTagId(props.id);
@@ -58,17 +41,18 @@ function MachineCard(props) {
       <CardActionArea
         sx={{ minWidth: 200, boxShadow: 5, borderRadius: 2 }}
         onClick={() => {
-          props.sensorStatus === '0' ? '' : handleClick() ;
+          props.sensorStatus === '0' ? '' : handleClick();
         }}
         style={{
-          cursor : props.sensorStatus === '0' ? 'not-allowed' : 'pointer',
+          cursor: props.sensorStatus === '0' ? 'not-allowed' : 'pointer',
         }}
       >
-        <Grid 
-          item xs={12} 
-          style={{ 
-          backgroundColor: getSensorBackgroundColor(props.sensorStatus, alertStatus), //props.lightColor || '#cce6ff', 
-          height: '50px' }}>
+        <Grid
+          item xs={12}
+          style={{
+            backgroundColor: getSensorBackgroundColor(props.sensorStatus, alertStatus), //props.lightColor || '#cce6ff', 
+            height: '50px'
+          }}>
           <Stack
             direction="row"
             justifyContent="space-evenly"
@@ -120,7 +104,7 @@ function MachineCard(props) {
             }}
             >
               {props.sensorStatus === '0' ? <WifiOffOutlined style={{ fontSize: '70px', color: '#707070' }} /> :
-              <MachineCircularProgressbar score={props.last} color={props.alertColor} />
+                <MachineCircularProgressbar score={props.last} color={props.alertColor} />
               }
             </div>
             <div style={{
