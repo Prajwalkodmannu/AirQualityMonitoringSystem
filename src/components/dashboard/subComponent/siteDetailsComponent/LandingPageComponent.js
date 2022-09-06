@@ -31,7 +31,7 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
   useEffect(() => {
     intervalCallFunction();
     /* eslint-disable-next-line */
-    if (open === true) { } else {
+    if (open === false) {
       const devicePolling = setInterval(() => {
         intervalCallFunction();
       }, intervalSec);
