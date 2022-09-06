@@ -23,6 +23,8 @@ import BumpTestComponentModal from './BumpTestComponentModal';
 import DeleteConfirmationDailog from '../../../utils/confirmDeletion';
 import ImageMarkerList from './imageMarkerList';
 import DeviceModeModal from './DeviceModeModal';
+import DebugModeModal from './DebugModeModal';
+import ConfirmModeChange from '../../../utils/confirmModeChange';
 /* eslint-disable no-shadow */
 /* eslint-disable no-useless-concat */
 
@@ -96,6 +98,7 @@ function AddDeviceListResults(props) {
   const [sensorRefresh, setSensorRefresh] = useState(false);
   const [open, setOpen] = useState(false);
   const [deviceModalOpen, setDeviceModalOpen] = useState(false);
+  const [debugModalOpen, setDebugModalOpen] = useState(false);
   const [deleteDailogOpen, setDeleteDailogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState('');
   const [deployedSensorTagList, setDeployedSensorTagList] = useState([]);
@@ -108,6 +111,8 @@ function AddDeviceListResults(props) {
   const [sensorOpen, setSensorOpen] = useState(false);
   const [configSetupOpen, setConfigSetupOpen] = useState(false);
   const [modeChange, setModeChange] = useState(false);
+  const [changeDeviceId, setChangeDeviceId] = useState('');
+  const [changeDeviceIdMode, setChangeDeviceIdMode] = useState('');
   const [analogSensorList, setAnalogSensorList] = useState([]);
   const [digitalSensorList, setDigitalSensorList] = useState([]);
   const [modbusSensorList, setModbusSensorList] = useState([]);
@@ -150,11 +155,13 @@ function AddDeviceListResults(props) {
   };
 
   /* eslint-disable-next-line */
-  function ChangeModeAPI({id}, deviceMode){
+  function ChangeModeAPI(id, deviceMode){
     if (deviceMode !== 'bumpTest') {
+      setDeviceId(id);
       ChangeDeviceMode({ id, deviceMode }, modeChangeHandleSuccess, modeChangeHandleException);
     } else {
       setDeviceId(id);
+      setModeChange(false);
       bumptestDeployedSensorsList(id);
     }
   }
@@ -181,7 +188,10 @@ function AddDeviceListResults(props) {
         label="Mode"
         fullWidth
         onChange={(e) => {
-          ChangeModeAPI(props.selectedRow, e.target.value);
+          // ChangeModeAPI(props.selectedRow, e.target.value);
+          setChangeDeviceId(props.selectedRow.id);
+          setChangeDeviceIdMode(e.target.value);
+          setModeChange(true);
         }}
       >
         <MenuItem value="enabled">Enable</MenuItem>
@@ -190,12 +200,14 @@ function AddDeviceListResults(props) {
         <MenuItem value="calibration">Calibration</MenuItem>
         <MenuItem value="firmwareUpgradation">Firmware Upgradation</MenuItem>
         <MenuItem value="config">Configuration</MenuItem>
+        <MenuItem value="debug">Debug</MenuItem>
       </Select>
     ));
   }
 
   /* eslint-disable-next-line */
   const modeChangeHandleSuccess = (dataObject) => {
+    setModeChange(false);
     setNotification({
       status: true,
       type: 'success',
@@ -219,10 +231,13 @@ function AddDeviceListResults(props) {
         setDeviceModalOpen(true);
         break;
       case 'config':
-      setDeviceModeHeader('Device configuration');
-      setDeviceModeSubHeader('Configuring...');
-      setDeviceModalOpen(true);
-      break;
+        setDeviceModeHeader('Device configuration');
+        setDeviceModeSubHeader('Configuring...');
+        setDeviceModalOpen(true);
+        break;
+      case 'debug': 
+        setDebugModalOpen(true);
+        break;
       default: break;
       }
     }, 3000);
@@ -254,6 +269,7 @@ function AddDeviceListResults(props) {
   };
   /* eslint-disable-next-line */
   const modeChangeHandleException = (errorObject, errorMessage) => {
+    setModeChange(false);
     setNotification({
       status: true,
       type: 'error',
@@ -263,20 +279,20 @@ function AddDeviceListResults(props) {
   /* eslint-disable-next-line */
   function ChangeStatus(props) {
     switch (props.selectedRow.deviceMode) {
-    case 'calibration':
-      return <Upgrade />;
-    case 'firmwareUpgradation':
-      return (
-        <Box sx={{ width: '50%' }}>
-          <CircularProgress color="secondary" style={{ width: 20, height: 20 }} />
-        </Box>
-      );
-    case 'disabled':
-      return <PlayDisabled />;
-    case 'bumpTest':
-      return <Science />;
-    default:
-      return <PlayArrow />;
+      case 'calibration':
+        return <Upgrade />;
+      case 'firmwareUpgradation':
+        return (
+          <Box sx={{ width: '50%' }}>
+            <CircularProgress color="secondary" style={{ width: 20, height: 20 }} />
+          </Box>
+        );
+      case 'disabled':
+        return <PlayDisabled />;
+      case 'bumpTest':
+        return <Science />;
+      default:
+        return <PlayArrow />;
     }
   }
 
@@ -541,46 +557,25 @@ function AddDeviceListResults(props) {
         deviceModeHeader={deviceModeHeader}
         deviceModeSubHeader={deviceModeSubHeader}
       />
+      <DebugModeModal
+        open={debugModalOpen}
+        setOpen={setDebugModalOpen}
+        setRefreshData={setRefreshData}
+        device_id={device_id}
+      />
       <NotificationBar
         handleClose={handleClose}
         notificationContent={openNotification.message}
         openNotification={openNotification.status}
         type={openNotification.type}
       />
-      <Dialog
-        fullWidth
-        maxWidth="sm"
-        sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: '100%' } }}
-        open={modeChange}
-      >
-        <DialogTitle sx={{ textAlign: 'center' }}>
-          <GppMaybe color="warning" style={{ fontSize: 95 }} />
-        </DialogTitle>
-        <DialogContent sx={{ textAlign: 'center' }}>
-          <Typography
-            sx={{ m: 1 }}
-            variant="h5"
-            component="span"
-          >
-            Do you really want to change the mode?
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ margin: '10px' }}>
-          <div style={{ textAlign: 'center' }}>
-            <Button onClick={() => {
-              setModeChange(false);
-            }}
-            >
-              Confirm
-            </Button>
-            <Button
-              onClick={() => { setModeChange(false); }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </DialogActions>
-      </Dialog>
+      <ConfirmModeChange 
+        modeChange={modeChange}
+        setModeChange={setModeChange}
+        changeDeviceId={changeDeviceId}
+        changeDeviceIdMode={changeDeviceIdMode}
+        ChangeModeAPI={ChangeModeAPI}
+      />
       <DeleteConfirmationDailog
         open={deleteDailogOpen}
         setOpen={setDeleteDailogOpen}
