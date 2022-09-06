@@ -5,19 +5,13 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState } from 'react';
 import { SensorIdAlertUpdate } from '../../../services/LoginPageService';
-import NotificationBar from '../../notification/ServiceNotificationBar';
 
 /* eslint-disable no-unused-vars */
-function AlertWidget({ dataList, setRefreshData, maxHeight }) {
+function AlertWidget({ dataList, setRefreshData, maxHeight, setAlertList, setNotification }) {
   const [clearAlert, setClearAlert] = useState(false);
   const [clearAlertReason, setAlertReason] = useState('');
   const [sensorId, setSensorId] = useState('');
   const [errorObject, setErrorObject] = useState({});
-  const [openNotification, setNotification] = useState({
-    status: false,
-    type: 'error',
-    message: '',
-  });
 
   const columns = [
     {
@@ -75,7 +69,7 @@ function AlertWidget({ dataList, setRefreshData, maxHeight }) {
         color="success"
         startIcon={<Delete />}
         onClick={(e) => {
-          setSensorId(selectedRow.sensorId);
+          setSensorId(selectedRow.id);
           setClearAlert(true);
         }}
       >
@@ -85,10 +79,10 @@ function AlertWidget({ dataList, setRefreshData, maxHeight }) {
     );
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    await SensorIdAlertUpdate({
+    SensorIdAlertUpdate({
       sensor_id: sensorId, clearAlertReason,
     }, handleSuccess, handleException);
 
@@ -102,11 +96,10 @@ function AlertWidget({ dataList, setRefreshData, maxHeight }) {
       type: 'success',
       message: dataObject.message,
     });
+    setAlertList(oldValue => oldValue.filter(data => {
+      return data.id !== sensorId;
+    }));
     setRefreshData((oldvalue) => !oldvalue);
-    setTimeout(() => {
-      handleClose();
-      setErrorObject({});
-    }, 5000);
   };
 
   /* eslint-disable-next-line */
@@ -117,14 +110,6 @@ function AlertWidget({ dataList, setRefreshData, maxHeight }) {
       message: errorMessage,
     });
     setErrorObject({});
-  };
-
-  const handleClose = () => {
-    setNotification({
-      status: false,
-      type: '',
-      message: '',
-    });
   };
 
   return (
@@ -191,12 +176,6 @@ function AlertWidget({ dataList, setRefreshData, maxHeight }) {
             </div>
           </form>
         </DialogContent>
-        <NotificationBar
-          handleClose={handleClose}
-          notificationContent={openNotification.message}
-          openNotification={openNotification.status}
-          type={openNotification.type}
-        />
       </Dialog>
     </div>
   );
