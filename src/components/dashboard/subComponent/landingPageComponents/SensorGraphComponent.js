@@ -15,7 +15,10 @@ function SensorGraphComponent({
   open, setOpen, sensorTagId, segretionInterval, setSegretionInterval, rangeInterval, setRangeInterval, sensorTag,
 }) {
   const [data, setData] = useState([]);
-  const [groupingIntervalList, setGroupingIntervalList] = useState([]);
+  const [groupingIntervalList, setGroupingIntervalList] = useState([
+    { value: '1', text: '1 Minute' },
+    { value: '5', text: '5 Minutes' },
+  ]);
 
   useEffect(() => {
     DashboardIndividualSensorDetails({ sensorTagId, segretionInterval, rangeInterval }, handleSuccess, handleException);
@@ -25,14 +28,14 @@ function SensorGraphComponent({
     setData(dataObject || []);
   };
 
-  const handleException = () => {};
+  const handleException = () => { };
 
   const updateGroupingInterval = (e) => {
     if (e.target.value === '15') {
       setGroupingIntervalList([
         { value: '1', text: '1 Minute' },
       ]);
-    } else if (e.target.value === '60') {
+    } else if (e.target.value === '500*60') {
       setGroupingIntervalList([
         { value: '1', text: '1 Minute' },
         { value: '5', text: '5 Minutes' },
@@ -99,7 +102,7 @@ function SensorGraphComponent({
                 }}
               >
                 <MenuItem value="15">15 Min</MenuItem>
-                <MenuItem value="60">1 Hr</MenuItem>
+                <MenuItem value="500*60">1 Hr</MenuItem>
                 <MenuItem value="24*60">24 Hr</MenuItem>
                 <MenuItem value="7*24*60">1 week</MenuItem>
                 <MenuItem value="30*24*60">1 Month</MenuItem>

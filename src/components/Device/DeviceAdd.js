@@ -285,7 +285,7 @@ function DeviceAdd({ locationDetails, labMap, deviceData }) {
                 sx={{ marginTop: 0 }}
                 margin="normal"
                 fullWidth
-                label="Upload Bin File"
+                label="Upload Bin File (Max file size 1MB to be uploaded)"
                 autoComplete="off"
                 required
                 onBlur={() => { validateForNullValue(firmwareBinFile, 'deviceImage'); }}
