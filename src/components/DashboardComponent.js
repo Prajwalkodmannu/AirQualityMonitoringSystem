@@ -10,6 +10,7 @@ import LandingPageComponent from './dashboard/subComponent/siteDetailsComponent/
 import DeviceGridComponent from './dashboard/subComponent/siteDetailsComponent/DeviceGridComponent';
 import ApplicationStore from '../utils/localStorageUtil';
 import { FetchFacilitiyService, FetchBranchService, FetchLocationService, DeviceIdAlerts } from '../services/LoginPageService';
+import NotificationBar from './notification/ServiceNotificationBar';
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
@@ -53,7 +54,11 @@ function Dashboard() {
   const [isdashboard, setIsDashBoard] = useState(0);
   const [isGeoMap, setIsGeoMap] = useState(true);
   const [alertList, setAlertList] = useState([]);
-
+  const [openNotification, setNotification] = useState({
+    status: false,
+    type: 'error',
+    message: '',
+  });
   useEffect(() => {
     const { locationDetails } = ApplicationStore().getStorage('userDetails');
     const { locationLabel, facilityLabel, branchLabel } = ApplicationStore().getStorage('siteDetails');
@@ -183,6 +188,14 @@ function Dashboard() {
 
   const handleExceptionAlerts = () => { };
 
+  const handleClose = () => {
+    setNotification({
+      status: false,
+      type: '',
+      message: '',
+    });
+  };
+  
   return (
     <Grid container spacing={1} style={{ height: '100%', width: '100%', padding: 2 }}>
       {isdashboard === 0
@@ -266,7 +279,7 @@ function Dashboard() {
                     height: '50%',
                   }}
                 >
-                  <AlertWidget dataList={alertList} />
+                  <AlertWidget dataList={alertList} setAlertList={setAlertList} setNotification={setNotification} />
                 </Grid>
               </Grid>
             </Grid>
@@ -303,6 +316,12 @@ function Dashboard() {
             locationAlerts={locationAlerts}
           />
         )}
+        <NotificationBar
+          handleClose={handleClose}
+          notificationContent={openNotification.message}
+          openNotification={openNotification.status}
+          type={openNotification.type}
+        />
     </Grid>
   );
 }

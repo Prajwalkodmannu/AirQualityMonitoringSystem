@@ -5,10 +5,16 @@ import {
 import Grid from '@mui/material/Grid';
 import AlertWidget from '../../components/AlertWidget';
 import { DeviceIdAlerts } from '../../../../services/LoginPageService';
+import NotificationBar from '../../../notification/ServiceNotificationBar';
 
 function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
   const [dataList, setDataList] = useState([]);
   const [refreshData, setRefreshData] = useState(false);
+  const [openNotification, setNotification] = useState({
+    status: false,
+    type: 'error',
+    message: '',
+  });
 
   useEffect(() => {
     DeviceIdAlerts(locationDetails, fetchAlertListSuccess, fetchAlertListException);
@@ -19,6 +25,14 @@ function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
   };
 
   const fetchAlertListException = () => {
+  };
+
+  const handleClose = () => {
+    setNotification({
+      status: false,
+      type: '',
+      message: '',
+    });
   };
 
   return (
@@ -63,7 +77,7 @@ function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
               paddingTop: '0px'
             }}
             >
-              <AlertWidget dataList={dataList} setRefreshData={setRefreshData} maxHeight='500px' />
+              <AlertWidget dataList={dataList} setRefreshData={setRefreshData} maxHeight='500px' setAlertList={setDataList} setNotification={setNotification} />
             </div>
           </DialogContent>
           <div className='float-right'>
@@ -79,6 +93,12 @@ function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
           </div>
         </Grid>
       </DialogContent>
+      <NotificationBar
+        handleClose={handleClose}
+        notificationContent={openNotification.message}
+        openNotification={openNotification.status}
+        type={openNotification.type}
+      />
     </Dialog>
   );
 }
