@@ -26,6 +26,7 @@ function DeviceModel({
   const [category_id, setCategory_id] = useState('');
   const [categoryList, setCategoryList] = useState([]);
   const [firmwareBinFile, setFirmwareBinFile] = useState({});
+  const [binFileName, setBinFileName] = useState('');
   const [pollingPriority, setPollingPriority] = useState('');
   const [nonPollingPriority, setNonPollingPriority] = useState('');
   const [floorCords, setFloorCords] = useState('');
@@ -53,6 +54,7 @@ function DeviceModel({
     setFloorCords(deviceData.floorCords || '');
     setCategoryList(categoryData || []);
     setCategory_id(deviceData.category_id || '');
+    setBinFileName(deviceData.binFileName || '');
   };
 
   const validateForNullValue = (value, type) => {
@@ -88,6 +90,7 @@ function DeviceModel({
           deviceName,
           category_id,
           firmwareBinFile,
+          binFileName,
           deviceTag,
           firmwareVersion,
           macAddress,
@@ -106,6 +109,7 @@ function DeviceModel({
           deviceName,
           category_id,
           firmwareBinFile,
+          binFileName,
           deviceTag,
           firmwareVersion,
           macAddress,
@@ -122,6 +126,7 @@ function DeviceModel({
 
   const resetForm = () => {
     setFirmwareBinFile({});
+    setBinFileName(deviceData.binFileName || '');
   };
 
   const handleClose = () => {
@@ -255,7 +260,7 @@ function DeviceModel({
               xl={6}
             >
               <TextField
-                sx={{ marginTop: 0 }}
+                sx={{ marginTop: 0, paddingRight: 1 }}
                 value={pollingPriority}
                 type="number"
                 placeholder="Enter value in Seconds"
@@ -322,9 +327,33 @@ function DeviceModel({
               item
               xs={12}
               sm={12}
-              md={12}
-              lg={12}
-              xl={12}
+              md={6}
+              lg={6}
+              xl={6}
+            >
+              <TextField
+                sx={{ marginTop: 0, paddingRight: 1 }}
+                value={binFileName}
+                disabled
+                type="text"
+                placeholder=""
+                label="Current Bin File"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                margin="normal"
+                autoComplete="off"
+                fullWidth
+              />
+            </Grid>
+            <Grid
+              sx={{ mt: 0, padding: 0 }}
+              item
+              xs={12}
+              sm={12}
+              md={6}
+              lg={6}
+              xl={6}
             >
               <TextField
                 sx={{ marginTop: 0 }}
@@ -335,6 +364,16 @@ function DeviceModel({
                 onBlur={() => { validateForNullValue(firmwareBinFile, 'deviceImage'); }}
                 onChange={(e) => {
                   if (e.target.files && e.target.files.length > 0) {
+                    var fullPath = e.target.value;
+                    if (fullPath) {
+                        var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+                        var filename = fullPath.substring(startIndex);
+                        if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+                            filename = filename.substring(1);
+                        }
+                        setBinFileName(filename);
+                    }
+
                     setFirmwareBinFile(e.target.files[0]);
 
                     const reader = new FileReader();

@@ -62,7 +62,7 @@ function SensorConfig({
 
   // --- Alarm --- //
   const [alarm, setAlarm] = useState(editData.alarm || '');
-  const [isStel, setIsStel] = useState(editData ? editData.isStel === 1 : false);
+  const [isStel, setIsStel] = useState(editData ? editData.isStel === '1' : false);
   const [isAQI, setIsAQI] = useState(editData ? editData.isAQI === '1' : false);
   const [stelDuration, setStelDuration] = useState(editData.stelDuration || '');
   const [stelType, setStelType] = useState(editData.stelType || 'ppm');
@@ -70,6 +70,7 @@ function SensorConfig({
   const [stelAlert, setStelAlert] = useState(editData.stelAlert || '');
   const [twaDuration, setTwaDuration] = useState(editData.twaDuration || '');
   const [twaType, setTwaType] = useState(editData.twaType || 'ppm');
+  const [twaStartTime, setTwaStartTime] = useState(editData.twaStartTime || '01:05')
   const [twaLimit, setTwaLimit] = useState(editData.twaLimit || 0);
   const [twaAlert, setTwaAlert] = useState(editData.twaAlert || '');
 
@@ -170,6 +171,7 @@ function SensorConfig({
           stelAlert,
           twaDuration,
           twaType,
+          twaStartTime,
           twaLimit,
           twaAlert,
           parmGoodMinScale,
@@ -225,6 +227,7 @@ function SensorConfig({
           stelAlert,
           twaDuration,
           twaType,
+          twaStartTime,
           twaLimit,
           twaAlert,
           parmGoodMinScale,
@@ -628,6 +631,8 @@ function SensorConfig({
                   setTwaDuration={setTwaDuration}
                   twaType={twaType}
                   setTwaType={setTwaType}
+                  twaStartTime={twaStartTime}
+                  setTwaStartTime={setTwaStartTime}
                   twaLimit={twaLimit}
                   setTwaLimit={setTwaLimit}
                   twaAlert={twaAlert}

@@ -49,10 +49,10 @@ function DeviceWidget({
     <div
       className="widget"
       onClick={() => {
-        data.deviceMode === 'disabled' || data.disconnectedStatus === '1' ? '' : handleClick(data);
+        data.deviceMode !== 'enabled' || data.disconnectedStatus === '1' ? '' : handleClick(data);
       }}
       style={{
-        height: '190px', cursor: data.deviceMode === 'disabled' || data.disconnectedStatus === '1' ? 'not-allowed' :'pointer', display: 'block', padding: 1,
+        height: '190px', cursor: data.deviceMode !== 'enabled' || data.disconnectedStatus === '1' ? 'not-allowed' :'pointer', display: 'block', padding: 1,
       }}
     >
       <div

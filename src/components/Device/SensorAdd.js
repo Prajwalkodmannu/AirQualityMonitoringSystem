@@ -99,12 +99,13 @@ function DeviceAdd({
   const [alarm, setAlarm] = useState(editData?.alarm || '');
 
   const [isAQI, setIsAQI] = useState(editData ? editData.isAQI === '1' : false);
-  const [isStel, setIsStel] = useState(editData ? editData.isStel === 1 : false);
+  const [isStel, setIsStel] = useState(editData ? editData.isStel === '1' : false);
   const [stelDuration, setStelDuration] = useState(editData?.stelDuration || '');
   const [stelType, setStelType] = useState(editData?.stelType || 'ppm');
   const [stelLimit, setStelLimit] = useState(editData?.stelLimit || 0);
   const [stelAlert, setStelAlert] = useState(editData?.stelAlert || '');
   const [twaDuration, setTwaDuration] = useState(editData?.twaDuration || '');
+  const [twaStartTime, setTwaStartTime] = useState(editData?.twaStartTime || '01:05');
   const [twaType, setTwaType] = useState(editData?.twaType || 'ppm');
   const [twaLimit, setTwaLimit] = useState(editData?.twaLimit || 0);
   const [twaAlert, setTwaAlert] = useState(editData?.twaAlert || '');
@@ -589,12 +590,13 @@ function DeviceAdd({
                         // -- STEL&TWA -- //
                         setAlarm(data.alarm);
                         setIsAQI(data.isAQI === '1');
-                        setIsStel(data.isStel === 1);
+                        setIsStel(data.isStel === '1');
                         setStelDuration(data.stelDuration);
                         setStelType(data.stelType);
                         setStelLimit(data.stelLimit);
                         setStelAlert(data.stelAlert);
                         setTwaDuration(data.twaDuration);
+                        setTwaStartTime(data.twaStartTime);
                         setTwaType(data.twaType);
                         setTwaLimit(data.twaLimit);
                         setTwaAlert(data.twaAlert);
@@ -753,6 +755,8 @@ function DeviceAdd({
             setStelAlert={setStelAlert}
             twaDuration={twaDuration}
             setTwaDuration={setTwaDuration}
+            twaStartTime={twaStartTime}
+            setTwaStartTime={setTwaStartTime}
             twaType={twaType}
             setTwaType={setTwaType}
             twaLimit={twaLimit}
