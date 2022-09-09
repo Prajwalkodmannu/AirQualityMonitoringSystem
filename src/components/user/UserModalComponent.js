@@ -116,6 +116,10 @@ function UserModal({
                             floor_id: userData?.floor_id,
                           },(labRespObj)=>{
                             labHandleSuccess(labRespObj);
+                            if(userData?.lab_id){
+                              setLabId(userData.lab_id);
+                              setBackdrop(false);
+                            }
                           },locationHandleException);
                           setFloorId(userData.floor_id);
                         }
@@ -272,6 +276,11 @@ function UserModal({
     setBuildingList([]);
     setFloorList([]);
     setLabList([]);
+    setBranchId('');
+    setFacilityId('');
+    setBuildingId('');
+    setFloorId('');
+    setLabId('');
   };
 
   const branchHandleException = () => {};
@@ -281,6 +290,10 @@ function UserModal({
     setBuildingList([]);
     setFloorList([]);
     setLabList([]);
+    setFacilityId('');
+    setBuildingId('');
+    setFloorId('');
+    setLabId('');
   };
 
   const facilityHandleException = () => {};
@@ -289,15 +302,21 @@ function UserModal({
     setBuildingList(dataObject.data);
     setFloorList([]);
     setLabList([]);
+    setBuildingId('');
+    setFloorId('');
+    setLabId('');
   }
 
   const floorHandleSuccess = (dataObject) =>{
     setFloorList(dataObject.data);
     setLabList([]);
+    setFloorId('');
+    setLabId('');
   }
 
   const labHandleSuccess = (dataObject) =>{
     setLabList(dataObject.data);
+    setLabId('');
     setBackdrop(false);
   }
   
@@ -311,6 +330,11 @@ function UserModal({
       setBuildingList([]);
       setFloorList([]);
       setLabList([]);
+      setBranchId('');
+      setFacilityId('');
+      setBuildingId('');
+      setFloorId('');
+      setLabId('');
     }
   };
 
@@ -323,6 +347,10 @@ function UserModal({
       setBuildingList([]);
       setFloorList([]);
       setLabList([]);
+      setFacilityId('');
+      setBuildingId('');
+      setFloorId('');
+      setLabId('');
     }
   };
 
@@ -334,6 +362,9 @@ function UserModal({
       setBuildingList([]);
       setFloorList([]);
       setLabList([]);
+      setBuildingId('');
+      setFloorId('');
+      setLabId('');
     }
   };
 
@@ -344,6 +375,8 @@ function UserModal({
     } else {
       setFloorList([]);
       setLabList([]);
+      setFloorId('');
+      setLabId('');
     }
   }
   const onFloorChange = (floor_id) =>{
@@ -352,6 +385,7 @@ function UserModal({
       LabfetchService({ location_id, branch_id, facility_id, building_id, floor_id }, labHandleSuccess, locationHandleException);
     } else {
       setLabList([]);
+      setLabId('');
     }
   }
   
