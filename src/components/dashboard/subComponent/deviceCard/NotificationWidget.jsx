@@ -125,7 +125,7 @@ function NotificationWidget({ type, figure, handleClick, userRole, testHooter })
         type === 'hooterStatus' && handleClick();
       }}>
         <span className="title">{data.title}</span>
-        <span className="counter">
+        <span className="counter" style={{minWidth: type === 'time' && '132px'}}>
           {data.figure}
         </span>
         <span className="link">{data.link}</span>

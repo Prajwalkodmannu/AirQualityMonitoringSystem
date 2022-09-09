@@ -115,7 +115,7 @@ function Navbar(props) {
           }}
         >
           <Typography variant="h5" gutterBottom component="div">
-            {customerDisplayName}
+            {props.mobileMenu? customerDisplayName : ''}
           </Typography>
         </div>
         <div className="items">

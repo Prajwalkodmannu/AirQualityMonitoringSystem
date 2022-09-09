@@ -35,6 +35,7 @@ function DeviceAdd({ locationDetails, labMap, deviceData }) {
   const [deviceName, setDeviceName] = useState('');
   const [deviceCategory, setDeviceCategory] = useState('');
   const [firmwareBinFile, setFirmwareBinFile] = useState({});
+  const [binFileName, setBinFileName] = useState('');
   const [deviceTag, setDeviceTag] = useState('');
   const [macAddress, setMacAddress] = useState('');
   const [firmwareVersion, setFirmwareVersion] = useState('');
@@ -94,6 +95,7 @@ function DeviceAdd({ locationDetails, labMap, deviceData }) {
       deviceName,
       category_id,
       firmwareBinFile,
+      binFileName,
       deviceTag,
       firmwareVersion,
       macAddress,
@@ -112,6 +114,7 @@ function DeviceAdd({ locationDetails, labMap, deviceData }) {
     setMacAddress('');
     setDeviceTag('');
     setFirmwareBinFile({});
+    setBinFileName('');
     setFloorCords('');
     setCategory_id('');
   };
@@ -288,6 +291,15 @@ function DeviceAdd({ locationDetails, labMap, deviceData }) {
                 onBlur={() => { validateForNullValue(firmwareBinFile, 'deviceImage'); }}
                 onChange={(e) => {
                   if (e.target.files && e.target.files.length > 0) {
+                    var fullPath = e.target.value;
+                    if (fullPath) {
+                        var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+                        var filename = fullPath.substring(startIndex);
+                        if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+                            filename = filename.substring(1);
+                        }
+                        setBinFileName(filename);
+                    }
                     setFirmwareBinFile(e.target.files[0]);
 
                     const reader = new FileReader();

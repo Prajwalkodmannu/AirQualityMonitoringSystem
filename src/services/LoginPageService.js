@@ -309,3 +309,8 @@ export const HooterRelayService = (data, successCallback, errorCallBack) => { re
 
 // -------------Dynamic Unit listing --------------//
 export const DynamicUnitListService = (id, successCallback, errorCallBack) => _fetchService(`sensorCategoryUnitsDisplay/${id}`, 'GET', {}, successCallback, errorCallBack);
+
+// ------------ Application Version --------------//
+export const AppVersionAddService = (data, successCallback, errorCallBack) => _fetchService('appVersion/add', 'POST', data, successCallback, errorCallBack);
+
+export const AppVersionFetchService = (successCallback, errorCallBack) => _fetchService('appVersion', 'GET', {}, successCallback, errorCallBack);
