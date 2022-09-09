@@ -7,17 +7,32 @@ import React, { useState } from 'react';
 import { SensorIdAlertUpdate } from '../../../services/LoginPageService';
 
 /* eslint-disable no-unused-vars */
-function AlertWidget({ dataList, setRefreshData, maxHeight, setAlertList, setNotification }) {
+function AlertWidget({
+  dataList, setRefreshData, maxHeight, setAlertList, setNotification,
+}) {
   const [clearAlert, setClearAlert] = useState(false);
   const [clearAlertReason, setAlertReason] = useState('');
   const [sensorId, setSensorId] = useState('');
   const [errorObject, setErrorObject] = useState({});
+
+  const convertDateTime = (value) => {
+    const dateSplit = value.split('-');
+    const date = `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
+    return date;
+  };
 
   const columns = [
     {
       field: 'a_date',
       headerName: 'Date',
       width: 100,
+      renderCell: (params) => (
+        <Typography>
+          {
+            convertDateTime(params.value)
+          }
+        </Typography>
+      ),
     },
     {
       field: 'a_time',
@@ -63,19 +78,21 @@ function AlertWidget({ dataList, setRefreshData, maxHeight, setAlertList, setNot
 
   function ClearAlert({ selectedRow }) {
     return (
-      selectedRow.alarmType === 'Latch' ?
-      <Button
-        variant="contained"
-        color="success"
-        startIcon={<Delete />}
-        onClick={(e) => {
-          setSensorId(selectedRow.id);
-          setClearAlert(true);
-        }}
-      >
-        Clear
-      </Button>
-      : ''
+      selectedRow.alarmType === 'Latch'
+        ? (
+          <Button
+            variant="contained"
+            color="success"
+            startIcon={<Delete />}
+            onClick={(e) => {
+              setSensorId(selectedRow.id);
+              setClearAlert(true);
+            }}
+          >
+            Clear
+          </Button>
+        )
+        : ''
     );
   }
 
@@ -96,7 +113,7 @@ function AlertWidget({ dataList, setRefreshData, maxHeight, setAlertList, setNot
       type: 'success',
       message: dataObject.message,
     });
-    setAlertList(oldValue => oldValue.filter(data => {
+    setAlertList((oldValue) => oldValue.filter((data) => {
       return data.id !== sensorId;
     }));
     setRefreshData((oldvalue) => !oldvalue);
