@@ -281,7 +281,7 @@ export default function ManagementReportTab() {
                 <Box sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider', marginTop: 0 }}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" selectionFollowsFocus>
-                            <Tab label="Sites Report" {...a11yProps(0)} />
+                            <Tab label="Air Quality Index" {...a11yProps(0)} />
                             <Tab label="Sensor Report" {...a11yProps(1)} />
                             <Tab label="Alarms" {...a11yProps(2)} />
                             {/* <Tab label="AQMI logs" {...a11yProps(3)} /> */}

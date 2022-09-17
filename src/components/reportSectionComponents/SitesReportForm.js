@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  FormControl, Stack, Button, Fab, Typography,
+  FormControl, Stack, Button, Fab, Typography, TextField
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -135,20 +135,20 @@ function ReportSectionForm(props) {
             Send
           </Button>
 
-          {/* <TextField sx={{ minWidth: 250 }}
-                    label="From Date"
-                    type="date"
-                    // value={fromDate}
-                    variant="outlined"
-                    required
-                    onChange={(e) => {
-                        setFromDate(e.target.value);
-                    }}
-                    autoComplete="off"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                /> */}
+          <TextField sx={{ minWidth: 250 }}
+            label="From Date"
+            type="date"
+            // value={fromDate}
+            variant="outlined"
+            required
+            onChange={(e) => {
+              setFromDate(e.target.value);
+            }}
+            autoComplete="off"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
           {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DateTimePicker
                             renderInput={(props) => <TextField {...props} />}
@@ -160,20 +160,20 @@ function ReportSectionForm(props) {
                             }}
                         />
                     </LocalizationProvider> */}
-          {/* <TextField sx={{ minWidth: 250 }}
-                    label="to date"
-                    type="date"
-                    // value={toDate}
-                    variant="outlined"
-                    required
-                    onChange={(e) => {
-                        // setToDate(e.target.value);
-                    }}
-                    autoComplete="off"
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                /> */}
+          <TextField sx={{ minWidth: 250 }}
+            label="to date"
+            type="date"
+            // value={toDate}
+            variant="outlined"
+            required
+            onChange={(e) => {
+              setToDate(e.target.value);
+            }}
+            autoComplete="off"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
           {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DateTimePicker
                             renderInput={(props) => <TextField {...props} />}
@@ -184,22 +184,6 @@ function ReportSectionForm(props) {
                             }}
                         />
                     </LocalizationProvider> */}
-          {/* <Box sx={{ minWidth: 250 }}>
-                    <FormControl fullWidth>
-                        <InputLabel >AQMI/AQMO</InputLabel>
-                        <Select
-                            // value={deviceId}
-                            label="Age"
-                            onChange={(e) => {
-                                // HandleDeviceChange(e.target.value)
-                            }}
-                        >
-                            {props.deviceList.map((data) => (
-                                <MenuItem value={data.id}>{data.deviceName}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Box> */}
           <FormControl>
             <Button size="medium" variant="contained" autoFocus type="submit">
               Submit
