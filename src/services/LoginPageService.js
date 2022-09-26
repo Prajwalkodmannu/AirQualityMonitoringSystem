@@ -297,9 +297,13 @@ export const FetchAlarmReportDetails = (data, successCallback, errorCallBack) =>
 
 export const FetchSensorLogReportDetails = (data, successCallback, errorCallBack) => _fetchService('SensorLog', 'POST', data, successCallback, errorCallBack);
 
-export const FetchAqiStatusReportDetails = (data, successCallback, errorCallBack) => _fetchService('SiteDeviceReport', 'POST', data, successCallback, errorCallBack);
+// export const FetchAqiStatusReportDetails = (data, successCallback, errorCallBack) => _fetchService('SiteDeviceReport', 'POST', data, successCallback, errorCallBack);
 
 export const FetchFirmwareVersionReportDetails = (data, successCallback, errorCallBack) => _fetchService('FirmwareVersionReport', 'POST', data, successCallback, errorCallBack);
+
+export const FetchApplicationVersionReportDetails = (data, successCallback, errorCallBack) => _fetchService('appVersion', 'GET', data, successCallback, errorCallBack);
+
+export const FetchAqiStatusReportDetails = (data, successCallback, errorCallBack) => _fetchService('DeviceAqiReport', 'POST', data, successCallback, errorCallBack);
 
 // ---------- Alert Notification --------------------------//
 

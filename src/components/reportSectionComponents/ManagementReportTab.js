@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
     Tabs, Tab, Typography, Box, InputLabel, MenuItem, FormControl, Select, Stack, Grid,
 } from '@mui/material';
-import SitesReportForm from './SitesReportForm';
+import AqiSitesReportForm from './AqiSitesReportForm';
 import Alarm from './Alarm';
 import ServerUtilization from './ServerUtilization';
 import FirmwareVersion from './FirmwareVersion';
@@ -282,7 +282,7 @@ export default function ManagementReportTab() {
                     <Box sx={{ borderBottom: 1, borderColor: 'divider', marginTop: 0 }}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" selectionFollowsFocus>
                             <Tab label="Air Quality Index" {...a11yProps(0)} />
-                            <Tab label="Sensor Report" {...a11yProps(1)} />
+                            <Tab label="Sensor Health Status" {...a11yProps(1)} />
                             <Tab label="Alarms" {...a11yProps(2)} />
                             {/* <Tab label="AQMI logs" {...a11yProps(3)} /> */}
                             <Tab label="Device LOGS" {...a11yProps(3)} />
@@ -293,7 +293,7 @@ export default function ManagementReportTab() {
                         </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
-                        <SitesReportForm location_id={location_id} branch_id={branch_id} facility_id={facility_id} building_id={building_id} floor_id={floor_id} lab_id={lab_id} />
+                        <AqiSitesReportForm location_id={location_id} branch_id={branch_id} facility_id={facility_id} building_id={building_id} floor_id={floor_id} lab_id={lab_id} />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         <IndividualReportForm deviceList={deviceList} />

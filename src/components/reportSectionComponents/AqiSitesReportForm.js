@@ -8,7 +8,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import { FetchAqiStatusReportDetails } from '../../services/LoginPageService';
 import { DownloadReportAqiStatusCsv } from '../../services/DownloadCsvReportsService';
 
-function ReportSectionForm(props) {
+function AqiSitesReportForm(props) {
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
   const [isLoading, setGridLoading] = useState(false);
   const [aqiStatusReportList, setAqiStatusReportList] = useState([]);
   const [unTaggedAqiStatusReportList, setUnTaggedAqiStatusReportList] = useState();
@@ -18,6 +20,7 @@ function ReportSectionForm(props) {
   }, [unTaggedAqiStatusReportList]);
 
   const AqiStatusReportHandleSuccess = (dataObject) => {
+    console.log(dataObject)
     setAqiStatusReportList(dataObject.data);
     // console.log(dataObject);
     // setRowCountState(dataObject.data.totalRowCount)
@@ -29,16 +32,16 @@ function ReportSectionForm(props) {
 
   const columns = [
     {
-      field: 'sample_date_time',
+      field: 'my_date',
       headerName: 'Date',
       width: 100,
-      renderCell: (params) => (
-        <Typography>
-          {
-            dateFormat(params.value)
-          }
-        </Typography>
-      ),
+      // renderCell: (params) => (
+      //   <Typography>
+      //     {
+      //       dateFormat(params.value)
+      //     }
+      //   </Typography>
+      // ),
     },
     {
       field: 'stateName',
@@ -76,18 +79,18 @@ function ReportSectionForm(props) {
       width: 100,
     },
     {
-      field: 'alertType',
-      headerName: ' AQI Status',
+      field: 'maxAqi',
+      headerName: 'AQI Status',
       width: 100,
     },
 
   ];
-  const dateFormat = (value) => {
-    const dateTime = value.split(' ');
-    const date = dateTime[0].split('-');
-    const dateValue = `${date[2]}-${date[1]}-${date[0]}`;
-    return dateValue;
-  };
+  // const dateFormat = (value) => {
+  //   const dateTime = value.split(' ');
+  //   const date = dateTime[0].split('-');
+  //   const dateValue = `${date[2]}-${date[1]}-${date[0]}`;
+  //   return dateValue;
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -99,6 +102,8 @@ function ReportSectionForm(props) {
       building_id: props.building_id,
       floor_id: props.floor_id,
       lab_id: props.lab_id,
+      fromDate,
+      toDate
     }, AqiStatusReportHandleSuccess, AqiStatusReportHandleException);
   };
 
@@ -125,7 +130,7 @@ function ReportSectionForm(props) {
             color="primary"
             aria-label="add"
             onClick={() => {
-              DownloadCsv();
+              // DownloadCsv();
             }}
           >
             <DownloadIcon sx={{ mr: 1 }} />
@@ -138,7 +143,7 @@ function ReportSectionForm(props) {
           <TextField sx={{ minWidth: 250 }}
             label="From Date"
             type="date"
-            // value={fromDate}
+            value={fromDate}
             variant="outlined"
             required
             onChange={(e) => {
@@ -163,7 +168,7 @@ function ReportSectionForm(props) {
           <TextField sx={{ minWidth: 250 }}
             label="to date"
             type="date"
-            // value={toDate}
+            value={toDate}
             variant="outlined"
             required
             onChange={(e) => {
@@ -209,4 +214,4 @@ function ReportSectionForm(props) {
   );
 }
 
-export default ReportSectionForm;
+export default AqiSitesReportForm;

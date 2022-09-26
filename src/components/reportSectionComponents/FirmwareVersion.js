@@ -1,18 +1,56 @@
 import React, { useState, useEffect } from 'react'
-import { FormControl, Select, Button, Stack, InputLabel, MenuItem, Box, Fab } from '@mui/material';
+import { FormControl, Select, Button, Stack, InputLabel, MenuItem, Box, Fab, Typography } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { DataGrid } from '@mui/x-data-grid';
 import SendIcon from '@mui/icons-material/Send';
 import { FetchFirmwareVersionReportDetails } from '../../services/LoginPageService';
 
+
+// Date
+const convertDate = (value) => {
+    var date = '';
+    var dateTimeSplit = value && value.split(" ");
+    if (dateTimeSplit) {
+        var dateSplit = dateTimeSplit[0].split("-");
+        date = dateSplit[2] + "-" + dateSplit[1] + "-" + dateSplit[0];
+    }
+    return date;
+}
+
+// Time
+const convertTime = (value) => {
+    var time = '';
+    var dateTimeSplit = value && value.split(" ");
+    if (dateTimeSplit) {
+        time = dateTimeSplit[1];
+    }
+    return time;
+}
+
+
 const columns = [
     {
         field: 'created_at',
         headerName: 'Date',
-        width: 130,
-
+        renderCell: (params) => (
+            <Typography>
+                {
+                    convertDate(params.value)
+                }
+            </Typography>
+        ),
     },
-    // { field: 'time', headerName: 'Time', width: 130 },
+    {
+        field: 'updated_at',
+        headerName: 'Time',
+        renderCell: (params) => (
+            <Typography>
+                {
+                    convertTime(params.value)
+                }
+            </Typography>
+        ),
+    },
     { field: 'deviceName', headerName: 'Device Name', width: 130 },
     { field: 'firmwareVersion', headerName: 'FirmwareVersion', width: 130 },
     // { field: 'HardwareVersion', headerName: 'HardwareVersion', width: 130 },
@@ -28,7 +66,7 @@ const columns = [
 
 
 
-const ApplicationVersion = (props) => {
+const FirmwareVersion = (props) => {
     const [deviceId, setDeviceId] = useState('');
     const [isLoading, setGridLoading] = useState(false);
     const [firmwareVersionReportList, setFirmwareVersionReportList] = useState([]);
@@ -61,7 +99,7 @@ const ApplicationVersion = (props) => {
 
     const FirmwareVersionReportHandleSuccess = (dataObject) => {
         console.log(dataObject.data);
-        setFirmwareVersionReportList(dataObject.data);
+        setFirmwareVersionReportList(dataObject.data.data);
         setRowCountState(dataObject.totalRowCount);
         setGridLoading(false);
     };
@@ -157,4 +195,4 @@ const ApplicationVersion = (props) => {
     )
 }
 
-export default ApplicationVersion
+export default FirmwareVersion
