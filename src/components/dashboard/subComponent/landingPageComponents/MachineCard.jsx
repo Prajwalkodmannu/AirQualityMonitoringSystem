@@ -37,21 +37,22 @@ function MachineCard(props) {
     props.setOpen(true);
   }
   return (
-    <Card>
+    <Card 
+      sx={{ minWidth: 200, boxShadow: 5, borderRadius: 2 }}
+    >
       <CardActionArea
-        sx={{ minWidth: 200, boxShadow: 5, borderRadius: 2 }}
         onClick={() => {
-          props.sensorStatus === '0' ? '' : handleClick();
+          props.sensorStatus === 0 ? '' : handleClick();
         }}
         style={{
-          cursor: props.sensorStatus === '0' ? 'not-allowed' : 'pointer',
+          cursor: props.sensorStatus === 0 ? 'not-allowed' : 'pointer',
         }}
       >
         <Grid
           item xs={12}
           style={{
             // backgroundColor: getSensorBackgroundColor(props.sensorStatus, alertStatus), //props.lightColor || '#cce6ff', 
-            backgroundColor: props.lightColor || '#a5d6a7',
+            backgroundColor: props.sensorStatus === 0 ? '#9e9e9e' : props.lightColor || '#a5d6a7',
             height: '50px'
           }}>
           <Stack
@@ -63,7 +64,7 @@ function MachineCard(props) {
             <Tooltip title={props.sensorNameUnit}>
               <Typography style={{
                 // color: getSensorHeaderColor(props.sensorStatus, alertStatus) || '#004d99',
-                color: props.alertColor || '#004d99',
+                color: props.sensorStatus === 0 ? '#212121' : props.alertColor || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -78,7 +79,7 @@ function MachineCard(props) {
             <Tooltip title={props.sensorName}>
               <Typography style={{
                 // color: getSensorHeaderColor(props.sensorStatus, alertStatus) || '#004d99',
-                color: props.alertColor || '#004d99',
+                color: props.sensorStatus === 0 ? '#212121' : props.alertColor || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -107,7 +108,12 @@ function MachineCard(props) {
             }}
             >
               {props.sensorStatus === '0' ? <WifiOffOutlined style={{ fontSize: '70px', color: '#707070' }} /> :
-                <MachineCircularProgressbar score={props.last} color={props.alertColor} minReading={props.minRatedReadingScale} maxReading={props.maxRatedReadingScale} />
+                <MachineCircularProgressbar 
+                  score={props.sensorStatus === 0 ? '0': props.last}
+                  text={props.sensorStatus === 0 ? 'NA' : props.last}
+                  color={props.sensorStatus === 0 ? 'NA' : props.alertColor} 
+                  minReading={props.minRatedReadingScale} 
+                  maxReading={props.maxRatedReadingScale} />
               }
             </div>
             <div style={{
@@ -121,7 +127,10 @@ function MachineCard(props) {
                 gutterBottom
                 component="div"
                 style={{
-                  fontWeight: 1000, color: props.color || '#7F8487', marginLeft: 9, marginTop: 22,
+                  fontWeight: 1000, 
+                  color: props.sensorStatus === 0 ? '#212121' : props.color || '#7F8487', 
+                  marginLeft: 9, 
+                  marginTop: 22,
                 }}
               >
                 {props.units}
@@ -135,7 +144,7 @@ function MachineCard(props) {
             spacing={1}
           >
             <div>
-              <Typography style={{ marginLeft: 9, color: '#004d99' }} align="left" display="block" gutterBottom component="div">
+              <Typography style={{ color: '#004d99', textAlignLast: 'center' }} align="left" display="block" gutterBottom component="div">
                 <b>MIN</b>
               </Typography>
               <Typography
@@ -143,13 +152,13 @@ function MachineCard(props) {
                 display="block"
                 gutterBottom
                 component="div"
-                style={{ fontWeight: 600, color: '#004d99' || '#7F8487', marginLeft: 9 }}
+                style={{ fontWeight: 600, color: '#004d99' || '#7F8487', textAlignLast: 'center'}}
               >
-                {props.min}
+                {props.sensorStatus === 0 ? 'NA' : props.min}
               </Typography>
             </div>
             <div>
-              <Typography style={{ marginLeft: 9, color: '#004d99' }} align="left" display="block" gutterBottom component="div">
+              <Typography style={{ color: '#004d99', textAlignLast: 'center' }} align="left" display="block" gutterBottom component="div">
                 <b>MAX</b>
               </Typography>
               <Typography
@@ -157,13 +166,13 @@ function MachineCard(props) {
                 display="block"
                 gutterBottom
                 component="div"
-                style={{ fontWeight: 600, color: "#004d99" || '#7F8487', marginLeft: 9 }}
+                style={{ fontWeight: 600, color: "#004d99" || '#7F8487', textAlignLast: 'center'}}
               >
-                {props.max}
+                {props.sensorStatus === 0 ? 'NA' : props.max}
               </Typography>
             </div>
             <div>
-              <Typography style={{ color: '#004d99' }} align="center" display="block" gutterBottom component="div">
+              <Typography style={{ color: '#004d99',textAlignLast: 'center' }} align="center" display="block" gutterBottom component="div">
                 <b>AVG</b>
               </Typography>
               <Typography
@@ -171,9 +180,9 @@ function MachineCard(props) {
                 display="block"
                 gutterBottom
                 component="div"
-                style={{ fontWeight: 600, color: "#004d99" || '#7F8487', marginLeft: 9 }}
+                style={{ fontWeight: 600, color: "#004d99" || '#7F8487', textAlignLast: 'center' }}
               >
-                {props.avg}
+                {props.sensorStatus === 0 ? 'NA' : props.avg}
               </Typography>
             </div>
           </Stack>
