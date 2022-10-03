@@ -50,7 +50,7 @@ function BuildingModal({
     setBuildingId(editData.id || '');
     setBuildingTag(editData.buildingTag || '');
     setBuildingTotalFloors(editData.buildingTotalFloors || '');
-    setPreviewBuilding(editData.buildingImg ? `http://varmatrix.com/Aqms/blog/public/${editData.buildingImg}` : previewImage);
+    setPreviewBuilding(editData.buildingImg ? `https://wisething.in/aideaLabs/blog/public/${editData.buildingImg}` : previewImage);
     setMarkerLng(parseFloat(coordinates[0]));
     setMarkerLat(parseFloat(coordinates[1]));
   };

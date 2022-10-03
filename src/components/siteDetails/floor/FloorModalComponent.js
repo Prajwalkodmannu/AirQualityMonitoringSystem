@@ -40,7 +40,7 @@ function FloorModal({
     setFloorId(editData.id || '');
     setFloorStage(editData.floorStage || '');
     setFloorCords(editData.floorCords || '');
-    setPreviewFloor(editData.floorMap ? `http://varmatrix.com/Aqms/blog/public/${editData.floorMap}` : previewImage);
+    setPreviewFloor(editData.floorMap ? `https://wisething.in/aideaLabs/blog/public/${editData.floorMap}` : previewImage);
     // setFloorMap(editData.floorMap || '');
     // setFloorCords(editData.floorCords || []);
   };

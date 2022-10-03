@@ -41,7 +41,7 @@ function LabModal({
     setLabDepName(editData.labDepName || '');
     setLabId(editData.id || '');
     setLabCords(editData.labCords || '');
-    setPreviewLab(editData.labDepMap ? `http://varmatrix.com/Aqms/blog/public/${editData.labDepMap}` : previewImage);
+    setPreviewLab(editData.labDepMap ? `https://wisething.in/aideaLabs/blog/public/${editData.labDepMap}` : previewImage);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
