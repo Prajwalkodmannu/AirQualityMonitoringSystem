@@ -106,6 +106,7 @@ function DeviceAdd({
   const [stelAlert, setStelAlert] = useState(editData?.stelAlert || '');
   const [twaDuration, setTwaDuration] = useState(editData?.twaDuration || '');
   const [twaStartTime, setTwaStartTime] = useState(editData?.twaStartTime || '01:05');
+  const [stelStartTime, setStelStartTime] = useState(editData?.stelStartTime || '01:05');
   const [twaType, setTwaType] = useState(editData?.twaType || 'ppm');
   const [twaLimit, setTwaLimit] = useState(editData?.twaLimit || 0);
   const [twaAlert, setTwaAlert] = useState(editData?.twaAlert || '');
@@ -237,10 +238,12 @@ function DeviceAdd({
         isAQI,
         isStel,
         stelDuration,
+        stelStartTime,
         stelType,
         stelLimit,
         stelAlert,
         twaDuration,
+        twaStartTime,
         twaType,
         twaLimit,
         twaAlert,
@@ -304,10 +307,12 @@ function DeviceAdd({
         isAQI,
         isStel,
         stelDuration,
+        stelStartTime,
         stelType,
         stelLimit,
         stelAlert,
         twaDuration,
+        twaStartTime,
         twaType,
         twaLimit,
         twaAlert,
@@ -597,6 +602,7 @@ function DeviceAdd({
                         setStelAlert(data.stelAlert);
                         setTwaDuration(data.twaDuration);
                         setTwaStartTime(data.twaStartTime);
+                        setStelStartTime(data.stelStartTime);
                         setTwaType(data.twaType);
                         setTwaLimit(data.twaLimit);
                         setTwaAlert(data.twaAlert);
@@ -757,6 +763,8 @@ function DeviceAdd({
             setTwaDuration={setTwaDuration}
             twaStartTime={twaStartTime}
             setTwaStartTime={setTwaStartTime}
+            stelStartTime={stelStartTime}
+            setStelStartTime={setStelStartTime}
             twaType={twaType}
             setTwaType={setTwaType}
             twaLimit={twaLimit}
@@ -908,8 +916,10 @@ function DeviceAdd({
                     setPollingIntervalType={setPollingIntervalType}
                     criticalMinValue={criticalMinValue}
                     setCriticalMinValue={setCriticalMinValue}
+                    criticalRefMinValue={criticalRefMinValue}
                     criticalMaxValue={criticalMaxValue}
                     setCriticalMaxValue={setCriticalMaxValue}
+                    criticalRefMaxValue={criticalRefMaxValue}
                     criticalAlertType={criticalAlertType}
                     setCriticalAlertType={setCriticalAlertType}
                     criticalLowAlert={criticalLowAlert}
@@ -918,8 +928,10 @@ function DeviceAdd({
                     setCriticalHighAlert={setCriticalHighAlert}
                     warningMinValue={warningMinValue}
                     setWarningMinValue={setWarningMinValue}
+                    warningRefMinValue={warningRefMinValue}
                     warningMaxValue={warningMaxValue}
                     setWarningMaxValue={setWarningMaxValue}
+                    warningRefMaxValue={warningRefMaxValue}
                     warningAlertType={warningAlertType}
                     setWarningAlertType={setWarningAlertType}
                     warningLowAlert={warningLowAlert}
@@ -928,8 +940,10 @@ function DeviceAdd({
                     setWarningHighAlert={setWarningHighAlert}
                     outofrangeMinValue={outofrangeMinValue}
                     setOutofrangeMinValue={setOutofrangeMinValue}
+                    outofrangeRefMinValue={outofrangeRefMinValue}
                     outofrangeMaxValue={outofrangeMaxValue}
                     setOutofrangeMaxValue={setOutofrangeMaxValue}
+                    outofrangeRefMaxValue={outofrangeRefMaxValue}
                     outofrangeAlertType={outofrangeAlertType}
                     setOutofrangeAlertType={setOutofrangeAlertType}
                     outofrangeLowAlert={outofrangeLowAlert}

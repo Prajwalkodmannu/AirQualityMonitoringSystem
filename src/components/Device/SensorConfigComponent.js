@@ -70,7 +70,8 @@ function SensorConfig({
   const [stelAlert, setStelAlert] = useState(editData.stelAlert || '');
   const [twaDuration, setTwaDuration] = useState(editData.twaDuration || '');
   const [twaType, setTwaType] = useState(editData.twaType || 'ppm');
-  const [twaStartTime, setTwaStartTime] = useState(editData.twaStartTime || '01:05')
+  const [twaStartTime, setTwaStartTime] = useState(editData.twaStartTime || '01:05');
+  const [stelStartTime, setStelStartTime] = useState(editData.stelStartTime || '01:05');
   const [twaLimit, setTwaLimit] = useState(editData.twaLimit || 0);
   const [twaAlert, setTwaAlert] = useState(editData.twaAlert || '');
 
@@ -172,6 +173,7 @@ function SensorConfig({
           twaDuration,
           twaType,
           twaStartTime,
+          stelStartTime,
           twaLimit,
           twaAlert,
           parmGoodMinScale,
@@ -228,6 +230,7 @@ function SensorConfig({
           twaDuration,
           twaType,
           twaStartTime,
+          stelStartTime,
           twaLimit,
           twaAlert,
           parmGoodMinScale,
@@ -633,6 +636,8 @@ function SensorConfig({
                   setTwaType={setTwaType}
                   twaStartTime={twaStartTime}
                   setTwaStartTime={setTwaStartTime}
+                  stelStartTime={stelStartTime}
+                  setStelStartTime={setStelStartTime}
                   twaLimit={twaLimit}
                   setTwaLimit={setTwaLimit}
                   twaAlert={twaAlert}
