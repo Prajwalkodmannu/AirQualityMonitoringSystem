@@ -9,10 +9,11 @@ import {
   NotificationsActiveOutlined,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import MachineCircularProgressbar from '../dashboard/subComponent/landingPageComponents/MachineCircularProgressbar';
+import { setAQIColor } from '../../utils/helperFunctions';
 
-function Widget({ type , setAlertOpen, totalSensors, totalAlerts }) {
+function Widget({ type , setAlertOpen, totalSensors, totalAlerts, aqi }) {
   let data; 
-
 
   const [dateTime, setDateTime] = useState({
     time: '',
@@ -84,6 +85,31 @@ function Widget({ type , setAlertOpen, totalSensors, totalAlerts }) {
       ),
     };
     break;
+    case 'aqi':
+    data = {
+      title: 'AQI',
+      link: '',
+      figure: (
+        <div style={{
+          width: '50%',
+          minWidth: '100px',
+          maxWidth: '100px',
+          height: '50%',
+          maxHeight: '50px'
+        }}>
+            <MachineCircularProgressbar 
+              text={aqi}
+              score={aqi} 
+              color={setAQIColor(aqi)} 
+              minReading='0' 
+              maxReading='500' 
+            />
+        </div>
+      ),
+      diff: '',
+      icon: '',
+    };
+    break;
   case 'time':
     data = {
       title: 'Time',
@@ -120,12 +146,14 @@ function Widget({ type , setAlertOpen, totalSensors, totalAlerts }) {
     <div className="widget" onClick={() => {
         type === 'alerts' && setAlertOpen(true);
       }}
-      style={{ cursor: type === 'alerts' && 'pointer', display: 'inline-block' }}
+      style={{ 
+        cursor: type === 'alerts' && 'pointer', 
+        display: type === "aqi" && aqi === 'NA' ? 'none' : 'inline-block' }}
     >
       <div>
         <div className="left" >
-          <span className="title" style={{minWidth: '150px'}}>{data.title}</span>
-          <span className="counter" style={{minWidth: '150px'}}>
+          <span className="title" style={{minWidth: '130px'}}>{data.title}</span>
+          <span className="counter" style={{minWidth: '130px', alignSelf: type === 'aqi' && 'center'}}>
             {data.figure}
           </span>
           <span className="link">{data.link}</span>
