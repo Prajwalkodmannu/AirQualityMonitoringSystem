@@ -33,6 +33,15 @@ function AnalogAlert({
   const validateForNullValue = (value, type) => {
     AnalogSensorValidate(value, type, setErrorObject);
   };
+
+  const validateAlertrange = (currentValue, minimumValue, maximumvalue, setCurrentValue) =>{
+    if(currentValue<minimumValue){
+      setCurrentValue(minimumValue);
+    }
+    if(currentValue>maximumvalue){
+      setCurrentValue(maximumvalue);
+    }
+  }
   return (
     <DialogContent sx={{ px: 0, p: 0 }}>
       <Grid container spacing={1} sx={{ mt: 1 }}>
@@ -207,7 +216,10 @@ function AnalogAlert({
                 min: criticalRefMinValue,
                 max: criticalRefMaxValue,
               }}
-              onBlur={() => validateForNullValue(criticalMinValue, 'criticalMinValue')}
+              onBlur={() => {
+                validateForNullValue(criticalMinValue, 'criticalMinValue');
+                validateAlertrange(criticalMinValue, criticalRefMinValue, criticalRefMaxValue, setCriticalMinValue);
+              }}
               onChange={(e) => {
                 setCriticalMinValue(e.target.value);
               }}
@@ -237,7 +249,10 @@ function AnalogAlert({
               value={criticalMaxValue}
               type="number"
               disabled={criticalAlertType === 'Low' || criticalAlertType === '' || (moduleAccess.edit === false && true)}
-              onBlur={() => validateForNullValue(criticalMaxValue, 'criticalMaxValue')}
+              onBlur={() => {
+                validateForNullValue(criticalMaxValue, 'criticalMaxValue');
+                validateAlertrange(criticalMaxValue, criticalRefMinValue, criticalRefMaxValue, setCriticalMaxValue);
+              }}
               inputProps={{
                 min: criticalRefMinValue,
                 max: criticalRefMaxValue,
@@ -396,7 +411,10 @@ function AnalogAlert({
               value={warningMinValue}
               type="number"
               disabled={warningAlertType === 'High' || warningAlertType === '' || (moduleAccess.edit === false && true)}
-              onBlur={() => validateForNullValue(warningMinValue, 'warningMinValue')}
+              onBlur={() => {
+                validateForNullValue(warningMinValue, 'warningMinValue');
+                validateAlertrange(warningMinValue, warningRefMinValue, warningRefMaxValue, setWarningMinValue);
+              }}
               inputProps={{
                 min: warningRefMinValue,
                 max: warningRefMaxValue,
@@ -430,7 +448,10 @@ function AnalogAlert({
               value={warningMaxValue}
               type="number"
               disabled={warningAlertType === 'Low' || warningAlertType === '' || (moduleAccess.edit === false && true)}
-              onBlur={() => validateForNullValue(warningMaxValue, 'warningMaxValue')}
+              onBlur={() => {
+                validateForNullValue(warningMaxValue, 'warningMaxValue');
+                validateAlertrange(warningMaxValue, warningRefMinValue, warningRefMaxValue, setWarningMaxValue);
+              }}
               inputProps={{
                 min: warningRefMinValue,
                 max: warningRefMaxValue,
@@ -589,7 +610,10 @@ function AnalogAlert({
               value={outofrangeMinValue}
               type="number"
               disabled={outofrangeAlertType === 'High' || outofrangeAlertType === '' || (moduleAccess.edit === false && true)}
-              onBlur={() => validateForNullValue(outofrangeMinValue, 'outofrangeMinValue')}
+              onBlur={() => {
+                validateForNullValue(outofrangeMinValue, 'outofrangeMinValue');
+                validateAlertrange(outofrangeMinValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMinValue);
+              }}
               inputProps={{
                 min: outofrangeRefMinValue,
                 max: outofrangeRefMaxValue,
@@ -623,7 +647,10 @@ function AnalogAlert({
               value={outofrangeMaxValue}
               type="number"
               disabled={outofrangeAlertType === 'Low' || outofrangeAlertType === '' || (moduleAccess.edit === false && true)}
-              onBlur={() => validateForNullValue(outofrangeMaxValue, 'outofrangeMaxValue')}
+              onBlur={() => {
+                validateForNullValue(outofrangeMaxValue, 'outofrangeMaxValue');
+                validateAlertrange(outofrangeMaxValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMaxValue);
+              }}
               inputProps={{
                 min: outofrangeRefMinValue,
                 max: outofrangeRefMaxValue,
