@@ -402,6 +402,25 @@ const BumptestValidate = (value, type, setErrorObject) => {
       };
     });
       break;
+    case 'percentageConcentrationGas': setErrorObject((oldErrorState) => {
+      let status = {};
+      if (!validate('number', value)) {
+        status = {
+          errorStatus: true,
+          helperText: 'Enter value in sec',
+        };
+      } else {
+        status = {
+          errorStatus: false,
+          helperText: '',
+        };
+      }
+      return {
+        ...oldErrorState,
+        percentageConcentrationGas: status,
+      };
+    });
+      break;
     default: break;
   }
 };

@@ -226,17 +226,21 @@ function AddDeviceListResults(props) {
         bumptestDeployedSensorsList(dataObject.deviceId);
         break;
       case 'firmwareUpgradation':
+        setChangeDeviceId(dataObject.deviceId);
         setDeviceModeHeader('Firmware Upgradation');
         setDeviceModeSubHeader('Upgrading...');
         setDeviceModalOpen(true);
         break;
       case 'config':
+        setChangeDeviceId(dataObject.deviceId);
         setDeviceModeHeader('Device configuration');
         setDeviceModeSubHeader('Configuring...');
         setDeviceModalOpen(true);
         break;
       case 'debug': 
         setDebugModalOpen(true);
+        break;
+      case 'enabled' : setChangeDeviceId('');
         break;
       default: break;
       }
@@ -505,7 +509,7 @@ function AddDeviceListResults(props) {
             }}
             >
               <ImageMarkerList
-                labImage={`http://varmatrix.com/Aqms/blog/public/${props.labMap}`}
+                labImage={`https://wisething.in/aideaLabs/blog/public/${props.labMap}`}
                 deviceCoordsList={deviceCoordsList}
               />
             </div>
@@ -552,10 +556,14 @@ function AddDeviceListResults(props) {
         setOpen={setConfigSetupOpen}
       />
       <DeviceModeModal
+        changeDeviceId={changeDeviceId}
+        setChangeDeviceId={setChangeDeviceId}
+        changeDeviceIdMode={changeDeviceIdMode}
         deviceModalOpen={deviceModalOpen}
         setDeviceModalOpen={setDeviceModalOpen}
         deviceModeHeader={deviceModeHeader}
         deviceModeSubHeader={deviceModeSubHeader}
+        setNotification={setNotification}
       />
       <DebugModeModal
         open={debugModalOpen}

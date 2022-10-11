@@ -8,7 +8,7 @@ import { LabListResults } from './siteDetails/lab/labList';
 function Lab() {
   const routeStateObject = useLocation();
   const { floorMap } = routeStateObject.state;
-  const imgSrc = `http://varmatrix.com/Aqms/blog/public/${floorMap}`;
+  const imgSrc = `https://wisething.in/aideaLabs/blog/public/${floorMap}`;
   return (
     <Container maxWidth={false} style={{ marginTop: 0 }}>
       <Grid

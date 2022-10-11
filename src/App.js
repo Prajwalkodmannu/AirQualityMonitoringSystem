@@ -24,6 +24,7 @@ import AddDeviceSensor from './components/AddDeviceSensorComponent';
 import ApplicationStore from './utils/localStorageUtil';
 import ManagementReportTab from './components/reportSectionComponents/ManagementReportTab';
 import AppVersion from './components/AppVersion';
+import GasCylinder from './pages/GasCylinderComponent';
 
 function ProtectedRoutes() {
   const { user_token } = ApplicationStore().getStorage('userDetails');
@@ -43,6 +44,7 @@ function App() {
               <Route path="CustomerManagement/*" element={<CustomerManagement />} />
               <Route path="UserManagement/*" element={<UserManagement />} />
               <Route path="Vendor/*" element={<VendorManagement />} />
+              <Route path="GasCylinder" element={<GasCylinder />} />
               <Route path="Report/*" element={<ManagementReportTab />} />
               <Route path="ChangePassword/*" element={<UserResetPassword />} />
               <Route path="AppVersion/*" element={<AppVersion />} />

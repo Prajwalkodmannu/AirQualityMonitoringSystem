@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Breadcrumbs, Typography, Grid,
+  Breadcrumbs, Typography, Grid, Backdrop, CircularProgress,
 } from '@mui/material';
-import { DeviceFetchService, HooterRelayService } from '../../../../services/LoginPageService';
+import { DeviceFetchService, HooterRelayService, TestHooterRelay } from '../../../../services/LoginPageService';
 import DeviceWidget from '../deviceCard/DeviceWidget';
 import NotificationWidget from '../deviceCard/NotificationWidget';
 import ApplicationStore from '../../../../utils/localStorageUtil';
@@ -27,11 +27,13 @@ function DeviceGridComponent(props) {
   const [deviceAlert, setAlertTotal] = useState('0');
   const [disconnectedDevices, setDisconnectedDevices] = useState('0');
   const [labHooterStatus, setLabHooterStatus] = useState('0');
+  const [aqiIndex, setAqiIndex] = useState('NA');
   const [expanded, setExpanded] = useState(false);
   const { intervalDetails, userDetails } = ApplicationStore().getStorage('userDetails');
   const { deviceIdList } = ApplicationStore().getStorage('alertDetails');
   const intervalSec = intervalDetails.deviceLogInterval * 1000;
   const [pollingStatus, setPollingStatus] = useState(false);
+  const [backdropOpen, setBackdropOpen] = useState(true);
   const [openNotification, setNotification] = useState({
     status: false,
     type: 'error',
@@ -68,27 +70,51 @@ function DeviceGridComponent(props) {
       return arrayList && { top: arrayList[0], left: arrayList[1] };
     });
     const filteredArray = deviceCoordinationsList.filter((x) => x != null);
-    setDeviceCoordsList(filteredArray || []);
+    // setDeviceCoordsList(filteredArray || []);
+    setDeviceCoordsList([]);
     setDeviceTotal(dataObject.totalData);
     setAlertTotal(dataObject.alertCount);
     setDisconnectedDevices(dataObject.disconnectedDevices);
+    setAqiIndex(dataObject.aqiIndex || 'NA');
     setLabHooterStatus(dataObject.labHooterStatus);
+    setBackdropOpen(false);
   };
 
   const handleException = () => { };
 
   const setLocationlabel = (value) => {
     const { locationDetails } = ApplicationStore().getStorage('userDetails');
+    setDeviceCoordsList([]);
     setProgressState(() => {
       let newValue = value;
-      if (locationDetails.facility_id) {
-        newValue = 3;
+      if (locationDetails.lab_id) {
+        // newValue = value < 7 ? 5 : value;
+        // value >=4 ? setIsGeoMap(false) : setIsGeoMap(true);
+        // setIsDashBoard(0);
+      } else if (locationDetails.floor_id) {
+        newValue = value < 6 ? 5 : value;
+        value >=4 ? setIsGeoMap(false) : setIsGeoMap(true);
+        setIsDashBoard(0);
+      } else if (locationDetails.building_id) {
+        newValue = value < 5 ? 4 : value;
+        value <=3 ? setIsGeoMap(true) : setIsGeoMap(false);
+        setIsDashBoard(0);
+      } else if (locationDetails.facility_id) {
+        newValue = value < 4 ? 3 : value;
+        value <=3 ? setIsGeoMap(true) : setIsGeoMap(false);
+        setIsDashBoard(0);
       } else if (locationDetails.branch_id) {
-        newValue = 2;
+        newValue = value < 3 ? 2 : value;
+        value <= 3 ? setIsGeoMap(true) : setIsGeoMap(false);
+        setIsDashBoard(0);
       } else if (locationDetails.location_id) {
-        newValue = 1;
+        newValue = value < 2 ? 1 : value;
+        value <= 3 ? setIsGeoMap(true) : setIsGeoMap(false);
+        setIsDashBoard(0);
       } else {
         // locationAlerts({});
+        value <= 3 ? setIsGeoMap(true) : setIsGeoMap(false);
+        setIsDashBoard(0);
       }
       return newValue;
     });
@@ -98,9 +124,6 @@ function DeviceGridComponent(props) {
     userDetails?.userRole === 'systemSpecialist' && HooterRelayService({ lab_id: props.locationDetails.lab_id }, handleHooterSuccess, handleHooterException);
   }
 
-  const testHooter = () =>{
-    // Hooter test API call
-  }
   const handleHooterSuccess = (dataObject) => {
     console.log(dataObject.message);
     setLabHooterStatus('0');
@@ -116,6 +139,27 @@ function DeviceGridComponent(props) {
       status: false,
       type: 'error',
       message: 'Unable to disable the hooter...!',
+    });
+  }
+  
+  const testHooter = () =>{
+    TestHooterRelay({lab_id: props.locationDetails.lab_id}, handleTestHooterSuccess, handleTestHooterException)
+  }
+
+  const handleTestHooterSuccess = (dataObject) =>{
+    setLabHooterStatus(dataObject.currentHooterStatus);
+    setNotification({
+      status: true,
+      type: 'success',
+      message: dataObject.message,
+    });
+  }
+
+  const handleTestHooterException = (errorObject, errorMessage) =>{
+    setNotification({
+      status: false,
+      type: 'error',
+      message: 'Unable to test the Hooter...!',
     });
   }
 
@@ -139,20 +183,35 @@ function DeviceGridComponent(props) {
       <Breadcrumbs aria-label="breadcrumb" separator="›">
         <h3
           onClick={() => {
+            setDeviceCoordsList([]);
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            if (locationDetails.facility_id) {
+            let value = 0;
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            } else if (locationDetails.facility_id) {
               locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
+              value = 3;
             } else if (locationDetails.branch_id) {
               locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
+              value = 2;
             } else if (locationDetails.location_id) {
               locationAlerts({ location_id: locationDetails.location_id || props.locationDetails.location_id });
+              value = 1;
             } else {
               locationAlerts({});
+              value = 0;
             }
-            setDeviceCoordsList([]);
-            setIsGeoMap(true);
-            setLocationlabel(0);
-            setIsDashBoard(0);
+            setImg('');
+            // setIsGeoMap(true);
+            setLocationlabel(value);
+            // setIsDashBoard(0);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -160,18 +219,32 @@ function DeviceGridComponent(props) {
         </h3>
         <h3
           onClick={() => {
+            setDeviceCoordsList([]);
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            if (locationDetails.facility_id) {
+            let value = 1;
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            } else if (locationDetails.facility_id) {
               locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
+              value = 3;
             } else if (locationDetails.branch_id) {
               locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
+              value = 2;
             } else {
               locationAlerts({ location_id: locationDetails.location_id || props.locationDetails.location_id });
+              value = 1;
             }
-            setDeviceCoordsList([]);
-            setIsGeoMap(true);
-            setLocationlabel(1);
-            setIsDashBoard(0);
+            setImg('');
+            // setIsGeoMap(true);
+            setLocationlabel(value);
+            // setIsDashBoard(0);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -179,16 +252,29 @@ function DeviceGridComponent(props) {
         </h3>
         <h3
           onClick={() => {
+            setDeviceCoordsList([]);
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            if (locationDetails.facility_id) {
+            let value = 2;
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            } else if (locationDetails.facility_id) {
               locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
+              value = 3;
             } else {
               locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
+              value = 2;
             }
-            setDeviceCoordsList([]);
-            setIsGeoMap(true);
-            setLocationlabel(2);
-            setIsDashBoard(0);
+            setImg('');
+            // setIsGeoMap(true);
+            setLocationlabel(value);
+            // setIsDashBoard(0);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -196,12 +282,27 @@ function DeviceGridComponent(props) {
         </h3>
         <h3
           onClick={() => {
-            const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
             setDeviceCoordsList([]);
-            setIsGeoMap(true);
-            setProgressState(3);
-            setIsDashBoard(0);
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            let value = 3;
+            // locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            } else {
+              locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
+              value = 3;
+            }
+            setImg('');
+            // setIsGeoMap(true);
+            setLocationlabel(value);
+            // setIsDashBoard(0);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -209,13 +310,24 @@ function DeviceGridComponent(props) {
         </h3>
         <h3
           onClick={() => {
-            const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            locationAlerts({ building_id: locationDetails.building_id || props.locationDetails.building_id });
-            setIsGeoMap(false);
             setDeviceCoordsList([]);
-            setImg(siteImages.buildingImage);
-            setProgressState(4);
-            setIsDashBoard(0);
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            let value = 4;
+            // locationAlerts({ building_id: locationDetails.building_id || props.locationDetails.building_id });
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            }
+            // setIsGeoMap(false);
+            setImg('');
+            setLocationlabel(value);
+            // setIsDashBoard(0);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -223,13 +335,21 @@ function DeviceGridComponent(props) {
         </h3>
         <h3
           onClick={() => {
-            const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            locationAlerts({ floor_id: locationDetails.floor_id || props.locationDetails.floor_id });
-            setImg(siteImages.floorImage);
             setDeviceCoordsList([]);
-            setIsGeoMap(false);
-            setProgressState(5);
-            setIsDashBoard(0);
+            const { locationDetails } = ApplicationStore().getStorage('userDetails');
+            let value = 5;
+            // locationAlerts({ floor_id: locationDetails.floor_id || props.locationDetails.floor_id });
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            }
+            setImg('');
+            // setIsGeoMap(false);
+            setLocationlabel(value);
+            // setIsDashBoard(0);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -239,7 +359,7 @@ function DeviceGridComponent(props) {
           underline="hover"
           color="inherit"
         >
-          {breadCrumbLabels.lablabel}
+          {breadCrumbLabels.labLabel}
         </Typography>
       </Breadcrumbs>
       <div className="widgets" style={{ height: 'auto', backgroundColor: '#fafafa', padding: 10 }}>
@@ -247,7 +367,8 @@ function DeviceGridComponent(props) {
         <NotificationWidget type="disconnectedDevice" figure={disconnectedDevices} />
         <NotificationWidget type="devices" figure={deviceTotal} />
         <NotificationWidget type="alerts" figure={deviceAlert} handleClick={handleAlert} />
-        <NotificationWidget type="time" />
+        <NotificationWidget type="aqi" aqi={aqiIndex} />
+        {/* <NotificationWidget type="time" /> */}
       </div>
       <div
         className=""
@@ -292,6 +413,13 @@ function DeviceGridComponent(props) {
         type={openNotification.type}
       />
       <AlertModalComponent alertOpen={alertOpen} setAlertOpen={setAlertOpen} locationDetails={labId} />
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdropOpen}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

@@ -83,6 +83,7 @@ export function CustomerListResults() {
   };
 
   useEffect(() => {
+    setGridLoading(true);
     FetchCustomerService(handleSuccess, handleException);
   }, [refreshData]);
 

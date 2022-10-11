@@ -307,6 +307,8 @@ export const CompanyLogInterval = (data, successCallback, errorCallBack) => { re
 
 export const HooterRelayService = (data, successCallback, errorCallBack) => { return _fetchService(`labHooterRelay`, 'POST', data, successCallback, errorCallBack); };
 
+export const TestHooterRelay = (data, successCallback, errorCallBack) => { return _fetchService(`testLabHooterRealay`, 'POST', data, successCallback, errorCallBack); };
+
 // -------------Dynamic Unit listing --------------//
 export const DynamicUnitListService = (id, successCallback, errorCallBack) => _fetchService(`sensorCategoryUnitsDisplay/${id}`, 'GET', {}, successCallback, errorCallBack);
 
@@ -314,3 +316,17 @@ export const DynamicUnitListService = (id, successCallback, errorCallBack) => _f
 export const AppVersionAddService = (data, successCallback, errorCallBack) => _fetchService('appVersion/add', 'POST', data, successCallback, errorCallBack);
 
 export const AppVersionFetchService = (successCallback, errorCallBack) => _fetchService('appVersion', 'GET', {}, successCallback, errorCallBack);
+
+// ----------- Device Configuration / Firmware Upgradation / Debug --------//
+export const TestModeChangeInitiator = (data, successCallback, errorCallBack) => { return _fetchService(`configurationStatus`, 'POST', data, successCallback, errorCallBack); };
+
+export const ConfigUpgradeModeResult = (data, successCallback, errorCallBack) => { return _fetchService(`configurationProcessStatus`, 'POST', data, successCallback, errorCallBack); };
+
+// ---------- Gas Cylinder ----------------//
+export const GasCylinderFetchService = (successCallback, errorCallBack) => _fetchService('gasCylinder', 'GET', {}, successCallback, errorCallBack);
+
+export const GasCylinderAddService = (data, successCallback, errorCallBack) => _fetchService('gasCylinder/add', 'POST', data, successCallback, errorCallBack);
+
+export const GasCylinderEditService = (data, successCallback, errorCallBack) => _fetchService(`gasCylinder/${data.id}/update`, 'POST', data, successCallback, errorCallBack);
+
+export const GasCylinderDeleteService = (id, successCallback, errorCallBack) => _fetchService(`gasCylinder/${id}/delete`, 'DELETE', {}, successCallback, errorCallBack);

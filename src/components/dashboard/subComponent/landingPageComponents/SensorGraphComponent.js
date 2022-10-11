@@ -21,7 +21,9 @@ function SensorGraphComponent({
   ]);
 
   useEffect(() => {
-    DashboardIndividualSensorDetails({ sensorTagId, segretionInterval, rangeInterval }, handleSuccess, handleException);
+    if(sensorTagId){
+      DashboardIndividualSensorDetails({ sensorTagId, segretionInterval, rangeInterval }, handleSuccess, handleException);
+    }
   }, [sensorTagId, segretionInterval, rangeInterval]);
 
   const handleSuccess = (dataObject) => {

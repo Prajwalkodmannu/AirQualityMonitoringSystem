@@ -2,7 +2,7 @@ import { Breadcrumbs, Chip, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { LabfetchService } from '../../../../services/LoginPageService';
-import { setAlertPriorityAndType } from '../../../../utils/helperFunctions';
+import { setAlertPriorityAndType, setAQIColor } from '../../../../utils/helperFunctions';
 import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
@@ -18,14 +18,15 @@ function LabGridComponent(props) {
     locationAlerts
   } = props;
   const { labIdList } = ApplicationStore().getStorage('alertDetails');
-
+  const { locationDetails } = ApplicationStore().getStorage('userDetails');
+  
   const [dataList, setDataList] = useState([]);
   const [isLoading, setGridLoading] = useState(true);
   const dataColumns = [
     {
       field: 'labDepName',
       headerName: 'Zone Name',
-      width: 400,
+      width: 200,
       type: 'actions',
       getActions: (params) => [
         <LinkTo selectedRow={params.row} />,
@@ -61,9 +62,31 @@ function LabGridComponent(props) {
         );
       }),
     },
+    {
+      field: 'aqiIndex',
+      headerName: 'AQI Index',
+      width: 100,
+      renderCell: ((params) => {
+        return(
+          <span
+            style={{
+              color: setAQIColor(params.row.aqiIndex)
+            }}
+          >
+            {params.row.aqiIndex}
+          </span>
+        )
+      }),
+    }
   ];
   useEffect(() => {
     setGridLoading(true);
+    setDeviceCoordsList([]);
+    // const { locationDetails } = ApplicationStore().getStorage('userDetails');
+    // if(locationDetails?.imageFloorURL !== ''){
+    //   setImg(locationDetails?.imageFloorURL);
+    // }
+    
     LabfetchService({
       location_id: props.locationDetails.location_id,
       branch_id: props.locationDetails.branch_id,
@@ -76,6 +99,7 @@ function LabGridComponent(props) {
   const handleSuccess = (dataObject) => {
     setGridLoading(false);
     setDataList(dataObject.data);
+    setImg(dataObject.imageFloorURL);
   };
 
   const handleException = () => {
@@ -92,7 +116,7 @@ function LabGridComponent(props) {
           });
 
           setBreadCrumbLabels((oldvalue) => {
-            return { ...oldvalue, lablabel: selectedRow.labDepName };
+            return { ...oldvalue, labLabel: selectedRow.labDepName };
           });
           setIsDashBoard(2);
           setImg(selectedRow.labDepMap);
@@ -108,16 +132,30 @@ function LabGridComponent(props) {
 
   const setLocationlabel = (value) => {
     const { locationDetails } = ApplicationStore().getStorage('userDetails');
-    setProgressState(() => {
+    setProgressState((oldValue) => {
+      setDeviceCoordsList([]);
       let newValue = value;
-      if (locationDetails.facility_id) {
-        newValue = 3;
+      if (locationDetails.lab_id) {
+        newValue = value < 7 ? 6 : value;
+        value >=4 ? setIsGeoMap(false) : setIsGeoMap(true);
+      } else if (locationDetails.floor_id) {
+        newValue = value < 6 ? 5 : value;
+        value >=4 ? setIsGeoMap(false) : setIsGeoMap(true);
+      } else if (locationDetails.building_id) {
+        newValue = value < 5 ? 4 : value;
+        value <=3 ? setIsGeoMap(true) : setIsGeoMap(false);
+      } else if (locationDetails.facility_id) {
+        newValue = value < 4 ? 3 : value;
+        value <=3 ? setIsGeoMap(true) : setIsGeoMap(false);
       } else if (locationDetails.branch_id) {
-        newValue = 2;
+        newValue = value < 3 ? 2 : value;
+        value <= 3 ? setIsGeoMap(true) : setIsGeoMap(false);
       } else if (locationDetails.location_id) {
-        newValue = 1;
+        newValue = value < 2 ? 1 : value;
+        value <= 3 ? setIsGeoMap(true) : setIsGeoMap(false);
       } else {
         // locationAlerts({});
+        value <= 3 ? setIsGeoMap(true) : setIsGeoMap(false);
       }
       return newValue;
     });
@@ -129,18 +167,33 @@ function LabGridComponent(props) {
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            if (locationDetails.facility_id) {
+            let value = 0;
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              setImg(locationDetails?.imageBuildingURL);
+              value = 4;
+            } else if (locationDetails.facility_id) {
               locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+              value = 3;
             } else if (locationDetails.branch_id) {
               locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+              value = 2;
             }else if (locationDetails.location_id) {
               locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+              value = 1;
             } else {
               locationAlerts({});
+              value = 0;
             }
-            setLocationlabel(0);
+            setLocationlabel(value);
             setDeviceCoordsList([]);
-            setIsGeoMap(true);
+            // setIsGeoMap(true);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -149,16 +202,29 @@ function LabGridComponent(props) {
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            if (locationDetails.facility_id) {
+            let value = 1;
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            } else if (locationDetails.facility_id) {
               locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+              value = 3;
             } else if (locationDetails.branch_id) {
               locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+              value = 2;
             } else {
               locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+              value = 1;
             }
-            setLocationlabel(1);
+            setLocationlabel(value);
             setDeviceCoordsList([]);
-            setIsGeoMap(true);
+            // setIsGeoMap(true);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -167,14 +233,26 @@ function LabGridComponent(props) {
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            if (locationDetails.facility_id) {
+            let value = 2;
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            } else if (locationDetails.facility_id) {
               locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+              value = 3;
             } else {
               locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+              value = 2;
             }
-            setLocationlabel(2);
+            setLocationlabel(value);
             setDeviceCoordsList([]);
-            setIsGeoMap(true);
+            // setIsGeoMap(true);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -183,10 +261,24 @@ function LabGridComponent(props) {
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
-            setProgressState(3);
+            let value = 3;
+            // locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            } else {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+              value = 3;
+            }
+            setLocationlabel(value);
             setDeviceCoordsList([]);
-            setIsGeoMap(true);
+            // setIsGeoMap(true);
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -195,11 +287,22 @@ function LabGridComponent(props) {
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
-            setProgressState(4);
+            let value = 4;
+            // locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            }
+            setLocationlabel(value);
             setDeviceCoordsList([]);
-            setImg(siteImages.buildingImage);
-            setIsGeoMap(false);
+            // setImg(siteImages.buildingImage);
+            // setIsGeoMap(false);
           }}
           style={{ cursor: 'pointer' }}
         >

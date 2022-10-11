@@ -1,24 +1,29 @@
 import { NotificationsActive, NotificationsActiveOutlined, SecurityOutlined, WarningAmber } from '@mui/icons-material';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { LatestAlertAccess } from '../../context/UserAccessProvider';
 
 function GlobalNotifier({
   notifierState, setNotifierState, setAnchorElNotification,
 }) {
+  const value = LatestAlertAccess();
+  const {alertStatus, setAlertStatus} = value;
   const handleClose = (e) => {
     e.preventDefault();
+    setAlertStatus(oldValue=>!oldValue);
     setNotifierState((currentProps) => {
       return { ...currentProps, open: false };
     });
   };
 
   const handleMenu = (e) => {
+    setAlertStatus(oldValue=>!oldValue);
     setNotifierState((currentProps) => {
       return { ...currentProps, open: false };
     });
     setAnchorElNotification({ ...e.currentTarget, top: '16px', left: '708px' });
   };
-
+  
   const action = (
     <>
       <Button
