@@ -330,3 +330,13 @@ export const GasCylinderAddService = (data, successCallback, errorCallBack) => _
 export const GasCylinderEditService = (data, successCallback, errorCallBack) => _fetchService(`gasCylinder/${data.id}/update`, 'POST', data, successCallback, errorCallBack);
 
 export const GasCylinderDeleteService = (id, successCallback, errorCallBack) => _fetchService(`gasCylinder/${id}/delete`, 'DELETE', {}, successCallback, errorCallBack);
+
+
+// --------- Email Template -------------//
+export const EmailTemplateFetchService = (successCallback, errorCallBack) => _fetchService('emailTemplate', 'GET', {}, successCallback, errorCallBack);
+
+export const EmailTemplateUpdateService = (data, successCallback, errorCallBack) => _fetchService('emailTemplate/update', 'POST', data, successCallback, errorCallBack);
+
+// ------------ Back Up Configuration ---------------------//
+
+export const BackUpConfigurationservice = (data, successCallback, errorCallBack) => { return _fetchService(`updateBackUpConfiguration`, 'POST', data, successCallback, errorCallBack); };
