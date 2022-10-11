@@ -12,6 +12,7 @@ import ApplicationStore from '../utils/localStorageUtil';
 import { FetchFacilitiyService, FetchBranchService, FetchLocationService, DeviceIdAlerts, BuildingFetchService, FloorfetchService, LabfetchService } from '../services/LoginPageService';
 import NotificationBar from './notification/ServiceNotificationBar';
 
+const { locationLabel, facilityLabel, branchLabel, buildingLabel, floorLabel, labLabel } = ApplicationStore().getStorage('siteDetails');
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 function Dashboard() {
@@ -26,12 +27,12 @@ function Dashboard() {
   });
 
   const [breadCrumbLabels, setBreadCrumbLabels] = useState({
-    stateLabel: 'State',
-    branchLabel: 'Branch',
-    facilityLabel: 'Facility',
-    buildingLabel: 'Building',
-    floorLabel: 'Floor',
-    labLabel: 'Zone',
+    stateLabel: locationLabel || 'State',
+    branchLabel: branchLabel || 'Branch',
+    facilityLabel: facilityLabel || 'Facility',
+    buildingLabel: buildingLabel || 'Building',
+    floorLabel: floorLabel || 'Floor',
+    labLabel: labLabel || 'Zone',
     deviceLabel: '',
   });
 
@@ -59,9 +60,14 @@ function Dashboard() {
     type: 'error',
     message: '',
   });
-  const { locationLabel, facilityLabel, branchLabel, buildingLabel, floorLabel, labLabel } = ApplicationStore().getStorage('siteDetails');
 
   useEffect(() => {
+    const { locationLabel, facilityLabel, branchLabel, buildingLabel, floorLabel, labLabel } = ApplicationStore().getStorage('siteDetails');
+    setBreadCrumbLabels((oldValue) => {
+      return {
+        ...oldValue, stateLabel: locationLabel, branchLabel, facilityLabel, buildingLabel, floorLabel, labLabel
+      };
+    });
     const { locationDetails } = ApplicationStore().getStorage('userDetails');
     if(locationDetails?.imageBuildingURL){
       setImg(locationDetails.imageBuildingURL);
@@ -80,11 +86,6 @@ function Dashboard() {
         building_id: locationDetails.building_id,
         floor_id: locationDetails.floor_id,
         lab_id: locationDetails.lab_id,
-      };
-    });
-    setBreadCrumbLabels((oldValue) => {
-      return {
-        ...oldValue, stateLabel: locationLabel, branchLabel, facilityLabel, buildingLabel, floorLabel, labLabel
       };
     });
     setProgressState((oldValue) => {
