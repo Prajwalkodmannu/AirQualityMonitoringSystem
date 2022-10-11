@@ -95,6 +95,7 @@ function AddDeviceListResults(props) {
   ];
   const [progressStatus, setProgressStatus] = useState(3);
   const [device_id, setDeviceId] = useState('0');
+  const [calibratingDeviceId, setCalibratingDeviceId] = useState('');
   const [sensorRefresh, setSensorRefresh] = useState(false);
   const [open, setOpen] = useState(false);
   const [deviceModalOpen, setDeviceModalOpen] = useState(false);
@@ -220,6 +221,7 @@ function AddDeviceListResults(props) {
       handleClose();
       switch (dataObject.deviceMode) {
       case 'calibration':
+        setCalibratingDeviceId(dataObject.deviceId);
         calibrateDeployedSensorsList(dataObject.deviceId);
         break;
       case 'bumpTest':
@@ -540,6 +542,7 @@ function AddDeviceListResults(props) {
         progressStatus={progressStatus}
         setProgressStatus={setProgressStatus}
         deployedSensorTagList={deployedSensorTagList}
+        calibratingDeviceId={calibratingDeviceId}
       />
       <BumpTestComponentModal
         device_id={device_id}

@@ -181,7 +181,7 @@ function BumpTestComponentModal({
           } else {
             let avg = 0;
             avg = total / dataList;
-            setPercentageDeviation(Math.sqrt(avg));
+            setPercentageDeviation(Math.sqrt(avg).toFixed(2));
             setLoading(false);
             setProgress('start');
           }
@@ -236,7 +236,7 @@ function BumpTestComponentModal({
 
   const getBumpTestDataSuccess = (dataObject) => {
     j++;
-    setDisplayedValue(dataObject.data.LAST);
+    setDisplayedValue(dataObject.data.LAST.toFixed(2));
     bumpData.push(dataObject.data.LAST);
   };
   /* eslint-disable-next-line */
