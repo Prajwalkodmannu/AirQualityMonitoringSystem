@@ -305,6 +305,8 @@ export const FetchApplicationVersionReportDetails = (data, successCallback, erro
 
 export const FetchAqiStatusReportDetails = (data, successCallback, errorCallBack) => _fetchService('DeviceAqiReport', 'POST', data, successCallback, errorCallBack);
 
+export const FetchServerUsageReportDetails = (data, successCallback, errorCallBack) => _fetchService('serverUsage', 'GET', data, successCallback, errorCallBack);
+
 // ---------- Alert Notification --------------------------//
 
 export const NotificationAlerts = (data, successCallback, errorCallBack) => _fetchService('getAlerts', 'POST', data, successCallback, errorCallBack);

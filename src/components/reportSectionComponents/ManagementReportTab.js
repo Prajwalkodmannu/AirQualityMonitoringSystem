@@ -10,6 +10,7 @@ import FirmwareVersion from './FirmwareVersion';
 import BumpTest from './BumpTest';
 import IndividualReportForm from './IndividualReportForm';
 import DeviceLogs from './DeviceLogs';
+import SoftwareVersion from './SoftwareVersion';
 
 import {
     FetchLocationService,
@@ -20,7 +21,6 @@ import {
     LabfetchService,
     DeviceFetchService,
 } from '../../services/LoginPageService';
-import SoftwareVersion from './SoftwareVersion';
 
 function TabPanel(props) {
     const { children, value, index } = props;
@@ -282,7 +282,7 @@ export default function ManagementReportTab() {
                     <Box sx={{ borderBottom: 1, borderColor: 'divider', marginTop: 0 }}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" selectionFollowsFocus>
                             <Tab label="Air Quality Index" {...a11yProps(0)} />
-                            <Tab label="Sensor Health Status" {...a11yProps(1)} />
+                            <Tab label="Sensor Status" {...a11yProps(1)} />
                             <Tab label="Alarms" {...a11yProps(2)} />
                             {/* <Tab label="AQMI logs" {...a11yProps(3)} /> */}
                             <Tab label="Device LOGS" {...a11yProps(3)} />
