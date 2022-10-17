@@ -18,9 +18,17 @@ function Branch() {
     setCenterLng(parseFloat(coordinates[1]) || '');
   }, [locationCoordinationList]);
   return (
-    <Container maxWidth={false} style={{ marginTop: 0, height: '77%', width: '100%' }}>
-      <Grid container style={{ overflow: 'auto', height: '100%', width: '100%' }}>
-        <Grid sx={{ mt: 1 }} xs={12} sm={12} md={12} lg={12} xl={12}>
+    <Container maxWidth={false} style={{ 
+      marginTop: 0, height: '94vh', width: '100%',
+      paddingLeft: '2px', 
+      paddingRight: '2px',
+    }}>
+      <Grid container style={{ overflow: 'auto', height: '94vh', width: '100%', }}>
+        <Grid item sx={{ mt: 1 }} xs={12} sm={12} md={12} lg={12} xl={12}
+        style={{
+          height: '46vh',
+          marginTop: '0px'
+        }}>
           <BranchListResults
             locationId={locationId}
             locationCoordinationList={locationCoordinationList}
@@ -29,12 +37,16 @@ function Branch() {
             centerLng={centerLng}
           />
         </Grid>
-        <Grid sx={{ mt: 1 }} xs={12} sm={12} md={12} lg={12} xl={12}>
+        <Grid item sx={{ mt: 1 }} xs={12} sm={12} md={12} lg={12} xl={12}
+          style={{
+            height: '47vh'
+          }}
+        >
           {locationCoordinationList.length !== 0
             ? (
               <MapsMultiplePoints
                 width="100%"
-                height="50vh"
+                height="47vh"
                 markers={locationCoordinationList}
                 zoom={6}
                 center={{

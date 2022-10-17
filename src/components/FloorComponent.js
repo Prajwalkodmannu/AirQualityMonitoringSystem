@@ -13,22 +13,33 @@ function Floor() {
   const {imageBuildingURL} = locationDetails ;
   const imgSrc = `https://wisething.in/aideaLabs/blog/public/${imageBuildingURL || buildingImg}`;
   return (
-    <Container maxWidth={false} style={{ marginTop: 0 }}>
+    <Container maxWidth={false} style={{ marginTop: 0, height: '94vh', paddingLeft: '2px' }}>
       <Grid
         container
         spacing={2}
         columns={{
           xs: 12, sm: 12, md: 12, lg: 12, xl: 12,
         }}
+        style={{
+          height: '46vh',
+          marginLeft: '2px',
+          marginTop: '0px'
+        }}
       >
         <Grid
           sx={{ mt: 1 }}
           item
-          xs={11}
-          sm={11}
+          xs={12}
+          sm={12}
           md={8}
           lg={8}
           xl={8}
+          style={{
+            height: '46vh',
+            paddingTop: '0px',
+            paddingLeft: '0px',
+            marginTop: '0px'
+          }}
         >
           <FloorListResults img={imgSrc} />
         </Grid>
@@ -36,19 +47,30 @@ function Floor() {
         <Box
           component={Grid}
           item
-          xs={2}
-          sm={6}
+          xs={12}
+          sm={12}
           md={4}
           lg={4}
           xl={4}
           display={{
-            xs: 'none', sm: 'block', md: 'block', lg: 'block', lx: 'block',
+            xs: 'block', sm: 'block', md: 'block', lg: 'block', lx: 'block',
           }}
           sx={{ mt: 2 }}
+          style={{
+            height: '46vh',
+            border: '1px solid black',
+            paddingLeft: '0px',
+            paddingTop: '0px',
+            paddingBottom: '0px',
+            marginTop: '2px'
+          }}
         >
           <img
             src={imgSrc}
-            style={{ width: `${99}%`, height: `${56}vh` }}
+            style={{ 
+              width: `${99}%`, 
+              height: `${100}%`
+            }}
           />
         </Box>
       </Grid>

@@ -25,14 +25,14 @@ export function FloorListResults({ img }) {
     {
       field: 'totalLabs',
       headerName: 'Total Labs',
-      width: 230,
+      width: 130,
     },
     {
       field: 'totalAssets',
       headerName: 'Total Assets',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
-      width: 160,
+      width: 130,
     },
     {
       field: 'actions',
@@ -173,8 +173,13 @@ export function FloorListResults({ img }) {
     return (path);
   });
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <Breadcrumbs aria-label="breadcrumb" separator="›">
+    <div style={{ height: '46vh', width: '100%' }}>
+      <Breadcrumbs aria-label="breadcrumb" separator="›" style={{
+        height: '2vh',
+        minHeight: '15px',
+        minWidth: 'max-content'
+        }}
+      >
         {locationLabel ? (
           <Typography
             underline="hover"
@@ -273,7 +278,10 @@ export function FloorListResults({ img }) {
         loading={isLoading}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        style={{ maxHeight: `${80}%` }}
+        style={{ 
+          // maxHeight: `${80}%`,
+          height: '37vh'
+        }}
       />
 
       <FloorModal
