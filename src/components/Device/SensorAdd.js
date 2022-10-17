@@ -77,24 +77,24 @@ function DeviceAdd({
   const [criticalAlertType, setCriticalAlertType] = useState(editData?.criticalAlertType || '');
   const [criticalLowAlert, setCriticalLowAlert] = useState(editData?.criticalLowAlert || '');
   const [criticalHighAlert, setCriticalHighAlert] = useState(editData?.criticalHighAlert || '');
-  const [criticalRefMinValue, setRefCriticalMinValue] = useState(editData?.criticalMinValue || '');
-  const [criticalRefMaxValue, setRefCriticalMaxValue] = useState(editData?.criticalMaxValue || '');
+  const [criticalRefMinValue, setRefCriticalMinValue] = useState(editData?.criticalRefMinValue || '');
+  const [criticalRefMaxValue, setRefCriticalMaxValue] = useState(editData?.criticalRefMaxValue || '');
   // --- Warning Alert --- //
   const [warningMinValue, setWarningMinValue] = useState(editData?.warningMinValue || '');
   const [warningMaxValue, setWarningMaxValue] = useState(editData?.warningMaxValue || '');
   const [warningAlertType, setWarningAlertType] = useState(editData?.warningAlertType || '');
   const [warningLowAlert, setWarningLowAlert] = useState(editData?.warningLowAlert || '');
   const [warningHighAlert, setWarningHighAlert] = useState(editData?.warningHighAlert || '');
-  const [warningRefMinValue, setRefWarningMinValue] = useState(editData?.warningMinValue || '');
-  const [warningRefMaxValue, setRefWarningMaxValue] = useState(editData?.warningMaxValue || '');
+  const [warningRefMinValue, setRefWarningMinValue] = useState(editData?.warningRefMinValue || '');
+  const [warningRefMaxValue, setRefWarningMaxValue] = useState(editData?.warningRefMaxValue || '');
   // --- Out-of-Range Alert --- //
   const [outofrangeMinValue, setOutofrangeMinValue] = useState(editData?.outofrangeMinValue || '');
   const [outofrangeMaxValue, setOutofrangeMaxValue] = useState(editData?.outofrangeMaxValue || '');
   const [outofrangeAlertType, setOutofrangeAlertType] = useState(editData?.outofrangeAlertType || '');
   const [outofrangeLowAlert, setOutofrangeLowAlert] = useState(editData?.outofrangeLowAlert || '');
   const [outofrangeHighAlert, setOutofrangeHighAlert] = useState(editData?.outofrangeHighAlert || '');
-  const [outofrangeRefMinValue, setRefOutofrangeMinValue] = useState(editData?.outofrangeMinValue || '');
-  const [outofrangeRefMaxValue, setRefOutofrangeMaxValue] = useState(editData?.outofrangeMaxValue || '');
+  const [outofrangeRefMinValue, setRefOutofrangeMinValue] = useState(editData?.outofrangeRefMinValue || '');
+  const [outofrangeRefMaxValue, setRefOutofrangeMaxValue] = useState(editData?.outofrangeRefMaxValue || '');
   // ---- STEL & TWA ----------//
   const [alarm, setAlarm] = useState(editData?.alarm || '');
 
