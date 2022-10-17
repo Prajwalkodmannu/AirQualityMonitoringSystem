@@ -155,7 +155,7 @@ export function LocationListResults({ setLocationCoordinationList, centerLat, ce
   };
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: '46vh', width: '100%' }}>
       <LocationListToolbar
         setOpen={setOpen}
         setIsAddButton={setIsAddButton}
@@ -169,7 +169,10 @@ export function LocationListResults({ setLocationCoordinationList, centerLat, ce
         loading={isLoading}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        style={{ maxHeight: `${70}%` }}
+        style={{ 
+          // maxHeight: `${70}%`,
+          height: '38vh'
+        }}
       />
       <LocationModal
         isAddButton={isAddButton}
