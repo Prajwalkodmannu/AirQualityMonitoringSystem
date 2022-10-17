@@ -93,7 +93,9 @@ function Navbar(props) {
     });
   };
   return (
-    <div className="navbar">
+    <div className="navbar" style={{
+      height: '6vh'
+    }}>
       <Toolbar>
         <IconButton
           color="inherit"

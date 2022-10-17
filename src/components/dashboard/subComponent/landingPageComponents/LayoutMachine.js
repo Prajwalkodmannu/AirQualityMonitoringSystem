@@ -73,7 +73,7 @@ function LayoutMachine({
         })}
         {modbusSensorList.map((data) => {
           return (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={data.sensorTagId}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={data.sensorTagId}>
               <MachineCard
                 setOpen={setOpen}
                 id={data.sensorTagId}

@@ -130,7 +130,7 @@ function AlertWidget({
   };
 
   return (
-    <div style={{ height: '100%', width: '100%' }}>
+    <div style={{ height: '47vh', width: '100%' }}>
       <Typography
         underline="hover"
         color="inherit"
@@ -144,7 +144,9 @@ function AlertWidget({
         pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        style={{ maxHeight: maxHeight || '250px' }}
+        style={{ 
+          maxHeight: maxHeight || '40vh' 
+        }}
       />
       <Dialog
         sx={{ '& .MuiDialog-paper': { minWidth: '40%' } }}
