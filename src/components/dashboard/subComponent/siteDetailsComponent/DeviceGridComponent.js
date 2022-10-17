@@ -121,7 +121,7 @@ function DeviceGridComponent(props) {
   };
 
   const handleHooter = () => {
-    userDetails?.userRole === 'systemSpecialist' && HooterRelayService({ lab_id: props.locationDetails.lab_id }, handleHooterSuccess, handleHooterException);
+    (userDetails?.userRole === 'systemSpecialist' || userDetails?.userRole === 'Admin' || userDetails?.userRole === 'Manager') && HooterRelayService({ lab_id: props.locationDetails.lab_id }, handleHooterSuccess, handleHooterException);
   }
 
   const handleHooterSuccess = (dataObject) => {

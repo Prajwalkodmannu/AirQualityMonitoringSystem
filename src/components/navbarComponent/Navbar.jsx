@@ -27,7 +27,7 @@ function Navbar(props) {
   // const { dispatch } = useContext(DarkModeContext);
   const navigate = useNavigate();
   const { userDetails, intervalDetails } = ApplicationStore().getStorage('userDetails');
-  const isSystemSpecialist = userDetails?.userRole === 'systemSpecialist';
+  const userRole = userDetails?.userRole;
   const [userDisplayName, setUserDisplayName] = useState('');
   const [customerDisplayName, setCustomerDisplayName] = useState('Company Name Here...');
   const [open, setOpen] = useState(false);
@@ -78,6 +78,7 @@ function Navbar(props) {
       ApplicationStore().setStorage('siteDetails', '');
       ApplicationStore().setStorage('alertDetails', '');
       ApplicationStore().setStorage('notificationDetails', '');
+      ApplicationStore().setStorage('navigateDashboard', '');
       navigate('/login');
     }, 2000);
   };
@@ -259,7 +260,7 @@ function Navbar(props) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            {isSystemSpecialist
+            {(userRole === 'systemSpecialist' || userRole === 'superAdmin')
               && (
                 <MenuItem onClick={() => {
                   handleClose();
@@ -283,6 +284,7 @@ function Navbar(props) {
         setNotification={setNotification}
         handleClose={handleClose}
         intervalDetails={intervalDetails}
+        userRole={userRole}
       />
       <NotificationBar
         handleClose={handleNotificationClose}

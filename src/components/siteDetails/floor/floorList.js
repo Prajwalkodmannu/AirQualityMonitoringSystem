@@ -175,10 +175,19 @@ export function FloorListResults({ img }) {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <Breadcrumbs aria-label="breadcrumb" separator="›">
-        <Link underline="hover" color="inherit" to="/Location">
-          Location
-        </Link>
-        { locationLabel
+        {locationLabel ? (
+          <Typography
+            underline="hover"
+            color="inherit"
+          >
+            Location
+          </Typography>
+        ) : (
+          <Link underline="hover" color="inherit" to="/Location">
+            Location
+          </Link>
+        )}
+        { branchLabel
           ? (
             <Typography
               underline="hover"
@@ -199,7 +208,7 @@ export function FloorListResults({ img }) {
               {pathname[1]}
             </Link>
           )}
-        {branchLabel
+        {facilityLabel
           ? (
             <Typography
               underline="hover"
@@ -221,18 +230,27 @@ export function FloorListResults({ img }) {
               {pathname[2]}
             </Link>
           )}
-        <Link
-          underline="hover"
-          color="inherit"
-          to={`/Location/${pathname[1]}/${pathname[2]}/${pathname[3]}`}
-          state={{
-            location_id,
-            branch_id,
-            facility_id,
-          }}
-        >
-          {pathname[3]}
-        </Link>
+        {buildingLabel ? (
+            <Typography
+              underline="hover"
+              color="inherit"
+            >
+              {pathname[3]}
+            </Typography>
+          ) : (
+            <Link
+              underline="hover"
+              color="inherit"
+              to={`/Location/${pathname[1]}/${pathname[2]}/${pathname[3]}`}
+              state={{
+                location_id,
+                branch_id,
+                facility_id,
+              }}
+            >
+              {pathname[3]}
+            </Link>
+          )}
         <Typography
           underline="hover"
           color="inherit"

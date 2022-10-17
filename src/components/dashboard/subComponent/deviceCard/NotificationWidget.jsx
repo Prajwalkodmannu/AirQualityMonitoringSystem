@@ -27,7 +27,7 @@ function NotificationWidget({ type, figure, handleClick, userRole, testHooter, a
       (<VolumeOff style={{fontSize: '75px', color : '#808080'}}/>) :
       (<VolumeUp style={{fontSize: '75px', color : 'goldenrod', animation: 'flash 1s infinite '}}/>) , 
       link: '',
-      icon: userRole === 'systemSpecialist' ? 
+      icon: userRole === 'systemSpecialist' || userRole === 'Admin' || userRole === 'Manager' ? 
         (
           <Campaign
             className="icon"
@@ -148,7 +148,7 @@ function NotificationWidget({ type, figure, handleClick, userRole, testHooter, a
       }}
       style={{ cursor: type === 'alerts' && 'pointer', 
       display: 'inline-block',
-      justifyContent: type === 'hooterStatus' && userRole !== 'systemSpecialist' ? 'center' : '' 
+      justifyContent: type === 'hooterStatus' && (userRole !== 'systemSpecialist' || userRole !== 'Manager') ? 'center' : '' 
     }}
     >
       { type !== 'hooterStatus' ? 
@@ -166,7 +166,7 @@ function NotificationWidget({ type, figure, handleClick, userRole, testHooter, a
             <div className="percentage positive">
             </div>
             <div onClick={()=>{
-              userRole === 'systemSpecialist' && type === 'hooterStatus' ? testHooter() : {};
+              // type === 'hooterStatus' && (userRole === 'systemSpecialist' || 'Admin')  ? testHooter() : {};
               }}
             >
               {data.icon}
@@ -185,12 +185,12 @@ function NotificationWidget({ type, figure, handleClick, userRole, testHooter, a
               display: 'flex',
               minWidth: '150px',
               alignItems: 'flex-end',
-              justifyContent: userRole === 'systemSpecialist' ? 'space-between' : 'center',
+              justifyContent: userRole === 'systemSpecialist' || userRole === 'Admin' || userRole === 'Manager' ? 'space-between' : 'center',
             }}>
               <div 
                 onClick={()=>handleClick()}
                 style={{
-                  cursor: userRole === 'systemSpecialist' && 'pointer'
+                  cursor: (userRole === 'systemSpecialist' || userRole === 'Admin' || userRole === 'Manager')  && 'pointer'
                 }}
               >
                 <span className="counter" style={{minWidth: '150px'}}>
@@ -204,7 +204,7 @@ function NotificationWidget({ type, figure, handleClick, userRole, testHooter, a
                   cursor: 'pointer'
                 }} 
                 onClick={()=>{
-                  userRole === 'systemSpecialist' && testHooter();
+                  (userRole === 'systemSpecialist' || userRole === 'Manager' || userRole === 'Admin') && testHooter();
                 }}
               >
                 <div className="right" style={{

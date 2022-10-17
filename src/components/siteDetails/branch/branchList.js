@@ -10,6 +10,7 @@ import BranchModal from './BranchModalComponent';
 import NotificationBar from '../../notification/ServiceNotificationBar';
 import { useUserAccess } from '../../../context/UserAccessProvider';
 import DeleteConfirmationDailog from '../../../utils/confirmDeletion';
+import ApplicationStore from '../../../utils/localStorageUtil';
 
 export function BranchListResults(props) {
   const branchColumns = [
@@ -58,7 +59,7 @@ export function BranchListResults(props) {
   const { location_id, centerCoordination } = routeStateObject.state;
   const [refreshData, setRefreshData] = useState(false);
   const moduleAccess = useUserAccess()('location');
-
+  const {locationLabel} = ApplicationStore().getStorage('siteDetails');
   const [openNotification, setNotification] = useState({
     status: false,
     type: 'error',
@@ -170,13 +171,21 @@ export function BranchListResults(props) {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <Breadcrumbs aria-label="breadcrumb" separator="›">
-        <Link underline="hover" color="inherit" to="/Location">
-          Location
-        </Link>
+        {locationLabel ? (
+          <Typography
+            underline="hover"
+            color="inherit"
+          >
+            Location
+          </Typography>
+        ) : (
+          <Link underline="hover" color="inherit" to="/Location">
+            Location
+          </Link>
+        )}
         <Typography
           underline="hover"
           color="inherit"
-          to="/"
         >
           {pathname[1].replace(/%20/g, ' ')}
         </Typography>

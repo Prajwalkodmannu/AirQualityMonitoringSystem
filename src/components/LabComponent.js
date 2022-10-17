@@ -4,11 +4,14 @@ import Grid from '@mui/material/Grid';
 import { Container } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { LabListResults } from './siteDetails/lab/labList';
+import ApplicationStore from '../utils/localStorageUtil';
 
 function Lab() {
   const routeStateObject = useLocation();
   const { floorMap } = routeStateObject.state;
-  const imgSrc = `https://wisething.in/aideaLabs/blog/public/${floorMap}`;
+  const {locationDetails} = ApplicationStore().getStorage('userDetails');
+  const {imageFloorURL} = locationDetails ;
+  const imgSrc = `https://wisething.in/aideaLabs/blog/public/${imageFloorURL || floorMap}`;
   return (
     <Container maxWidth={false} style={{ marginTop: 0 }}>
       <Grid

@@ -64,9 +64,7 @@ export function BuildingListResults(props) {
   const [refreshData, setRefreshData] = useState(false);
   const moduleAccess = useUserAccess()('location');
 
-  const {
-    locationLabel, branchLabel, facilityLabel, buildingLabel,
-  } = ApplicationStore().getStorage('siteDetails');
+  const {locationLabel, branchLabel, facilityLabel,} = ApplicationStore().getStorage('siteDetails');
 
   const [openNotification, setNotification] = useState({
     status: false,
@@ -191,10 +189,19 @@ export function BuildingListResults(props) {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <Breadcrumbs aria-label="breadcrumb" separator="›">
-        <Link underline="hover" color="inherit" to="/Location">
-          Location
-        </Link>
-        {locationLabel
+        {locationLabel ? (
+          <Typography
+            underline="hover"
+            color="inherit"
+          >
+            Location
+          </Typography>
+        ) : (
+          <Link underline="hover" color="inherit" to="/Location">
+            Location
+          </Link>
+        )}
+        {branchLabel
           ? (
             <Typography
               underline="hover"
@@ -215,8 +222,7 @@ export function BuildingListResults(props) {
               {pathname[1]}
             </Link>
           )}
-        {
-          branchLabel
+        {facilityLabel
             ? (
               <Typography
                 underline="hover"

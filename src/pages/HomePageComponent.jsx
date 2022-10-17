@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/navbarComponent/Sidebar';
 import Navbar from '../components/navbarComponent/Navbar';
 import './css/home.scss';
@@ -12,6 +12,7 @@ import {
 } from '../services/LoginPageService';
 import GlobalNotifier from '../components/notification/GlobalNotificationBar';
 import { alertSeverityCode, setAlertColor } from '../utils/helperFunctions';
+import { Backdrop, CircularProgress } from '@mui/material';
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 /* eslint-disable no-nested-ternary */
@@ -19,13 +20,15 @@ import { alertSeverityCode, setAlertColor } from '../utils/helperFunctions';
 /* eslint-disable radix */
 
 function HomePageComponent() {
+  const navigate = useNavigate();
   const [locationLabel, setLocationLabel] = useState('');
   const [branchLabel, setBranchLabel] = useState('');
   const [facilityLabel, setFacilityLabel] = useState('');
   const [buildingLabel, setBuildingLabel] = useState('');
   const [floorLabel, setFloorLabel] = useState('');
   const [labLabel, setLabLabel] = useState('');
-  const [mobileMenu, setMobileOpen] = useState(true);
+  const [mobileMenu, setMobileOpen] = useState(true); 
+  const [backdropOpen, setBackdropOpen] = useState(false); 
   const [notifierState, setNotifierState] = useState({
     open: false,
     message: 'You have new notification !',
@@ -35,6 +38,8 @@ function HomePageComponent() {
   const [anchorElNotification, setAnchorElNotification] = useState(null);
   const { notificationList } = ApplicationStore().getStorage('notificationDetails');
   const { locationDetails, userDetails, intervalDetails } = ApplicationStore().getStorage('userDetails');
+  const { navigateDashboard } = ApplicationStore().getStorage('navigateDashboard');
+
   const {
     location_id, branch_id, facility_id, building_id, floor_id, lab_id
   } = locationDetails;
@@ -80,19 +85,19 @@ function HomePageComponent() {
         FetchLocationService(handleSuccess, handleException);
       }
       
-      // const interVal = setInterval(()=>{
-      //   console.log('Interval running...');
-      //   if(labelCount === 0){
-      //     console.log('Interval clearing...');
-      //     ApplicationStore().setStorage('siteDetails', {
-      //       locationLabel, branchLabel, facilityLabel, buildingLabel, floorLabel, labLabel
-      //     });
-      //     clearInterval(interVal);
-      //   }
-      // }, 1000);
-      // return () => clearInterval(interVal);
-      
+
+      setBackdropOpen(true);
     }
+    setTimeout(()=>{
+      if(userDetails.userRole !== 'superAdmin'){
+        if(navigateDashboard === true){
+          setBackdropOpen(false);
+          ApplicationStore().setStorage('navigateDashboard', {navigateDashboard : false});
+          navigate('/Dashboard') ;
+        }
+      };
+      setBackdropOpen(false);
+    },3000);
   },[]);
   
 
@@ -328,6 +333,12 @@ function HomePageComponent() {
             </UserAccessProvider>
           </LatestAlertProvider>
         </div>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={backdropOpen}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
     </div>
   );
 }

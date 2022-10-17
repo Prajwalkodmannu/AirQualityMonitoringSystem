@@ -36,6 +36,8 @@ function SensorModel({
   setProgressStatus,
   deployedSensorTagList,
   setSensorRefresh,
+  device_id,
+  calibratingDeviceId
 }) {
   const moduleAccess = useUserAccess()('devicelocation');
   const [editData, setEditData] = useState('');
@@ -103,7 +105,7 @@ function SensorModel({
   const handleSubmit = (e) => {
     e.preventDefault();
     CalibrationAddService({
-      sensorTag, name, model, testResult, nextDueDate,
+      device_id : calibratingDeviceId, sensorTag, name, model, testResult, nextDueDate,
     }, calibrationHandleSuccess, calibrationHandleException);
   };
 
