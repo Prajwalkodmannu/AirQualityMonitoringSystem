@@ -569,10 +569,14 @@ function AddDeviceListResults(props) {
         setNotification={setNotification}
       />
       <DebugModeModal
+        changeDeviceId={changeDeviceId}
+        setChangeDeviceId={setChangeDeviceId}
+        changeDeviceIdMode={changeDeviceIdMode}
         open={debugModalOpen}
         setOpen={setDebugModalOpen}
         setRefreshData={setRefreshData}
         device_id={device_id}
+        setNotification={setNotification}
       />
       <NotificationBar
         handleClose={handleClose}

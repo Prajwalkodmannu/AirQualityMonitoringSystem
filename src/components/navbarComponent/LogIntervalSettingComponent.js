@@ -12,8 +12,8 @@ function LogIntervalSetting({
   const [alertLogInterval, setAlertLogInterval] = useState(intervalDetails?.alertLogInterval || '15');
   const [deviceLogInterval, setDeviceLogInterval] = useState(intervalDetails?.deviceLogInterval || '15');
   const [sensorLogInterval, setSensorLogInterval] = useState(intervalDetails?.sensorLogInterval || '15');
-  const [periodicBackupInterval, setPeriodicBackupInterval] = useState(intervalDetails?.periodicBackupInterval || '30');
-  const [dataRetentionPeriodInterval, setDataRetentionPeriodInterval] = useState(intervalDetails?.dataRetentionPeriodInterval || '30');
+  const [periodicBackupInterval, setPeriodicBackupInterval] = useState(intervalDetails?.periodicBackupInterval || '60');
+  const [dataRetentionPeriodInterval, setDataRetentionPeriodInterval] = useState(intervalDetails?.dataRetentionPeriodInterval || '60');
   const [expireDateReminder, setExpireDateReminder] = useState(intervalDetails?.expireDateReminder || '2');
 
   const handleSubmit = (e) => {
