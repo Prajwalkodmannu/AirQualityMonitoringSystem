@@ -161,7 +161,7 @@ export function setAlertPriorityAndType(element, data){
     'Warning' : data.alertType === 'TWA' ? 'TWA': data.alertType === 'Stel' ? 'STEL' : 'Good',
     alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? '#9c27b0' : data.alertType === 'Warning' ? 
     'orange' : data.alertType === 'TWA' ? 'orange': data.alertType === 'Stel' ? 'red' : 'green',
-    alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : data.alertType === 'Warning' ?
+    alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'Warning' ? 2 : data.alertType === 'outOfRange' ?
      3: data.alertType === 'Stel' ? 4 : data.alertType === 'TWA' ? 5 : 6,
   };
 }
