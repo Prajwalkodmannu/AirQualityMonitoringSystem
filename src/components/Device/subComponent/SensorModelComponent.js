@@ -283,7 +283,7 @@ function SensorModel({
                                   />
                                 </Grid>
                                 {
-                                  moduleAccess.edit === true
+                                  moduleAccess.view === true
                                     ? (
                                       <SensorSettingsButton
                                         setAnchorEl={setAnchorEl}
@@ -340,7 +340,7 @@ function SensorModel({
                                   />
                                 </Grid>
                                 {
-                                  moduleAccess.edit === true
+                                  moduleAccess.view === true
                                     ? (
                                       <SensorSettingsButton
                                         setAnchorEl={setAnchorEl}
@@ -402,7 +402,7 @@ function SensorModel({
                                   />
                                 </Grid>
                                 {
-                                  moduleAccess.edit === true
+                                  moduleAccess.view === true
                                     ? (
                                       <SensorSettingsButton
                                         setAnchorEl={setAnchorEl}

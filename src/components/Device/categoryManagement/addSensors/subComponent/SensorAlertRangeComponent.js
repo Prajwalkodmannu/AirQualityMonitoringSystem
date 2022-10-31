@@ -3,23 +3,35 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useUserAccess } from '../../../../../context/UserAccessProvider';
+import ApplicationStore from '../../../../../utils/localStorageUtil';
 import { AnalogSensorValidate } from '../../../../../validation/formValidation';
 
 function SensorAlertRange({
   errorObject, setErrorObject,
   criticalMinValue, setCriticalMinValue,
   criticalMaxValue, setCriticalMaxValue,
-
+  criticalRefMinValue, criticalRefMaxValue,
   warningMinValue, setWarningMinValue,
   warningMaxValue, setWarningMaxValue,
-
+  warningRefMinValue, warningRefMaxValue, 
   outofrangeMinValue, setOutofrangeMinValue,
   outofrangeMaxValue, setOutofrangeMaxValue,
+  outofrangeRefMinValue, outofrangeRefMaxValue
 }) {
   const moduleAccess = useUserAccess()('devicelocation');
+  const { userDetails } = ApplicationStore().getStorage('userDetails');
   const validateForNullValue = (value, type) => {
     AnalogSensorValidate(value, type, setErrorObject);
   };
+
+  const validateAlertrange = (currentValue, minimumValue, maximumvalue, setCurrentValue) =>{
+    if(parseInt(currentValue)<parseInt(minimumValue)){
+      userDetails.userRole !== 'systemSpecialist' && setCurrentValue(minimumValue);
+    }
+    if(parseInt(currentValue)>parseInt(maximumvalue)){
+      userDetails.userRole !== 'systemSpecialist' && setCurrentValue(maximumvalue);
+    }
+  }
 
   return (
     <Grid sx={{ px: 0, p: 0 }}>
@@ -54,7 +66,14 @@ function SensorAlertRange({
               value={criticalMinValue}
               disabled={moduleAccess.edit === false && true}
               type="number"
-              onBlur={() => validateForNullValue(criticalMinValue, 'criticalMinValue')}
+              inputProps={{
+                min: userDetails.userRole !== 'systemSpecialist' && criticalRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && criticalRefMaxValue,
+              }}
+              onBlur={() => {
+                validateForNullValue(criticalMinValue, 'criticalMinValue');
+                validateAlertrange(criticalMinValue, criticalRefMinValue, criticalRefMaxValue, setCriticalMinValue);
+              }}
               onChange={(e) => {
                 setCriticalMinValue(e.target.value);
               }}
@@ -83,8 +102,15 @@ function SensorAlertRange({
               sx={{ marginTop: 0 }}
               value={criticalMaxValue}
               type="number"
+              inputProps={{
+                min: userDetails.userRole !== 'systemSpecialist' && criticalRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && criticalRefMaxValue,
+              }}
               disabled={moduleAccess.edit === false && true}
-              onBlur={() => validateForNullValue(criticalMaxValue, 'criticalMaxValue')}
+              onBlur={() => {
+                validateForNullValue(criticalMaxValue, 'criticalMaxValue');
+                validateAlertrange(criticalMaxValue, criticalRefMinValue, criticalRefMaxValue, setCriticalMaxValue);
+              }}
               onChange={(e) => {
                 setCriticalMaxValue(e.target.value);
               }}
@@ -129,8 +155,15 @@ function SensorAlertRange({
               sx={{ marginTop: 0 }}
               value={warningMinValue}
               type="number"
+              inputProps={{
+                min: userDetails.userRole !== 'systemSpecialist' && warningRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && warningRefMaxValue,
+              }}
               disabled={moduleAccess.edit === false && true}
-              onBlur={() => validateForNullValue(warningMinValue, 'warningMinValue')}
+              onBlur={() => {
+                validateForNullValue(warningMinValue, 'warningMinValue');
+                validateAlertrange(warningMinValue, warningRefMinValue, warningRefMaxValue, setWarningMinValue);
+              }}
               onChange={(e) => {
                 setWarningMinValue(e.target.value);
               }}
@@ -159,8 +192,15 @@ function SensorAlertRange({
               sx={{ marginTop: 0 }}
               value={warningMaxValue}
               type="number"
+              inputProps={{
+                min: userDetails.userRole !== 'systemSpecialist' && warningRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && warningRefMaxValue,
+              }}
               disabled={moduleAccess.edit === false && true}
-              onBlur={() => validateForNullValue(warningMaxValue, 'warningMaxValue')}
+              onBlur={() => {
+                validateForNullValue(warningMaxValue, 'warningMaxValue');
+                validateAlertrange(warningMaxValue, warningRefMinValue, warningRefMaxValue, setWarningMaxValue);
+              }}
               onChange={(e) => {
                 setWarningMaxValue(e.target.value);
               }}
@@ -205,8 +245,15 @@ function SensorAlertRange({
               sx={{ marginTop: 0 }}
               value={outofrangeMinValue}
               type="number"
+              inputProps={{
+                min: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMaxValue,
+              }}
               disabled={moduleAccess.edit === false && true}
-              onBlur={() => validateForNullValue(outofrangeMinValue, 'outofrangeMinValue')}
+              onBlur={() => {
+                validateForNullValue(outofrangeMinValue, 'outofrangeMinValue');
+                validateAlertrange(outofrangeMinValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMinValue);
+              }}
               onChange={(e) => {
                 setOutofrangeMinValue(e.target.value);
               }}
@@ -235,8 +282,15 @@ function SensorAlertRange({
               sx={{ marginTop: 0 }}
               value={outofrangeMaxValue}
               type="number"
+              inputProps={{
+                min: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMaxValue,
+              }}
               disabled={moduleAccess.edit === false && true}
-              onBlur={() => validateForNullValue(outofrangeMaxValue, 'outofrangeMaxValue')}
+              onBlur={() => {
+                validateForNullValue(outofrangeMaxValue, 'outofrangeMaxValue');
+                validateAlertrange(outofrangeMaxValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMaxValue);
+              }}
               onChange={(e) => {
                 setOutofrangeMaxValue(e.target.value);
               }}

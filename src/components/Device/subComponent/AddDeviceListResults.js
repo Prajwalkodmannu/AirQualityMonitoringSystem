@@ -185,7 +185,7 @@ function AddDeviceListResults(props) {
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={props.selectedRow.deviceMode}
-        disabled={!moduleAccess.edit && true}
+        disabled={!moduleAccess.changeDeviceMode.edit && true}
         label="Mode"
         fullWidth
         onChange={(e) => {
@@ -304,7 +304,7 @@ function AddDeviceListResults(props) {
 
   /* eslint-disable-next-line */
   function EditData(props) {
-    return (moduleAccess.edit
+    return (moduleAccess.view
       && (
         <EditIcon
           style={{ cursor: 'pointer' }}
@@ -329,7 +329,7 @@ function AddDeviceListResults(props) {
   }
   /* eslint-disable-next-line */
   function SensorsData(props) {
-    return (
+    return (moduleAccess.view && (
       <SensorsIcon
         style={{ cursor: 'pointer' }}
         onClick={(event) => {
@@ -339,7 +339,7 @@ function AddDeviceListResults(props) {
           setDeviceId(props.selectedRow.id);
         }}
       />
-    );
+    ));
   }
   const fetchSensorList = (device_id) => {
     SensorDeployFetchService({ ...props.locationDetails, device_id }, fetchSenosorListSuccess, fetchSenosorListException);
@@ -363,7 +363,7 @@ function AddDeviceListResults(props) {
   };
   /* eslint-disable-next-line */
   function AppSettingsAltIconData(props) {
-    return (moduleAccess.edit
+    return (moduleAccess.view
       && (
         <AppSettingsAltIcon
           style={{ cursor: 'pointer' }}
