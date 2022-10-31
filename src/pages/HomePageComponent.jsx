@@ -328,9 +328,13 @@ function HomePageComponent() {
               anchorElNotification={anchorElNotification}
               setAnchorElNotification={setAnchorElNotification}
             />
-            <UserAccessProvider>
-              <Outlet />
-            </UserAccessProvider>
+            <div style={{
+              height: '94vh'
+            }}>
+              <UserAccessProvider>
+                <Outlet />
+              </UserAccessProvider>
+            </div>
           </LatestAlertProvider>
         </div>
         <Backdrop

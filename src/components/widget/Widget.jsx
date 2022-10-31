@@ -147,6 +147,7 @@ function Widget({ type , setAlertOpen, totalSensors, totalAlerts, aqi }) {
         type === 'alerts' && setAlertOpen(true);
       }}
       style={{ 
+        minWidth: type === 'time' && '175px',
         cursor: type === 'alerts' && 'pointer', 
         display: type === "aqi" && aqi === 'NA' ? 'none' : 'inline-block' }}
     >

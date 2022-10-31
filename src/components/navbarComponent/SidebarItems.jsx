@@ -121,7 +121,7 @@ function DrawerObject() {
                 src={companyLogo}
                 alt=""
                 className="avatar"
-                style={{ width: 200, height: 50 }}
+                style={{ width: 200, height: '6vh' }}
               />
             </Link>
           </div>

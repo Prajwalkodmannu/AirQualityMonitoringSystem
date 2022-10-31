@@ -339,4 +339,7 @@ export const EmailTemplateUpdateService = (data, successCallback, errorCallBack)
 
 // ------------ Back Up Configuration ---------------------//
 
-export const BackUpConfigurationservice = (data, successCallback, errorCallBack) => { return _fetchService(`updateBackUpConfiguration`, 'POST', data, successCallback, errorCallBack); };
+export const BackUpConfigurationservice = (data, successCallback, errorCallBack) => { return _fetchService(`aidealabCompany/update`, 'POST', data, successCallback, errorCallBack); };
+
+// ------------ Device Debug Result ---------------------//
+export const DeviceDebugResultService = (data, successCallback, errorCallBack) => { return _fetchService(`DeviceDebugConfigData`, 'POST', data, successCallback, errorCallBack); };

@@ -37,7 +37,7 @@ function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
 
   return (
     <Dialog
-      sx={{ '& .MuiDialog-paper': { minWidth: '95%', height: '90vh' } }}
+      sx={{ '& .MuiDialog-paper': { minWidth: '95%', } }}
       maxWidth="lg"
       open={alertOpen}
     >
@@ -52,7 +52,7 @@ function AlertModalComponent({ alertOpen, setAlertOpen, locationDetails }) {
         <Grid
           item
           xs={12}
-          sm={6}
+          sm={12}
           md={12}
           lg={12}
           xl={12}

@@ -4,6 +4,7 @@ import {
 import React from 'react';
 import { AnalogSensorValidate } from '../../../validation/formValidation';
 import { useUserAccess } from '../../../context/UserAccessProvider';
+import ApplicationStore from '../../../utils/localStorageUtil';
 
 function AnalogAlert({
   errorObject, setErrorObject,
@@ -29,17 +30,18 @@ function AnalogAlert({
   outofrangeHighAlert, setOutofrangeHighAlert,
   outofrangeRefMinValue, outofrangeRefMaxValue,
 }) {
+  const { userDetails } = ApplicationStore().getStorage('userDetails');
   const moduleAccess = useUserAccess()('devicelocation');
   const validateForNullValue = (value, type) => {
     AnalogSensorValidate(value, type, setErrorObject);
   };
-
+  
   const validateAlertrange = (currentValue, minimumValue, maximumvalue, setCurrentValue) =>{
-    if(currentValue<minimumValue){
-      setCurrentValue(minimumValue);
+    if(parseInt(currentValue)<parseInt(minimumValue)){
+      userDetails.userRole !== 'systemSpecialist' && setCurrentValue(minimumValue);
     }
-    if(currentValue>maximumvalue){
-      setCurrentValue(maximumvalue);
+    if(parseInt(currentValue)>parseInt(maximumvalue)){
+      userDetails.userRole !== 'systemSpecialist' && userDetails.userRole !== 'systemSpecialist' && setCurrentValue(maximumvalue);
     }
   }
   return (
@@ -102,7 +104,7 @@ function AnalogAlert({
               Sensor alert
             </InputLabel>
             <Select
-              sx={{ minWidth: 250 }}
+              // sx={{ minWidth: 250 }}
               labelId="demo-simple-select-label"
               value={criticalAlertType}
               required
@@ -213,8 +215,8 @@ function AnalogAlert({
               disabled={criticalAlertType === 'High' || criticalAlertType === '' || (moduleAccess.edit === false && true)}
               type="number"
               inputProps={{
-                min: criticalRefMinValue,
-                max: criticalRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && criticalRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && criticalRefMaxValue,
               }}
               onBlur={() => {
                 validateForNullValue(criticalMinValue, 'criticalMinValue');
@@ -254,8 +256,8 @@ function AnalogAlert({
                 validateAlertrange(criticalMaxValue, criticalRefMinValue, criticalRefMaxValue, setCriticalMaxValue);
               }}
               inputProps={{
-                min: criticalRefMinValue,
-                max: criticalRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && criticalRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && criticalRefMaxValue,
               }}
               onChange={(e) => {
                 setCriticalMaxValue(e.target.value);
@@ -300,7 +302,7 @@ function AnalogAlert({
               Sensor alert
             </InputLabel>
             <Select
-              sx={{ minWidth: 250 }}
+              // sx={{ minWidth: 250 }}
               labelId="demo-simple-select-label"
               value={warningAlertType}
               label="Sensor alert"
@@ -416,8 +418,8 @@ function AnalogAlert({
                 validateAlertrange(warningMinValue, warningRefMinValue, warningRefMaxValue, setWarningMinValue);
               }}
               inputProps={{
-                min: warningRefMinValue,
-                max: warningRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && warningRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && warningRefMaxValue,
               }}
               onChange={(e) => {
                 setWarningMinValue(e.target.value);
@@ -453,8 +455,8 @@ function AnalogAlert({
                 validateAlertrange(warningMaxValue, warningRefMinValue, warningRefMaxValue, setWarningMaxValue);
               }}
               inputProps={{
-                min: warningRefMinValue,
-                max: warningRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && warningRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && warningRefMaxValue,
               }}
               onChange={(e) => {
                 setWarningMaxValue(e.target.value);
@@ -499,7 +501,7 @@ function AnalogAlert({
               Sensor alert
             </InputLabel>
             <Select
-              sx={{ minWidth: 250 }}
+              // sx={{ minWidth: 250 }}
               labelId="demo-simple-select-label"
               value={outofrangeAlertType}
               disabled={moduleAccess.edit === false && true}
@@ -615,8 +617,8 @@ function AnalogAlert({
                 validateAlertrange(outofrangeMinValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMinValue);
               }}
               inputProps={{
-                min: outofrangeRefMinValue,
-                max: outofrangeRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMaxValue,
               }}
               onChange={(e) => {
                 setOutofrangeMinValue(e.target.value);
@@ -652,8 +654,8 @@ function AnalogAlert({
                 validateAlertrange(outofrangeMaxValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMaxValue);
               }}
               inputProps={{
-                min: outofrangeRefMinValue,
-                max: outofrangeRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMaxValue,
               }}
               onChange={(e) => {
                 setOutofrangeMaxValue(e.target.value);

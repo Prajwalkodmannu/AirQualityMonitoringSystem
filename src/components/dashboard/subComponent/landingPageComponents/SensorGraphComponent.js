@@ -60,7 +60,9 @@ function SensorGraphComponent({
 
   return (
     <Dialog
-      sx={{ '& .MuiDialog-paper': { minWidth: '95%', minHeight: '95%' } }}
+      sx={{ '& .MuiDialog-paper': { minWidth: '95%', 
+      // minHeight: '95%' 
+    } }}
       maxWidth="sm"
       open={open}
     >
@@ -69,7 +71,10 @@ function SensorGraphComponent({
         {sensorTag}
         )
       </DialogTitle>
-      <DialogContent>
+      <DialogContent style={{
+            minWidth: '1200px',
+            minHeight: '400px',
+          }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={6} />
           <Grid item xs={2}>
@@ -133,9 +138,13 @@ function SensorGraphComponent({
             </FormControl>
           </Grid>
         </Grid>
-        <Grid container>
+        <Grid container >
           <Grid item md={12}>
-            <div className="mt-10" style={{ height: '100%', width: '100%' }}>
+            <div className="mt-10" style={{ 
+              minWidth: '1200px',
+              minHeight: '400px',
+              height: '100%', 
+              width: '100%' }}>
               <MixedChart data={data} />
             </div>
           </Grid>
