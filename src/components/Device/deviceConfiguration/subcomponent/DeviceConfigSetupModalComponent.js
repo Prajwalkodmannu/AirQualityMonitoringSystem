@@ -11,6 +11,7 @@ import {
   ConfigSetupFetchService, DeviceConfigSetupAddService, DeviceConfigSetupFetchService,
 } from '../../../../services/LoginPageService';
 import NotificationBar from '../../../notification/ServiceNotificationBar';
+import { useUserAccess } from '../../../../context/UserAccessProvider';
 
 function DeviceConfigSetupModal({
   open, setOpen, isAddButton, deviceData,
@@ -22,9 +23,9 @@ function DeviceConfigSetupModal({
   const [accessPointPassword, setAccessPointPassword] = useState('');
 
   //Secondary
-  const [accessPointNameSecondary, setAccessPointNameSecondary] = useState('');
-  const [ssIdSecondary, setSsIdSecondary] = useState('');
-  const [accessPointPasswordSecondary, setAccessPointPasswordSecondary] = useState('');
+  // const [accessPointNameSecondary, setAccessPointNameSecondary] = useState('');
+  // const [ssIdSecondary, setSsIdSecondary] = useState('');
+  // const [accessPointPasswordSecondary, setAccessPointPasswordSecondary] = useState('');
 
   // FTP inputs
   const [ftpAccountName, setFtpAccountName] = useState('');
@@ -42,7 +43,7 @@ function DeviceConfigSetupModal({
   const [accessType, setAccessType] = useState('');
   /* eslint-disable-next-line */
   const [errorObject, setErrorObject] = useState({});
-
+  const moduleAccess = useUserAccess()('devicelocation');
   const [openNotification, setNotification] = useState({
     status: false,
     type: 'error',
@@ -51,7 +52,9 @@ function DeviceConfigSetupModal({
 
   useEffect(() => {
     setOpen(open);
-    loadData();
+    if(deviceData.id){
+      loadData();
+    }
   }, [deviceData]);
 
   const loadData = () => {
@@ -70,9 +73,9 @@ function DeviceConfigSetupModal({
       setAccessPointName('');
       setSsId('');
       setAccessPointPassword('');
-      setAccessPointNameSecondary('');
-      setSsIdSecondary('');
-      setAccessPointPasswordSecondary('');
+      // setAccessPointNameSecondary('');
+      // setSsIdSecondary('');
+      // setAccessPointPasswordSecondary('');
       setFtpAccountName('');
       setUserName('');
       setFtpPassword('');
@@ -85,9 +88,9 @@ function DeviceConfigSetupModal({
       setAccessPointName(dataObject.data[0].accessPointName || '');
       setSsId(dataObject.data[0].ssId || '');
       setAccessPointPassword(dataObject.data[0].accessPointPassword || '');
-      setAccessPointNameSecondary(dataObject.data[0].accessPointNameSecondary || '');
-      setSsIdSecondary(dataObject.data[0].ssIdSecondary || '');
-      setAccessPointPasswordSecondary(dataObject.data[0].accessPointPasswordSecondary || '');
+      // setAccessPointNameSecondary(dataObject.data[0].accessPointNameSecondary || '');
+      // setSsIdSecondary(dataObject.data[0].ssIdSecondary || '');
+      // setAccessPointPasswordSecondary(dataObject.data[0].accessPointPasswordSecondary || '');
       setFtpAccountName(dataObject.data[0].ftpAccountName || '');
       setUserName(dataObject.data[0].userName || '');
       setFtpPassword(dataObject.data[0].ftpPassword || '');
@@ -129,9 +132,9 @@ function DeviceConfigSetupModal({
       setAccessPointName('');
       setSsId('');
       setAccessPointPassword('');
-      setAccessPointNameSecondary('');
-      setSsIdSecondary('');
-      setAccessPointPasswordSecondary('');
+      // setAccessPointNameSecondary('');
+      // setSsIdSecondary('');
+      // setAccessPointPasswordSecondary('');
       setFtpAccountName('');
       setUserName('');
       setFtpPassword('');
@@ -153,9 +156,9 @@ function DeviceConfigSetupModal({
       accessPointName,
       ssId,
       accessPointPassword,
-      accessPointNameSecondary,
-      ssIdSecondary,
-      accessPointPasswordSecondary,
+      // accessPointNameSecondary,
+      // ssIdSecondary,
+      // accessPointPasswordSecondary,
       ftpAccountName,
       userName,
       ftpPassword,
@@ -250,19 +253,19 @@ function DeviceConfigSetupModal({
                   }}
                   options={configSetupList}
                   onChange={(e, data) => {
-                    setAccessPointName(data.accessPointName);
-                    setSsId(data.ssId);
-                    setAccessPointPassword(data.accessPointPassword);
-                    setAccessPointNameSecondary(data.accessPointNameSecondary);
-                    setSsIdSecondary(data.ssIdSecondary);
-                    setAccessPointPasswordSecondary(data.accessPointPasswordSecondary);
-                    setFtpAccountName(data.ftpAccountName);
-                    setUserName(data.userName);
-                    setFtpPassword(data.ftpPassword);
-                    setPort(data.port);
-                    setServerUrl(data.serverUrl);
-                    setFolderPath(data.folderPath);
-                    setServiceProvider(data.serviceProvider);
+                    setAccessPointName(data.accessPointName || '');
+                    setSsId(data.ssId || '');
+                    setAccessPointPassword(data.accessPointPassword || '');
+                    // setAccessPointNameSecondary(data.accessPointNameSecondary || '');
+                    // setSsIdSecondary(data.ssIdSecondary || '');
+                    // setAccessPointPasswordSecondary(data.accessPointPasswordSecondary || '');
+                    setFtpAccountName(data.ftpAccountName || '');
+                    setUserName(data.userName || '');
+                    setFtpPassword(data.ftpPassword || '');
+                    setPort(data.port || '');
+                    setServerUrl(data.serverUrl || '');
+                    setFolderPath(data.folderPath || '');
+                    setServiceProvider(data.serviceProvider || '');
                     setApn(data.apn);
                   }}
                   renderInput={(params) => (
@@ -291,7 +294,7 @@ function DeviceConfigSetupModal({
               label="Access Point Name"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(accessPointName, 'accessPointName')}
               onChange={(e) => { setAccessPointName(e.target.value); }}
               autoComplete="off"
@@ -306,7 +309,7 @@ function DeviceConfigSetupModal({
               label="SSID"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(ssId, 'ssId')}
               onChange={(e) => { setSsId(e.target.value); }}
               autoComplete="off"
@@ -320,13 +323,13 @@ function DeviceConfigSetupModal({
               type="password"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(accessPointPassword, 'accessPointPassword')}
               onChange={(e) => { setAccessPointPassword(e.target.value); }}
               autoComplete="off"
             />
           </div>
-          <div className="flex items-center justify-between gap-3">
+          {/* <div className="flex items-center justify-between gap-3">
             <TextField
               value={accessPointNameSecondary}
               margin="dense"
@@ -334,7 +337,7 @@ function DeviceConfigSetupModal({
               label="Access Point Name"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(accessPointName, 'accessPointName')}
               onChange={(e) => { setAccessPointNameSecondary(e.target.value); }}
               autoComplete="off"
@@ -346,7 +349,7 @@ function DeviceConfigSetupModal({
               label="SSID"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(ssId, 'ssId')}
               onChange={(e) => { setSsIdSecondary(e.target.value); }}
               autoComplete="off"
@@ -359,12 +362,12 @@ function DeviceConfigSetupModal({
               type="password"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(accessPointPassword, 'accessPointPassword')}
               onChange={(e) => { setAccessPointPasswordSecondary(e.target.value); }}
               autoComplete="new-password"
             />
-          </div>
+          </div> */}
           <Typography variant="subtitle1" component="h6">
             FTP
           </Typography>
@@ -375,7 +378,8 @@ function DeviceConfigSetupModal({
               id="outlined-basic"
               label="Account Name"
               variant="outlined"
-              fullWidth              
+              fullWidth
+              required     
               // onBlur={() =>validateForNullValue(ftpAccountName, 'ftpAccountName')}
               onChange={(e) => { setFtpAccountName(e.target.value); }}
               autoComplete="off"
@@ -388,7 +392,8 @@ function DeviceConfigSetupModal({
               margin="dense"
               id="outlined-basic"
               label="User name"
-              variant="outlined"            
+              variant="outlined"
+              required
               //  onBlur={() =>validateForNullValue(userName, 'userName')}
               onChange={(e) => { setUserName(e.target.value); }}
               autoComplete="off"
@@ -404,7 +409,8 @@ function DeviceConfigSetupModal({
               type="password"
               label="password"
               variant="outlined"
-              fullWidth             
+              fullWidth
+              required
               //  onBlur={() =>validateForNullValue(ftpPassword, 'ftpPassword')}
               onChange={(e) => { setFtpPassword(e.target.value); }}
               autoComplete="off"
@@ -417,7 +423,8 @@ function DeviceConfigSetupModal({
               id="outlined-basic"
               label="Port"
               variant="outlined"
-              fullWidth             
+              fullWidth
+              required
               //  onBlur={() =>validateForNullValue(port, 'port')}
               onChange={(e) => { setPort(e.target.value); }}
               autoComplete="off"
@@ -430,6 +437,7 @@ function DeviceConfigSetupModal({
               multiline
               maxRows={4}
               fullWidth
+              required
               // onBlur={() =>validateForNullValue(serverUrl, 'serverUrl')}
               onChange={(e) => { setServerUrl(e.target.value); }}
               autoComplete="off"
@@ -443,6 +451,7 @@ function DeviceConfigSetupModal({
               label="Folder Path"
               variant="outlined"
               fullWidth
+              required
               //  onBlur={() =>validateForNullValue(folderPath, 'folderPath')}
               onChange={(e) => { setFolderPath(e.target.value); }}
               autoComplete="off"
@@ -487,12 +496,14 @@ function DeviceConfigSetupModal({
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-          >
-            {' '}
-            {isAddButton ? 'Add' : 'Update'}
-          </Button>
+          {moduleAccess.edit &&
+            <Button
+              type="submit"
+            >
+              Update
+              {/* {isAddButton ? 'Add' : 'Update'} */}
+            </Button>
+          }
         </DialogActions>
       </form>
 
