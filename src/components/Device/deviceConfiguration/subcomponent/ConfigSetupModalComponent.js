@@ -20,9 +20,9 @@ function ConfigSetupModal({
   const [accessPointPassword, setAccessPointPassword] = useState('');
  
   //Secondary
-  const [accessPointNameSecondary, setAccessPointNameSecondary] = useState('');
-  const [ssIdSecondary, setSsIdSecondary] = useState('');
-  const [accessPointPasswordSecondary, setAccessPointPasswordSecondary] = useState('');
+  // const [accessPointNameSecondary, setAccessPointNameSecondary] = useState('');
+  // const [ssIdSecondary, setSsIdSecondary] = useState('');
+  // const [accessPointPasswordSecondary, setAccessPointPasswordSecondary] = useState('');
 
   // FTP inputs
   const [ftpAccountName, setFtpAccountName] = useState('');
@@ -57,9 +57,9 @@ function ConfigSetupModal({
     setSsId(configSetupData.ssId || '');
     setAccessPointPassword(configSetupData.accessPointPassword || '');
 
-    setAccessPointNameSecondary(configSetupData.accessPointNameSecondary || ''); 
-    setSsIdSecondary(configSetupData.ssIdSecondary || '');
-    setAccessPointPasswordSecondary(configSetupData.accessPointPasswordSecondary || '');
+    // setAccessPointNameSecondary(configSetupData.accessPointNameSecondary || ''); 
+    // setSsIdSecondary(configSetupData.ssIdSecondary || '');
+    // setAccessPointPasswordSecondary(configSetupData.accessPointPasswordSecondary || '');
 
     setFtpAccountName(configSetupData.ftpAccountName || '');
     setUserName(configSetupData.userName || '');
@@ -103,12 +103,18 @@ function ConfigSetupModal({
     if (isAddButton) {
       await ConfigSetupAddService({
         /* eslint-disable-next-line */
-        accessPointName, ssId, accessPointPassword, accessPointNameSecondary,ssIdSecondary, accessPointPasswordSecondary, ftpAccountName, userName, ftpPassword, port, serverUrl, folderPath, serviceProvider, apn,
+        accessPointName, ssId, accessPointPassword, 
+        // accessPointNameSecondary,ssIdSecondary, accessPointPasswordSecondary, 
+        ftpAccountName, userName, ftpPassword, port, serverUrl, folderPath, 
+        serviceProvider, apn,
       }, handleSuccess, handleException);
     } else {
       await ConfigSetupEditService({
         /* eslint-disable-next-line */
-        id, accessPointName, ssId, accessPointPassword, accessPointNameSecondary,ssIdSecondary, accessPointPasswordSecondary, ftpAccountName, userName, ftpPassword, port, serverUrl, folderPath, serviceProvider, apn,
+        id, accessPointName, ssId, accessPointPassword, 
+        // accessPointNameSecondary,ssIdSecondary, accessPointPasswordSecondary, 
+        ftpAccountName, userName, ftpPassword, port, serverUrl, folderPath, 
+        serviceProvider, apn,
       }, handleSuccess, handleException);
     }
   };
@@ -144,7 +150,7 @@ function ConfigSetupModal({
               label="Access Point Name"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(accessPointName, 'accessPointName')}
               onChange={(e) => { setAccessPointName(e.target.value); }}
               autoComplete="off"
@@ -156,7 +162,7 @@ function ConfigSetupModal({
               label="SSID"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(ssId, 'ssId')}
               onChange={(e) => { setSsId(e.target.value); }}
               autoComplete="off"
@@ -169,13 +175,13 @@ function ConfigSetupModal({
               type="password"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(accessPointPassword, 'accessPointPassword')}
               onChange={(e) => { setAccessPointPassword(e.target.value); }}
               autoComplete="new-password"
             />
           </div>
-          <div className="flex items-center justify-between gap-3">
+          {/* <div className="flex items-center justify-between gap-3">
             <TextField
               value={accessPointNameSecondary}
               margin="dense"
@@ -183,7 +189,7 @@ function ConfigSetupModal({
               label="Access Point Name"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(accessPointName, 'accessPointName')}
               onChange={(e) => { setAccessPointNameSecondary(e.target.value); }}
               autoComplete="off"
@@ -195,7 +201,7 @@ function ConfigSetupModal({
               label="SSID"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(ssId, 'ssId')}
               onChange={(e) => { setSsIdSecondary(e.target.value); }}
               autoComplete="off"
@@ -208,12 +214,12 @@ function ConfigSetupModal({
               type="password"
               variant="outlined"
               fullWidth
-              required
+              // required
               // onBlur={() =>validateForNullValue(accessPointPassword, 'accessPointPassword')}
               onChange={(e) => { setAccessPointPasswordSecondary(e.target.value); }}
               autoComplete="new-password"
             />
-          </div>
+          </div> */}
           <Typography variant="subtitle1" component="h6">
             FTP
           </Typography>
@@ -225,6 +231,7 @@ function ConfigSetupModal({
               label="Account Name"
               variant="outlined"
               fullWidth
+              required
               // onBlur={() =>validateForNullValue(ftpAccountName, 'ftpAccountName')}
               onChange={(e) => { setFtpAccountName(e.target.value); }}
               autoComplete="off"
@@ -235,6 +242,7 @@ function ConfigSetupModal({
               id="outlined-basic"
               label="User name"
               variant="outlined"
+              required
               //  onBlur={() =>validateForNullValue(userName, 'userName')}
               onChange={(e) => { setUserName(e.target.value); }}
               autoComplete="off"
@@ -248,6 +256,7 @@ function ConfigSetupModal({
               label="password"
               variant="outlined"
               fullWidth
+              required
               //  onBlur={() =>validateForNullValue(ftpPassword, 'ftpPassword')}
               onChange={(e) => { setFtpPassword(e.target.value); }}
               autoComplete="new-password"
@@ -261,6 +270,7 @@ function ConfigSetupModal({
               label="Port"
               variant="outlined"
               fullWidth
+              required
               //  onBlur={() =>validateForNullValue(port, 'port')}
               onChange={(e) => { setPort(e.target.value); }}
               autoComplete="off"
@@ -273,6 +283,7 @@ function ConfigSetupModal({
               multiline
               maxRows={4}
               fullWidth
+              required
               // onBlur={() =>validateForNullValue(serverUrl, 'serverUrl')}
               onChange={(e) => { setServerUrl(e.target.value); }}
               autoComplete="off"
@@ -284,6 +295,7 @@ function ConfigSetupModal({
               label="Folder Path"
               variant="outlined"
               fullWidth
+              required
               //  onBlur={() =>validateForNullValue(folderPath, 'folderPath')}
               onChange={(e) => { setFolderPath(e.target.value); }}
               autoComplete="off"

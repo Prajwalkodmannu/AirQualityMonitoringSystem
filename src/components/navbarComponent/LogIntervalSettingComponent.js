@@ -65,7 +65,7 @@ function LogIntervalSetting({
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={1}>
-            {userRole === 'systemSpecialist' && <>
+            {(userRole === 'systemSpecialist' || userRole === 'Admin' || userRole === 'Manager') && <>
               <Grid container>
                 <Grid
                   item
@@ -233,9 +233,11 @@ function LogIntervalSetting({
                 flexFlow: 'row-reverse',
               }}
             >
-              <Button type="submit">
-                Update
-              </Button>
+              {(userRole === 'systemSpecialist' || userRole === 'superAdmin') && 
+                <Button type="submit">
+                  Update
+                </Button>
+              }
               <Button onClick={handleCancel}>
                 Cancel
               </Button>

@@ -12,11 +12,6 @@ import DeleteConfirmationDailog from '../../../../utils/confirmDeletion';
 export function ConfigSetupListResults() {
   const columns = [
     {
-      field: 'id',
-      headerName: 'Id',
-      width: 80,
-    },
-    {
       field: 'accessPointName',
       headerName: 'Access Point Name',
       width: 170,

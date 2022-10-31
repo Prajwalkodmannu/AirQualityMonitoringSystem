@@ -124,18 +124,21 @@ function SensorSettingsMenu(props) {
     >
       <MenuItem onClick={props.handleClose} disableRipple>
         <FormControlLabel
+          disabled={moduleAccess.edit === false}
           control={<Switch checked={sensorStatus !== '0'} onChange={updateSensorStatus} color="warning" />}
-          label="Enabled"
+          label="Sensor Status"
         />
       </MenuItem>
       <MenuItem onClick={props.handleClose} disableRipple>
         <FormControlLabel
+          disabled={moduleAccess.edit === false}
           control={<Switch checked={notificationStatus !== '0'} onChange={updateSensorNotification} color="warning" />}
           label="Notification"
         />
       </MenuItem>
       <MenuItem onClick={props.handleClose} disableRipple>
         <FormControlLabel
+          disabled={moduleAccess.edit === false}
           control={<Switch checked={hooterRelayStatus !== '0'} onChange={updateHooterRelaystatus} color="warning" />}
           label="HooterRelay"
         />

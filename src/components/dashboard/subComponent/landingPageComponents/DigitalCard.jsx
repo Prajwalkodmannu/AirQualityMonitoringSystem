@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { useEffect, useState } from 'react';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -60,18 +61,24 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function DigitalCard(props) {
+  const [sensorStatus, setSensorStatus] = useState(props.sensorStatus || 0);
+
+  useEffect(()=>{
+    setSensorStatus(props.sensorStatus || 0);
+  }, [props.sensorStatus]);
+
   return (
     <Card
       sx={{ minWidth: 200, boxShadow: 5, borderRadius: 2, height: 217 }}
     >
       <CardActionArea onClick={() => {
-          props.sensorStatus === 0 ? '' : '';
+          sensorStatus === 0 ? '' : '';
         }}
         style={{
           cursor: 'not-allowed',
         }}
       >
-        <Grid item xs={12} style={{ backgroundColor: props.sensorStatus === 0 ? '#9e9e9e' : props.lightColor || '#cce6ff', height: '50px' }}>
+        <Grid item xs={12} style={{ backgroundColor: sensorStatus === 0 ? '#9e9e9e' : props.lightColor || '#cce6ff', height: '50px' }}>
           <Stack
             direction="row"
             justifyContent="space-evenly"
@@ -80,7 +87,7 @@ function DigitalCard(props) {
           >
             <Tooltip title={props.sensorNameUnit}>
               <Typography style={{
-                color: props.sensorStatus === 0 ? '#212121' : props.color || '#004d99',
+                color: sensorStatus === 0 ? '#212121' : props.color || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -94,7 +101,7 @@ function DigitalCard(props) {
             </Tooltip>
             <Tooltip title={props.sensorName}>
               <Typography style={{
-                color: props.sensorStatus === 0 ? '#212121' : props.color || '#004d99',
+                color: sensorStatus === 0 ? '#212121' : props.color || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -132,7 +139,7 @@ function DigitalCard(props) {
             }}
             >
               <FormControlLabel
-                control={<MaterialUISwitch  defaultChecked={props.sensorStatus}  disabled style={{
+                control={<MaterialUISwitch  checked={sensorStatus === 1 ? true : false}  disabled style={{
                   cursor: 'not-allowed',
                 }}/>}
                 label="Digital"

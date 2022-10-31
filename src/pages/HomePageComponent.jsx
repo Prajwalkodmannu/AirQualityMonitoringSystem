@@ -47,9 +47,8 @@ function HomePageComponent() {
   const {  locationIdList, branchIdList, facilityIdList, buildingIdList, floorIdList,
     labIdList, deviceIdList, sensorIdList, } = ApplicationStore().getStorage('alertDetails');
   const intervalSec = intervalDetails.alertLogInterval * 1000 || 10000;
-  const [labelCount, setLabelCount] = useState(0);
-  const [lableCountLoop, setLableCountLoop] = useState(false);
-  
+  const [notificationCount, setNotificationCount] = useState(notificationList?.length);
+
   useEffect(()=>{
     console.log('Interval running...');
     if(userDetails.userRole !== 'superAdmin'){
@@ -81,11 +80,9 @@ function HomePageComponent() {
       } else if(location_id){
         fetchLocation();
       } else {
-        setLabelCount(oldValue => oldValue++);
         FetchLocationService(handleSuccess, handleException);
       }
       
-
       setBackdropOpen(true);
     }
     setTimeout(()=>{
@@ -102,19 +99,16 @@ function HomePageComponent() {
   
 
   const fetchLocation = () =>{
-    setLabelCount(oldValue => oldValue+2);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
   }
   const fetchBranch = () =>{
-    setLabelCount(oldValue => oldValue+3);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
   }
 
   const fetchFacility = () =>{
-    setLabelCount(oldValue => oldValue+4);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
@@ -122,7 +116,6 @@ function HomePageComponent() {
   }
 
   const fetchBuilding = () =>{
-    setLabelCount(oldValue => oldValue+5);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
@@ -131,7 +124,6 @@ function HomePageComponent() {
   }
 
   const fetchFloor = () =>{
-    setLabelCount(oldValue => oldValue+6);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
@@ -141,7 +133,6 @@ function HomePageComponent() {
   }
 
   const fetchLab  = () =>{
-    setLabelCount(oldValue => oldValue+7);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
@@ -157,7 +148,6 @@ function HomePageComponent() {
         setLocationLabel(datas.stateName);
       }
     });
-    setLabelCount(oldvalue => oldvalue--);
   };
   const handleBranchSuccess = (dataObject) => {
     dataObject?.data.map((datas) => {
@@ -165,7 +155,6 @@ function HomePageComponent() {
         setBranchLabel(datas.branchName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
   const handleFacilitySuccess = (dataObject) => {
     dataObject?.data.map((datas) => {
@@ -173,7 +162,6 @@ function HomePageComponent() {
         setFacilityLabel(datas.facilityName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
 
   const handleBuildingSuccess = (dataObject) => {
@@ -182,7 +170,6 @@ function HomePageComponent() {
         setBuildingLabel(datas.buildingName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
 
   const handleFloorSuccess = (dataObject) => {
@@ -191,7 +178,6 @@ function HomePageComponent() {
         setFloorLabel(datas.floorName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
 
   const handleLabSuccess = (dataObject) => {
@@ -200,7 +186,6 @@ function HomePageComponent() {
         setLabLabel(datas.labDepName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
 
   // const handleDeviceSuccess = (dataObject) => {
@@ -219,7 +204,7 @@ function HomePageComponent() {
     // Check for new alert with existing stack
     const arraySet = newDataObject.filter((object1) => {
       return !notificationList.some((object2) => {
-        return object1.id === object2.id;
+        return object1.id === object2.id // || (object1.sensorId === object2.sensorId && object1.id <= object2.id );
       });
     });
     // make an alert if we have new alert
@@ -239,11 +224,13 @@ function HomePageComponent() {
         };
       });
       ApplicationStore().setStorage('notificationDetails', {notificationList: newDataObject, newNotification: newNotificationValue});
+      setNotificationCount(newDataObject?.length);
     }
     
     ApplicationStore().setStorage('notificationDetails', {notificationList: newDataObject,
-       newNotification: newNotificationValue
-      });
+      newNotification: newNotificationValue
+    });
+    setNotificationCount(newDataObject?.length);
 
     let updatedAlertDetails = {
       locationIdList: [],
@@ -312,37 +299,38 @@ function HomePageComponent() {
 
   return (
     <div className="home">
-        <Sidebar handleDrawerToggle={handleDrawerToggle} mobileMenu={mobileMenu} />
-        <div className="homeContainer">
-          <LatestAlertProvider >
-            <GlobalNotifier
-              notifierState={notifierState}
-              setNotifierState={setNotifierState}
-              anchorElNotification={anchorElNotification}
-              setAnchorElNotification={setAnchorElNotification}
-            />
-            <Navbar
-              handleDrawerToggle={handleDrawerToggle}
-              mobileMenu={mobileMenu}
-              notificationList={notificationList}
-              anchorElNotification={anchorElNotification}
-              setAnchorElNotification={setAnchorElNotification}
-            />
-            <div style={{
-              height: '94vh'
-            }}>
-              <UserAccessProvider>
-                <Outlet />
-              </UserAccessProvider>
-            </div>
-          </LatestAlertProvider>
-        </div>
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={backdropOpen}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
+      <Sidebar handleDrawerToggle={handleDrawerToggle} mobileMenu={mobileMenu} />
+      <div className="homeContainer">
+        <LatestAlertProvider >
+          <GlobalNotifier
+            notifierState={notifierState}
+            setNotifierState={setNotifierState}
+            anchorElNotification={anchorElNotification}
+            setAnchorElNotification={setAnchorElNotification}
+          />
+          <Navbar
+            handleDrawerToggle={handleDrawerToggle}
+            mobileMenu={mobileMenu}
+            notificationList={notificationList}
+            anchorElNotification={anchorElNotification}
+            setAnchorElNotification={setAnchorElNotification}
+            notificationCount={notificationCount}
+          />
+          <div style={{
+            height: '94vh'
+          }}>
+            <UserAccessProvider>
+              <Outlet />
+            </UserAccessProvider>
+          </div>
+        </LatestAlertProvider>
+      </div>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdropOpen}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

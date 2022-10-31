@@ -27,7 +27,10 @@ function NotificationWidget({ type, figure, handleClick, userRole, testHooter, a
       (<VolumeOff style={{fontSize: '75px', color : '#808080'}}/>) :
       (<VolumeUp style={{fontSize: '75px', color : 'goldenrod', animation: 'flash 1s infinite '}}/>) , 
       link: '',
-      icon: userRole === 'systemSpecialist' || userRole === 'Admin' || userRole === 'Manager' ? 
+      icon: userRole === 'systemSpecialist' 
+        // ||  userRole === 'Admin' 
+        // ||  userRole === 'Manager' 
+        ? 
         (
           <Campaign
             className="icon"
@@ -148,7 +151,9 @@ function NotificationWidget({ type, figure, handleClick, userRole, testHooter, a
       }}
       style={{ cursor: type === 'alerts' && 'pointer', 
       display: 'inline-block',
-      justifyContent: type === 'hooterStatus' && (userRole !== 'systemSpecialist' || userRole !== 'Manager') ? 'center' : '' 
+      justifyContent: type === 'hooterStatus' && (userRole !== 'systemSpecialist' 
+        // || userRole !== 'Manager'
+        ) ? 'center' : '' 
     }}
     >
       { type !== 'hooterStatus' ? 
@@ -185,12 +190,18 @@ function NotificationWidget({ type, figure, handleClick, userRole, testHooter, a
               display: 'flex',
               minWidth: '150px',
               alignItems: 'flex-end',
-              justifyContent: userRole === 'systemSpecialist' || userRole === 'Admin' || userRole === 'Manager' ? 'space-between' : 'center',
+              justifyContent: userRole === 'systemSpecialist' 
+                // || userRole === 'Admin' 
+                // ||  userRole === 'Manager' 
+                ? 'space-between' : 'center',
             }}>
               <div 
                 onClick={()=>handleClick()}
                 style={{
-                  cursor: (userRole === 'systemSpecialist' || userRole === 'Admin' || userRole === 'Manager')  && 'pointer'
+                  cursor: (userRole === 'systemSpecialist' 
+                  || userRole === 'Admin' 
+                  || userRole === 'Manager'
+                  )  && 'pointer'
                 }}
               >
                 <span className="counter" style={{minWidth: '150px'}}>

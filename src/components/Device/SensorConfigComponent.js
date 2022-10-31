@@ -91,14 +91,20 @@ function SensorConfig({
   // --- Critical Alert --- //
   const [criticalMinValue, setCriticalMinValue] = useState(editData?.criticalMinValue || '');
   const [criticalMaxValue, setCriticalMaxValue] = useState(editData?.criticalMaxValue || '');
+  const [criticalRefMinValue, setRefCriticalMinValue] = useState(editData?.criticalMinValue || '');
+  const [criticalRefMaxValue, setRefCriticalMaxValue] = useState(editData?.criticalMaxValue || '');
 
   // --- Warning Alert --- //
   const [warningMinValue, setWarningMinValue] = useState(editData?.warningMinValue || '');
   const [warningMaxValue, setWarningMaxValue] = useState(editData?.warningMaxValue || '');
+  const [warningRefMinValue, setRefWarningMinValue] = useState(editData?.warningMinValue || '');
+  const [warningRefMaxValue, setRefWarningMaxValue] = useState(editData?.warningMinValue || '');
 
   // --- Out-of-Range Alert --- //
   const [outofrangeMinValue, setOutofrangeMinValue] = useState(editData?.outofrangeMinValue || '');
   const [outofrangeMaxValue, setOutofrangeMaxValue] = useState(editData?.outofrangeMaxValue || '');
+  const [outofrangeRefMinValue, setRefOutofrangeMinValue] = useState(editData?.outofrangeMinValue || '');
+  const [outofrangeRefMaxValue, setRefOutofrangeMaxValue] = useState(editData?.outofrangeMaxValue || '');
 
   const [openNotification, setNotification] = useState({
     status: false,
@@ -683,6 +689,12 @@ function SensorConfig({
                     setOutofrangeMinValue={setOutofrangeMinValue}
                     outofrangeMaxValue={outofrangeMaxValue}
                     setOutofrangeMaxValue={setOutofrangeMaxValue}
+                    criticalRefMinValue={criticalRefMinValue} 
+                    criticalRefMaxValue={criticalRefMaxValue} 
+                    warningRefMinValue={warningRefMinValue} 
+                    warningRefMaxValue={warningRefMaxValue} 
+                    outofrangeRefMinValue={outofrangeRefMinValue} 
+                    outofrangeRefMaxValue={outofrangeRefMaxValue}
                   />
                 )}
               </>

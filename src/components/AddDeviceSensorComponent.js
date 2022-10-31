@@ -25,7 +25,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: '10px' }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -70,13 +70,16 @@ function DeviceListResults() {
     return (path);
   });
   return (
-    <div className="container mx-auto" style={{ marginTop: 0, padding: 0 }}>
-      <Container maxWidth={false} style={{ padding: 0 }}>
+    <div className="" style={{ marginTop: 0, padding: 0, height: '94vh', }}>
+      <Container maxWidth={false} style={{ padding: 0, height: '94vh' }}>
         <Box sx={{
-          width: '100%', marginBottom: '0', marginTop: 0, padding: 0,
+          width: '100%', marginBottom: '0', marginTop: 0, padding: 0, height: '94vh'
         }}
         >
-          <Breadcrumbs aria-label="breadcrumb" separator="›" style={{ paddingTop: 5, paddingLeft: 15 }}>
+          <Breadcrumbs aria-label="breadcrumb" separator="›" style={{ 
+            paddingTop: '1px', paddingLeft: '4px', height: '2vh', minHeight: '15px',
+            minWidth: 'max-content'
+          }}>
             {locationLabel ? (
               <Typography
                 underline="hover"

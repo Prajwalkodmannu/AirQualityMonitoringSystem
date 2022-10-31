@@ -27,7 +27,7 @@ function UserModal({
   const [phoneNo, setPhone] = useState('');
   const [empRole, setRole] = useState(isSuperAdmin ? 'superAdmin' : 'User');
   const [empName, setFullName] = useState('');
-  const [empNotification, setEmpNotification] = useState(true);
+  const [empNotification, setEmpNotification] = useState(false);
   const [companyCode, setCompanyCode] = useState('');
   const [location_id, setLocationId] = useState('');
   const [branch_id, setBranchId] = useState('');
@@ -170,7 +170,7 @@ function UserModal({
     } else {
       setRole(userData?.user_role || 'User');
     }
-    setEmpNotification(userData?.empNotification || true);
+    setEmpNotification(userData?.empNotification === 1 ? true : false);
     setFullName(userData?.name || '');
     setCompanyCode(userData?.companyCode || '');
     setLocationId(userData?.location_id || '');
@@ -714,7 +714,7 @@ function UserModal({
                       control={(
                         <Switch
                         /* eslint-disable-next-line */
-                          checked={empNotification != 0}
+                          checked={empNotification}
                           onChange={(e) => {
                             setEmpNotification(e.target.checked);
                           }}

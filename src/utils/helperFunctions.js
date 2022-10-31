@@ -14,7 +14,8 @@ export function getFullTime(date) {
 }
 
 export function alertSeverityCode(alertType){
-  return alertType === 'Critical'? 1 : alertType === 'Warning'? 2 : alertType === 'outOfRange'? 3 : 4;
+  return alertType === 'Critical'? 1 : alertType === 'Warning'? 2 : alertType === 'outOfRange'? 3 : 
+  alertType === 'Stel'? 4 : 5;
 }
 
 function handleSwitchcase(alertStatus, colorCode, defaultCase, case1, case2, case3){
@@ -51,13 +52,25 @@ export function setAlertColor(newNotificationStack){
         colorCode = {
           priority: 2,
           color: '#ff9800',
-          message: 'Warning'
+          message: 'Warning Alert'
         }
       } else if(newNotificationStack[i].alertType === 'outOfRange') {
         colorCode = {
           priority: 3,
           color: '#ab47bc',
           message: 'Out Of Range Alert'
+        }
+      } else if(newNotificationStack[i].alertType === 'Stel') {
+        colorCode = {
+          priority: 4,
+          color: '#E53935',
+          message: 'STEL Alert'
+        }
+      } else if(newNotificationStack[i].alertType === 'TWA') {
+        colorCode = {
+          priority: 5,
+          color: '#ff9800',
+          message: 'TWA Alert'
         }
       }
     }
@@ -144,9 +157,12 @@ export function setAlertStatusCode(element, data, setAlertStatus){
 export function setAlertPriorityAndType(element, data){
   return element.alertPriority < data.alertPriority ? element : 
   {
-    alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : data.alertType === 'Warning' ? 'Warning' : 'Good',
-    alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? '#9c27b0' : data.alertType === 'Warning' ? 'orange' : 'green',
-    alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : data.alertType === 'Warning' ? 3: 4,
+    alertLabel: data.alertType === 'Critical' ? 'Critical' : data.alertType === 'outOfRange' ? 'Out Of Range' : data.alertType === 'Warning' ? 
+    'Warning' : data.alertType === 'TWA' ? 'TWA': data.alertType === 'Stel' ? 'STEL' : 'Good',
+    alertColor: data.alertType === 'Critical' ? 'red' : data.alertType === 'outOfRange' ? '#9c27b0' : data.alertType === 'Warning' ? 
+    'orange' : data.alertType === 'TWA' ? 'orange': data.alertType === 'Stel' ? 'red' : 'green',
+    alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : data.alertType === 'Warning' ?
+     3: data.alertType === 'Stel' ? 4 : data.alertType === 'TWA' ? 5 : 6,
   };
 }
 

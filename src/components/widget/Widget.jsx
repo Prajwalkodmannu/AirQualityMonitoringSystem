@@ -114,7 +114,7 @@ function Widget({ type , setAlertOpen, totalSensors, totalAlerts, aqi }) {
     data = {
       title: 'Time',
       link: '',
-      figure: dateTime.time,
+      figure: dateTime,
       diff: '',
       icon: (
         <AccessTime
@@ -138,6 +138,7 @@ function Widget({ type , setAlertOpen, totalSensors, totalAlerts, aqi }) {
           time: currentTime.toLocaleTimeString('en', {
             hour: 'numeric', hour12: true, minute: 'numeric', second: 'numeric',
           }),
+          date: currentTime.toLocaleDateString('es-CL')
         };
       });
     });
@@ -147,22 +148,33 @@ function Widget({ type , setAlertOpen, totalSensors, totalAlerts, aqi }) {
         type === 'alerts' && setAlertOpen(true);
       }}
       style={{ 
-        minWidth: type === 'time' && '175px',
+        minWidth: type === 'time' && '195px',
         cursor: type === 'alerts' && 'pointer', 
         display: type === "aqi" && aqi === 'NA' ? 'none' : 'inline-block' }}
     >
-      <div>
+      <div style={{
+        display: type === 'time' && 'flex',
+        justifyContent: type === 'time' && 'space-between'
+      }}>
         <div className="left" >
           <span className="title" style={{minWidth: '130px'}}>{data.title}</span>
-          <span className="counter" style={{minWidth: '130px', alignSelf: type === 'aqi' && 'center'}}>
-            {data.figure}
-          </span>
+          {type === 'time' ? <>
+              <span className="counter" style={{minWidth: '130px', lineHeight: 1.4}}>
+                {data.figure.time}
+              </span>
+              <span className="counter" style={{minWidth: '130px', lineHeight: 1.2}}>
+                {data.figure.date}
+              </span>
+          </>
+            :
+            <span className="counter" style={{minWidth: '130px', alignSelf: type === 'aqi' && 'center'}}>
+              {data.figure}
+            </span>
+          }
           <span className="link">{data.link}</span>
         </div>
         <div className="right">
           <div className="percentage positive">
-            {/* {data.diff && <KeyboardArrowUp /> }
-            {data.diff} */}
           </div>
           {data.icon}
         </div>

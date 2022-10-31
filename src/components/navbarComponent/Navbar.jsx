@@ -92,6 +92,18 @@ function Navbar(props) {
       message: '',
     });
   };
+
+  const alertIcon = (alertType) =>{
+    switch(alertType){
+      case 'Critical' : return (<ErrorOutlineOutlined sx={{ color: 'red', fontSize: 30 }} />); 
+      case 'Warning' : return (<PriorityHigh style={{ color: 'yellow', fontSize: 30 }}/>);
+      case 'outOfRange' : return (<WarningAmber sx={{ color: '#ba68c8', fontSize: 30 }} />);
+      case 'Stel' : return (<WarningAmber sx={{ color: 'red', fontSize: 30 }} />);
+      case 'TWA' : return (<WarningAmber sx={{ color: 'yellow', fontSize: 30 }} />);
+      default : return (<WarningAmber sx={{ color: 'yellow', fontSize: 30 }} />)
+    }
+  }
+
   return (
     <div className="navbar" style={{
       height: '6vh'
@@ -133,7 +145,7 @@ function Navbar(props) {
                     cursor: 'pointer',
                   }}
                 />
-                <div className="counter">{props.notificationList.length}</div>
+                <div className="counter">{props.notificationCount}</div>
               </div>
             </Tooltip>
             <Menu
@@ -203,9 +215,10 @@ function Navbar(props) {
                         }}
                       >
                         <ListItemAvatar>
-                          {alertType === 'Critical' ? <ErrorOutlineOutlined sx={{ color: 'red', fontSize: 30 }} /> :
+                          {/* {alertType === 'Critical' ? <ErrorOutlineOutlined sx={{ color: 'red', fontSize: 30 }} /> :
                           alertType === 'Warning' ?  <PriorityHigh style={{ color: 'yellow', fontSize: 30 }}/> :
-                          <WarningAmber sx={{ color: '#ba68c8', fontSize: 30 }} />}
+                          <WarningAmber sx={{ color: '#ba68c8', fontSize: 30 }} />} */}
+                          {alertIcon(alertType)}
                         </ListItemAvatar>
                         <ListItemText 
                           primary={<div>
@@ -262,7 +275,7 @@ function Navbar(props) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            {(userRole === 'systemSpecialist' || userRole === 'superAdmin')
+            {(userRole === 'systemSpecialist' || userRole === 'superAdmin' || userRole === 'Admin' || userRole === 'Manager')
               && (
                 <MenuItem onClick={() => {
                   handleClose();

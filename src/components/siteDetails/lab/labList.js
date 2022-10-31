@@ -175,8 +175,12 @@ export function LabListResults({ img }) {
   });
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <Breadcrumbs aria-label="breadcrumb" separator="›">
+    <div style={{ height: '46vh', width: '100%' }}>
+      <Breadcrumbs aria-label="breadcrumb" separator="›" style={{
+        height: '2vh',
+        minHeight: '15px',
+        minWidth: 'max-content'
+      }}>
         {locationLabel ? (
           <Typography
             underline="hover"
@@ -298,7 +302,10 @@ export function LabListResults({ img }) {
         loading={isLoading}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        style={{ maxHeight: `${80}%` }}
+        style={{ 
+          maxHeight: `${80}%`,
+          height: '37vh'
+        }}
       />
 
       <LabModal

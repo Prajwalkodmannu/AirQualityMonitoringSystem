@@ -293,19 +293,21 @@ function Dashboard() {
   };
   
   return (
-    <Grid container spacing={1} style={{ height: '94vh', width: '100%', padding: 2 }}>
+    <Grid container spacing={1} style={{ height: '94vh', width: '100%', padding: 2, marginLeft: '0px', marginTop: '0px' }}>
       {isdashboard === 0
         && (
           <div style={{ height: '94vh', width: '100%' }}>
             <Grid
               item
               xs={12}
+              sx={{
+                marginLeft: 1,
+              }}
               style={{
                 height: '94vh',
                 width: '100%',
-              }}
-              sx={{
-                marginLeft: 1,
+                marginLeft: '0px'
+
               }}
             >
               <Grid
@@ -326,7 +328,7 @@ function Dashboard() {
                   lg={8}
                   sx={{
                   }}
-                  style={{ minHeight: '300px', height: '47vh', marginTop: 10 }}
+                  style={{ minHeight: '300px', height: '47vh', }}
                 >
                   <LocationGridWidget
                     setLocationCoordinationList={setLocationCoordinationList}
@@ -360,7 +362,6 @@ function Dashboard() {
                     border: '2px solid black', height: '47vh', 
                     minHeight: '304px', 
                     // maxHeight: '300px', 
-                    marginTop: '10px',
                     padding: '2px'
                   }}
                 >
@@ -374,8 +375,8 @@ function Dashboard() {
                   sm={12}
                   md={12}
                   style={{
-                    padding: 1,
-                    marginLeft: 1,
+                    padding: '0px',
+                    marginLeft: 1, 
                     height: '47vh',
                   }}
                 >
