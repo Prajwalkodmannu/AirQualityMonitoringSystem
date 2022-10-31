@@ -4,6 +4,7 @@ import {
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useState } from 'react';
+import { useUserAccess } from '../../../context/UserAccessProvider';
 import { SensorIdAlertUpdate } from '../../../services/LoginPageService';
 
 /* eslint-disable no-unused-vars */
@@ -14,7 +15,7 @@ function AlertWidget({
   const [clearAlertReason, setAlertReason] = useState('');
   const [sensorId, setSensorId] = useState('');
   const [errorObject, setErrorObject] = useState({});
-
+  const moduleAccess = useUserAccess()('dashboard');
   const convertDateTime = (value) => {
     const dateSplit = value.split('-');
     const date = `${dateSplit[2]}-${dateSplit[1]}-${dateSplit[0]}`;
@@ -134,7 +135,11 @@ function AlertWidget({
       <Typography
         underline="hover"
         color="inherit"
-        component="h1"
+        style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: '#403f3e'
+        }}
       >
         Alerts
       </Typography>
@@ -146,6 +151,9 @@ function AlertWidget({
         disableSelectionOnClick
         style={{ 
           maxHeight: maxHeight || '40vh' 
+        }}
+        columnVisibilityModel={{
+          actions : moduleAccess.delete
         }}
       />
       <Dialog

@@ -88,6 +88,7 @@ export default function Sidebar(props) {
         }}
         sx={{
           display: { xs: 'none', sm: 'none', md: 'block' },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', position: 'inherit' },
         }}
       >
         <DrawerObject />

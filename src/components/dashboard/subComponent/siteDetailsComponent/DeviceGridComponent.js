@@ -121,7 +121,10 @@ function DeviceGridComponent(props) {
   };
 
   const handleHooter = () => {
-    (userDetails?.userRole === 'systemSpecialist' || userDetails?.userRole === 'Admin' || userDetails?.userRole === 'Manager') && HooterRelayService({ lab_id: props.locationDetails.lab_id }, handleHooterSuccess, handleHooterException);
+    (userDetails?.userRole === 'systemSpecialist' 
+    || userDetails?.userRole === 'Admin' 
+    || userDetails?.userRole === 'Manager'
+    ) && HooterRelayService({ lab_id: props.locationDetails.lab_id }, handleHooterSuccess, handleHooterException);
   }
 
   const handleHooterSuccess = (dataObject) => {
@@ -374,7 +377,8 @@ function DeviceGridComponent(props) {
         className=""
         style={{
           marginTop: 5,
-          maxHeight: '60vh',
+          height: '76%',
+          maxHeight: '100%',
           overflow: 'auto',
         }}
       >
