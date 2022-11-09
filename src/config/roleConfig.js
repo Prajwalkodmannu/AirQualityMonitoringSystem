@@ -6,7 +6,7 @@ export const sidebarConfig = {
   manager: ['Dashboard', 'Location', 'UserManagement', 'Vendor', 'ChangePassword', 'AddDevice', 'DeviceLocation'],
   user: ['Dashboard', 'Location', 'ChangePassword', 'AddDevice', 'DeviceLocation'],
 };
-
+// 'GasCylinder'
 export const crudConfig = {
   dashboard: {
     superadmin: {
@@ -119,6 +119,38 @@ export const crudConfig = {
     },
     user: {
       view: true,
+      add: false,
+      edit: false,
+      delete: false,
+    },
+  },
+  gascylinder: {
+    superadmin: {
+      view: false,
+      add: false,
+      edit: false,
+      delete: false,
+    },
+    systemspecialist: {
+      view: true,
+      add: true,
+      edit: true,
+      delete: true,
+    },
+    admin: {
+      view: true,
+      add: true,
+      edit: true,
+      delete: true,
+    },
+    manager: {
+      view: false,
+      add: false,
+      edit: false,
+      delete: false,
+    },
+    user: {
+      view: false,
       add: false,
       edit: false,
       delete: false,

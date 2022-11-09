@@ -4,31 +4,34 @@ import { DataGrid } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
 import SendIcon from '@mui/icons-material/Send';
 import { FetchServerUsageReportDetails } from '../../services/LoginPageService';
+import { serverUtiliExport } from '../../services/DownloadCsvReportsService';
 
 const columns = [
-
     {
-        field: 'avg_cpu_load',
-        headerName: 'AVG RAM %',
-        width: 300
+        field: 'date',
+        headerName: 'Date',
+        width: 100
     },
     {
-        field: 'perc_server_load',
-        headerName: 'AVG CPU %',
-        width: 300
+        field: 'time',
+        headerName: 'Time',
+        width: 100
     },
     {
         field: 'perc_memory_usage',
-        headerName: 'Disk Utilization',
-        type: 'number',
-        width: 300,
+        headerName: 'Disk Utilization ( AVG RAM % )',
+        width: 310
     },
+    {
+        field: 'avg_cpu_load',
+        headerName: 'AVG CPU %',
+        width: 200
+    }
 ];
 
 
 
 const ServerUtilization = () => {
-    const [deviceId, setDeviceId] = useState('');
     const [isLoading, setGridLoading] = useState(false);
     const [serverUsageReportList, setServerUsageReportList] = useState([]);
     const [unTaggedServerUsageReportList, setUnTaggedServerUsageReportList] = useState();
@@ -37,8 +40,8 @@ const ServerUtilization = () => {
     const [rowCountState, setRowCountState] = useState(0);
 
     useEffect(() => {
-        FetchServerUsageReportDetails({ deviceId }, ServerUsageReportHandleSuccess, ServerUsageReportHandleException);
-    }, [unTaggedServerUsageReportList]);
+        fetchNewData();
+    }, [unTaggedServerUsageReportList, page]);
 
 
 
@@ -50,16 +53,14 @@ const ServerUtilization = () => {
 
     const fetchNewData = () => {
         setGridLoading(true);
-        setDeviceId(deviceId);
         FetchServerUsageReportDetails({
             page, pageSize
         }, ServerUsageReportHandleSuccess, ServerUsageReportHandleException);
     };
 
     const ServerUsageReportHandleSuccess = (dataObject) => {
-        console.log(dataObject.data);
-        setServerUsageReportList(dataObject.data);
-        setRowCountState(dataObject.totalRowCount);
+        setServerUsageReportList(dataObject.data.data);
+        setRowCountState(dataObject.data.totalRowCount);
         setGridLoading(false);
     };
 
@@ -68,23 +69,26 @@ const ServerUtilization = () => {
     const handleCancel = () => {
         setDeviceId([]);
         setGridLoading(false);
-        setUnTaggedServerUsageReportList(!unTaggedServerUsageReportReportList);
+        setUnTaggedServerUsageReportList(!unTaggedServerUsageReportList);
     };
 
     const onPageChange = (newPage) => {
         setPage(newPage);
-        fetchNewData();
     };
 
     const onPageSizeChange = (newPageSize) => {
         setPageSize(newPageSize);
-        fetchNewData();
     };
 
 
 
+    const DownloadCsv = () => {
+        serverUtiliExport({}, serverUtiliExportSuccess, serverUtiliExportException);
+    }
 
+    const serverUtiliExportSuccess = () => { }
 
+    const serverUtiliExportException = () => { }
 
 
 
@@ -132,7 +136,6 @@ const ServerUtilization = () => {
                     rows={serverUsageReportList}
                     rowCount={rowCountState}
                     loading={isLoading}
-                    rowsPerPageOptions={[5, 10, 100]}
                     pagination
                     page={page}
                     pageSize={pageSize}

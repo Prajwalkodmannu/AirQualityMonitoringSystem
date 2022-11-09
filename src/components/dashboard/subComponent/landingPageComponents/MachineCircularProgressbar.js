@@ -18,7 +18,9 @@ function MachineCircularProgressbar(props) {
       {(value) => (
         <CircularProgressbar
           value={value}
-          text={`${value}`}
+          minValue={props.minReading}
+          maxValue={props.maxReading}
+          text={`${props.text}`}
           circleRatio={0.7}
           styles={{
             trail: {

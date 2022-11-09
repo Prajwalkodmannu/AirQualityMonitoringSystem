@@ -11,20 +11,32 @@ function ModbusAlert({
   criticalAlertType, setCriticalAlertType,
   criticalLowAlert, setCriticalLowAlert,
   criticalHighAlert, setCriticalHighAlert,
+  criticalRefMinValue, criticalRefMaxValue,
 
   warningMinValue, setWarningMinValue,
   warningMaxValue, setWarningMaxValue,
   warningAlertType, setWarningAlertType,
   warningLowAlert, setWarningLowAlert,
   warningHighAlert, setWarningHighAlert,
+  warningRefMinValue, warningRefMaxValue,
 
   outofrangeMinValue, setOutofrangeMinValue,
   outofrangeMaxValue, setOutofrangeMaxValue,
   outofrangeAlertType, setOutofrangeAlertType,
   outofrangeLowAlert, setOutofrangeLowAlert,
   outofrangeHighAlert, setOutofrangeHighAlert,
+  outofrangeRefMinValue, outofrangeRefMaxValue,
 }) {
   const moduleAccess = useUserAccess()('devicelocation');
+
+  const validateAlertrange = (currentValue, minimumValue, maximumvalue, setCurrentValue) =>{
+    if(currentValue<minimumValue){
+      setCurrentValue(minimumValue);
+    }
+    if(currentValue>maximumvalue){
+      setCurrentValue(maximumvalue);
+    }
+  }
 
   return (
     <DialogContent sx={{ px: 0, p: 0 }}>
@@ -93,8 +105,8 @@ function ModbusAlert({
               label="Sensor alert"
               onChange={(e) => {
                 setCriticalAlertType(e.target.value);
-                setCriticalMinValue('');
-                setCriticalMaxValue('');
+                setCriticalMinValue(criticalMinValue);
+                setCriticalMaxValue(criticalMaxValue);
               }}
               // error={errorObject?.deviceName?.errorStatus}
               // helperText={errorObject?.deviceName?.helperText}
@@ -202,7 +214,15 @@ function ModbusAlert({
               sx={{ marginTop: 0 }}
               value={criticalMinValue}
               disabled={criticalAlertType === 'High' || criticalAlertType === 'High' || (moduleAccess.edit === false && true)}
-              // onBlur={() => validateForNullValue(alertTag, "alertTag")}
+              type='number'
+              inputProps={{
+                min: criticalRefMinValue,
+                max: criticalRefMaxValue,
+              }}
+              onBlur={() => {
+                // validateForNullValue(alertTag, "alertTag");
+                validateAlertrange(criticalMinValue, criticalRefMinValue, criticalRefMaxValue, setCriticalMinValue);
+              }}
               onChange={(e) => {
                 setCriticalMinValue(e.target.value);
               }}
@@ -231,7 +251,15 @@ function ModbusAlert({
               sx={{ marginTop: 0 }}
               value={criticalMaxValue}
               disabled={criticalAlertType === 'Low' || criticalAlertType === '' || (moduleAccess.edit === false && true)}
-              // onBlur={() => validateForNullValue(alertTag, "alertTag")}
+              type='number'
+              inputProps={{
+                min: criticalRefMinValue,
+                max: criticalRefMaxValue,
+              }}
+              onBlur={() => {
+                // validateForNullValue(alertTag, "alertTag");
+                validateAlertrange(criticalMaxValue, criticalRefMinValue, criticalRefMaxValue, setCriticalMaxValue);
+              }}
               onChange={(e) => {
                 setCriticalMaxValue(e.target.value);
               }}
@@ -281,8 +309,8 @@ function ModbusAlert({
               label="Sensor alert"
               onChange={(e) => {
                 setWarningAlertType(e.target.value);
-                setWarningMinValue('');
-                setWarningMaxValue('');
+                setWarningMinValue(warningMinValue);
+                setWarningMaxValue(warningMaxValue);
               }}
               // error={errorObject?.deviceName?.errorStatus}
               // helperText={errorObject?.deviceName?.helperText}
@@ -392,7 +420,15 @@ function ModbusAlert({
               sx={{ marginTop: 0 }}
               value={warningMinValue}
               disabled={warningAlertType === 'High' || warningAlertType === '' || (moduleAccess.edit === false && true)}
-              // onBlur={() => validateForNullValue(alertTag, "alertTag")}
+              type='number'
+              onBlur={() => {
+                // validateForNullValue(alertTag, "alertTag");
+                validateAlertrange(warningMinValue, warningRefMinValue, warningRefMaxValue, setWarningMinValue);
+              }}
+              inputProps={{
+                min: warningRefMinValue,
+                max: warningRefMaxValue,
+              }}
               onChange={(e) => {
                 setWarningMinValue(e.target.value);
               }}
@@ -421,7 +457,15 @@ function ModbusAlert({
               sx={{ marginTop: 0 }}
               value={warningMaxValue}
               disabled={warningAlertType === 'Low' || warningAlertType === '' || (moduleAccess.edit === false && true)}
-              // onBlur={() => validateForNullValue(alertTag, "alertTag")}
+              type='number'
+              onBlur={() => {
+                // validateForNullValue(alertTag, "alertTag");
+                validateAlertrange(warningMaxValue, warningRefMinValue, warningRefMaxValue, setWarningMaxValue);
+              }}
+              inputProps={{
+                min: warningRefMinValue,
+                max: warningRefMaxValue,
+              }}
               onChange={(e) => {
                 setWarningMaxValue(e.target.value);
               }}
@@ -471,6 +515,8 @@ function ModbusAlert({
               label="Sensor alert"
               onChange={(e) => {
                 setOutofrangeAlertType(e.target.value);
+                setOutofrangeMinValue(outofrangeMinValue);
+                setOutofrangeMaxValue(outofrangeMaxValue);
               }}
               // error={errorObject?.deviceName?.errorStatus}
               // helperText={errorObject?.deviceName?.helperText}
@@ -580,7 +626,15 @@ function ModbusAlert({
               sx={{ marginTop: 0 }}
               value={outofrangeMinValue}
               disabled={outofrangeAlertType === 'High' || outofrangeAlertType === '' || (moduleAccess.edit === false && true)}
-              // onBlur={() => validateForNullValue(alertTag, "alertTag")}
+              type='number'
+              onBlur={() => {
+                // validateForNullValue(alertTag, "alertTag");
+                validateAlertrange(outofrangeMinValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMinValue);
+              }}
+              inputProps={{
+                min: outofrangeRefMinValue,
+                max: outofrangeRefMaxValue,
+              }}
               onChange={(e) => {
                 setOutofrangeMinValue(e.target.value);
               }}
@@ -609,7 +663,15 @@ function ModbusAlert({
               sx={{ marginTop: 0 }}
               value={outofrangeMaxValue}
               disabled={outofrangeAlertType === 'Low' || outofrangeAlertType === '' || (moduleAccess.edit === false && true)}
-              // onBlur={() => validateForNullValue(alertTag, "alertTag")}
+              type='number'
+              onBlur={() => {
+                // validateForNullValue(alertTag, "alertTag");
+                validateAlertrange(outofrangeMaxValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMaxValue);
+              }}
+              inputProps={{
+                min: outofrangeRefMinValue,
+                max: outofrangeRefMaxValue,
+              }}
               onChange={(e) => {
                 setOutofrangeMaxValue(e.target.value);
               }}

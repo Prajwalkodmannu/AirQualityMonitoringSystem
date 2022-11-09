@@ -20,8 +20,8 @@ function DeviceLogs(props) {
   const [rowCountState, setRowCountState] = useState(0);
 
   useEffect(() => {
-    FetchSensorLogReportDetails({}, SensorLogReportHandleSuccess, SensorLogHandleException);
-  }, [unTaggedSensorLogReportList]);
+    fetchNewData();
+  }, [unTaggedSensorLogReportList, page]);
 
   const columns = [
     {
@@ -101,7 +101,6 @@ function DeviceLogs(props) {
 
   const onPageSizeChange = (newPageSize) => {
     setPageSize(newPageSize);
-    fetchNewData();
   };
 
   const DownloadCsv = () => {
@@ -136,7 +135,6 @@ function DeviceLogs(props) {
   };
   const onPageChange = (newPage) => {
     setPage(newPage);
-    fetchNewData();
   };
   return (
     <div>
@@ -240,7 +238,6 @@ function DeviceLogs(props) {
             rows={sensorLogReportList}
             rowCount={rowCountState}
             loading={isLoading}
-            rowsPerPageOptions={[5, 10, 100]}
             pagination
             page={page}
             pageSize={pageSize}

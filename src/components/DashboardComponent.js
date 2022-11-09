@@ -9,7 +9,8 @@ import ImageMarkerList from './Device/subComponent/imageMarkerList';
 import LandingPageComponent from './dashboard/subComponent/siteDetailsComponent/LandingPageComponent';
 import DeviceGridComponent from './dashboard/subComponent/siteDetailsComponent/DeviceGridComponent';
 import ApplicationStore from '../utils/localStorageUtil';
-import { FetchFacilitiyService, FetchBranchService, FetchLocationService, DeviceIdAlerts } from '../services/LoginPageService';
+import { FetchFacilitiyService, FetchBranchService, FetchLocationService, DeviceIdAlerts, BuildingFetchService, FloorfetchService, LabfetchService } from '../services/LoginPageService';
+import NotificationBar from './notification/ServiceNotificationBar';
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
@@ -30,7 +31,7 @@ function Dashboard() {
     facilityLabel: 'Facility',
     buildingLabel: 'Building',
     floorLabel: 'Floor',
-    lablabel: 'Zone',
+    labLabel: 'Zone',
     deviceLabel: '',
   });
 
@@ -47,33 +48,67 @@ function Dashboard() {
   const [locationCoordinationList, setLocationCoordinationList] = useState([]);
   const [locationState, setProgressState] = useState(0);
   const [Img, setImg] = useState('');
-  const imgSrc = `http://varmatrix.com/Aqms/blog/public/${Img}`;
+  const imgSrc = `https://wisething.in/aideaLabs/blog/public/${Img}`;
   const [ImageState, setImageState] = useState(0);
   const [deviceCoordsList, setDeviceCoordsList] = useState([]);
   const [isdashboard, setIsDashBoard] = useState(0);
   const [isGeoMap, setIsGeoMap] = useState(true);
   const [alertList, setAlertList] = useState([]);
+  const [openNotification, setNotification] = useState({
+    status: false,
+    type: 'error',
+    message: '',
+  });
+  const { locationLabel, facilityLabel, branchLabel, buildingLabel, floorLabel, labLabel } = ApplicationStore().getStorage('siteDetails');
 
   useEffect(() => {
     const { locationDetails } = ApplicationStore().getStorage('userDetails');
-    const { locationLabel, facilityLabel, branchLabel } = ApplicationStore().getStorage('siteDetails');
-
+    if(locationDetails?.imageBuildingURL){
+      setImg(locationDetails.imageBuildingURL);
+    } else if(locationDetails?.imageFloorURL){
+      setImg(locationDetails.imageFloorURL);
+    } else if(locationDetails?.imageLabURL){
+      setImg(locationDetails.imageLabURL);
+    }
+    
     setLocationDetails((oldValue) => {
       return {
         ...oldValue,
         location_id: locationDetails.location_id,
         branch_id: locationDetails.branch_id,
         facility_id: locationDetails.facility_id,
+        building_id: locationDetails.building_id,
+        floor_id: locationDetails.floor_id,
+        lab_id: locationDetails.lab_id,
       };
     });
     setBreadCrumbLabels((oldValue) => {
       return {
-        ...oldValue, stateLabel: locationLabel, branchLabel, facilityLabel,
+        ...oldValue, stateLabel: locationLabel, branchLabel, facilityLabel, buildingLabel, floorLabel, labLabel
       };
     });
     setProgressState((oldValue) => {
       let newValue = 0;
-      if (locationDetails.facility_id) {
+      if(locationDetails.lab_id){
+        newValue = 6;
+        setIsGeoMap(false);
+        setImageState(1);
+        setIsDashBoard(2);
+        fetchLab();
+        locationAlerts({lab_id: locationDetails.lab_id});
+      } else if(locationDetails.floor_id){
+        newValue = 5;
+        setIsGeoMap(false);
+        setImageState(1);
+        fetchFloor();
+        locationAlerts({floor_id: locationDetails.floor_id});
+      } else if(locationDetails.building_id){
+        newValue = 4;
+        setIsGeoMap(false);
+        setImageState(1);
+        fetchBuilding();
+        locationAlerts({building_id: locationDetails.building_id});
+      } else if (locationDetails.facility_id) {
         newValue = 3;
         fetchFacility();
         locationAlerts({facility_id: locationDetails.facility_id});
@@ -173,6 +208,71 @@ function Dashboard() {
 
   const handleFetchException = (errorObject) => { };
 
+  const fetchBuilding = () => {
+    const { locationDetails } = ApplicationStore().getStorage('userDetails');
+    BuildingFetchService({
+      location_id: locationDetails?.location_id,
+      branch_id: locationDetails?.branch_id,
+      facility_id: locationDetails?.facility_id,
+    }, handleBuildingSuccess, handleBuildingException);
+    locationAlerts({
+      location_id: locationDetails?.location_id,
+      branch_id: locationDetails?.branch_id,
+      facility_id: locationDetails?.facility_id,
+    });
+  };
+
+  const handleBuildingSuccess = (dataObject) => {
+    
+  };
+
+  const handleBuildingException = (errorObject) => { };
+
+  const fetchFloor = () => {
+    const { locationDetails } = ApplicationStore().getStorage('userDetails');
+    FloorfetchService({
+      location_id: locationDetails?.location_id,
+      branch_id: locationDetails?.branch_id,
+      facility_id: locationDetails?.facility_id,
+      building_id: locationDetails?.building_id,
+
+    }, handleFloorSuccess, handleFloorException);
+    locationAlerts({
+      location_id: locationDetails?.location_id,
+      branch_id: locationDetails?.branch_id,
+      facility_id: locationDetails?.facility_id,
+      building_id: locationDetails?.building_id,
+    });
+  };
+
+  const handleFloorSuccess = (dataObject) => {
+  };
+
+  const handleFloorException = (errorObject) => { };
+
+  const fetchLab = () => {
+    const { locationDetails } = ApplicationStore().getStorage('userDetails');
+    LabfetchService({
+      location_id: locationDetails?.location_id,
+      branch_id: locationDetails?.branch_id,
+      facility_id: locationDetails?.facility_id,
+      building_id: locationDetails?.building_id,
+      floor_id: locationDetails?.floor_id,
+    }, handleLabSuccess, handleLabException);
+    locationAlerts({
+      location_id: locationDetails?.location_id,
+      branch_id: locationDetails?.branch_id,
+      facility_id: locationDetails?.facility_id,
+      building_id: locationDetails?.building_id,
+      floor_id: locationDetails?.floor_id,
+    });
+  };
+
+  const handleLabSuccess = (dataObject) => {
+  };
+
+  const handleLabException = (errorObject) => { };
+
   const locationAlerts = (alertLocationDetails) =>{
     DeviceIdAlerts(alertLocationDetails, handleSuccessAlerts, handleExceptionAlerts);
   }
@@ -183,6 +283,14 @@ function Dashboard() {
 
   const handleExceptionAlerts = () => { };
 
+  const handleClose = () => {
+    setNotification({
+      status: false,
+      type: '',
+      message: '',
+    });
+  };
+  
   return (
     <Grid container spacing={1} style={{ height: '100%', width: '100%', padding: 2 }}>
       {isdashboard === 0
@@ -266,7 +374,7 @@ function Dashboard() {
                     height: '50%',
                   }}
                 >
-                  <AlertWidget dataList={alertList} />
+                  <AlertWidget dataList={alertList} setAlertList={setAlertList} setNotification={setNotification} />
                 </Grid>
               </Grid>
             </Grid>
@@ -303,6 +411,12 @@ function Dashboard() {
             locationAlerts={locationAlerts}
           />
         )}
+        <NotificationBar
+          handleClose={handleClose}
+          notificationContent={openNotification.message}
+          openNotification={openNotification.status}
+          type={openNotification.type}
+        />
     </Grid>
   );
 }

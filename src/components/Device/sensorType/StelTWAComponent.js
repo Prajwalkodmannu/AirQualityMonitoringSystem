@@ -29,6 +29,10 @@ function StelTWA({
   setTwaDuration,
   twaType,
   setTwaType,
+  twaStartTime,
+  setTwaStartTime,
+  stelStartTime,
+  setStelStartTime,
   twaLimit,
   setTwaLimit,
   twaAlert,
@@ -159,7 +163,7 @@ function StelTWA({
               />
             </div>
           </Grid>
-          <Grid
+          {/* <Grid
             sx={{ mt: 0, padding: 0 }}
             item
             xs={12}
@@ -191,7 +195,7 @@ function StelTWA({
                 </MenuItem>
               </Select>
             </FormControl>
-          </Grid>
+          </Grid> */}
           <Grid
             sx={{ mt: 0, padding: 0 }}
             item
@@ -252,6 +256,39 @@ function StelTWA({
               />
             </div>
           </Grid>
+          <Grid
+            sx={{ mt: 0, padding: 0 }}
+            item
+            xs={12}
+            sm={6}
+            md={2.5}
+            lg={2.5}
+            xl={2.5}
+          >
+            <div className="rounded-md -space-y-px">
+              <TextField
+                sx={{ marginTop: 0 }}
+                value={stelStartTime}
+                // onBlur={() => validateForNullValue(partId, "partId")}
+                onChange={(e) => {
+                  setStelStartTime(e.target.value);
+                }}
+                margin="normal"
+                required={isStel === true}
+                disabled={(isStel !== true) || disable}
+                id="outlined-required"
+                label="Start Time"
+                fullWidth
+                type='time'
+                // error={errorObject?.partId?.errorStatus}
+                // helperText={errorObject?.partId?.helperText}
+                autoComplete="off"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </div>
+          </Grid>
         </Grid>
         <Grid
           sx={{ mt: 0, padding: 0 }}
@@ -307,7 +344,7 @@ function StelTWA({
               />
             </div>
           </Grid>
-          <Grid
+          {/* <Grid
             sx={{ mt: 0, padding: 0 }}
             item
             xs={12}
@@ -339,7 +376,7 @@ function StelTWA({
                 </MenuItem>
               </Select>
             </FormControl>
-          </Grid>
+          </Grid> */}
           <Grid
             sx={{ mt: 0, padding: 0 }}
             item
@@ -397,6 +434,39 @@ function StelTWA({
                 // error={errorObject?.partId?.errorStatus}
                 // helperText={errorObject?.partId?.helperText}
                 autoComplete="off"
+              />
+            </div>
+          </Grid>
+          <Grid
+            sx={{ mt: 0, padding: 0 }}
+            item
+            xs={12}
+            sm={6}
+            md={2.5}
+            lg={2.5}
+            xl={2.5}
+          >
+            <div className="rounded-md -space-y-px">
+              <TextField
+                sx={{ marginTop: 0 }}
+                value={twaStartTime}
+                // onBlur={() => validateForNullValue(partId, "partId")}
+                onChange={(e) => {
+                  setTwaStartTime(e.target.value);
+                }}
+                margin="normal"
+                required={isStel === true}
+                disabled={(isStel !== true) || disable}
+                id="outlined-required"
+                label="Start Time"
+                fullWidth
+                type='time'
+                // error={errorObject?.partId?.errorStatus}
+                // helperText={errorObject?.partId?.helperText}
+                autoComplete="off"
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
             </div>
           </Grid>

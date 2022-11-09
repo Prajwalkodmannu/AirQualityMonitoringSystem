@@ -2,7 +2,7 @@ import { Breadcrumbs, Chip, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { FetchFacilitiyService } from '../../../../services/LoginPageService';
-import { setAlertPriorityAndType } from '../../../../utils/helperFunctions';
+import { setAlertPriorityAndType, setAQIColor } from '../../../../utils/helperFunctions';
 import ApplicationStore from '../../../../utils/localStorageUtil';
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
@@ -22,7 +22,7 @@ function FacilityGridComponent(props) {
     {
       field: 'facilityName',
       headerName: 'Facility Name',
-      width: 400,
+      width: 200,
       type: 'actions',
       getActions: (params) => [
         <LinkTo selectedRow={params.row} />,
@@ -58,6 +58,22 @@ function FacilityGridComponent(props) {
         );
       }),
     },
+    {
+      field: 'aqiIndex',
+      headerName: 'AQI Index',
+      width: 100,
+      renderCell: ((params) => {
+        return(
+          <span
+            style={{
+              color: setAQIColor(params.row.aqiIndex)
+            }}
+          >
+            {params.row.aqiIndex}
+          </span>
+        )
+      }),
+    }
   ];
 
   const [dataList, setDataList] = useState([]);
@@ -116,28 +132,59 @@ function FacilityGridComponent(props) {
     );
   }
 
+  const setLocationlabel = (value) => {
+    const { locationDetails } = ApplicationStore().getStorage('userDetails');
+    setProgressState((oldValue) => {
+      let newValue = value;
+      if (locationDetails.lab_id) {
+        newValue = value < 7 ? 6 : value;
+      } else if (locationDetails.floor_id) {
+        newValue = value < 6 ? 5 : value;
+      } else if (locationDetails.building_id) {
+        newValue = value < 5 ? 4 : value;
+      } else if (locationDetails.facility_id) {
+        newValue = value < 4 ? 3 : value;
+      } else if (locationDetails.branch_id) {
+        newValue = value < 3 ? 2 : value;
+      } else if (locationDetails.location_id) {
+        newValue = value < 2 ? 1 : value;
+      } else {
+        // locationAlerts({});
+      }
+      return newValue;
+    });
+  };
+
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <Breadcrumbs aria-label="breadcrumb" separator="›">
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            setProgressState(() => {
-              let newValue = 0;
-              if (locationDetails.facility_id) {
-                newValue = 3;
-                locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
-              } else if (locationDetails.branch_id) {
-                newValue = 2;
-                locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
-              } else if (locationDetails.location_id) {
-                newValue = 1;
-                locationAlerts({ location_id: locationDetails.location_id || props.locationDetails.location_id });
-              } else {
-                locationAlerts({});
-              }
-              return newValue;
-            });
+            let value = 0;
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            } else if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+              value = 3;
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+              value = 2;
+            }else if (locationDetails.location_id) {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+              value = 1;
+            } else {
+              locationAlerts({});
+              value = 0;
+            }
+            setLocationlabel(value);
             setDeviceCoordsList([]);
             // setCenterLatitude(23.500);
             // setCenterLongitude(80.000);
@@ -150,20 +197,27 @@ function FacilityGridComponent(props) {
         <h3
           onClick={() => {
             const { locationDetails } = ApplicationStore().getStorage('userDetails');
-            setProgressState(() => {
-              let newValue = 1;
-              if (locationDetails.facility_id) {
-                newValue = 3;
-                locationAlerts({ facility_id: locationDetails.facility_id || props.locationDetails.facility_id });
-              } else if (locationDetails.branch_id) {
-                newValue = 2;
-                locationAlerts({ branch_id: locationDetails.branch_id || props.locationDetails.branch_id });
-              } else {
-                newValue = 1;
-                locationAlerts({ location_id: locationDetails.location_id || props.locationDetails.location_id });
-              }
-              return newValue;
-            });
+            let value = 1;
+            if (locationDetails.lab_id) {
+              locationAlerts({lab_id: locationDetails.lab_id || props.locationDetails.lab_id});
+              value = 6;
+            } else if (locationDetails.floor_id) {
+              locationAlerts({floor_id: locationDetails.floor_id || props.locationDetails.floor_id});
+              value = 5;
+            } else if (locationDetails.building_id) {
+              locationAlerts({building_id: locationDetails.building_id || props.locationDetails.building_id});
+              value = 4;
+            } else if (locationDetails.facility_id) {
+              locationAlerts({facility_id: locationDetails.facility_id || props.locationDetails.facility_id});
+              value = 3;
+            } else if (locationDetails.branch_id) {
+              locationAlerts({branch_id: locationDetails.branch_id || props.locationDetails.branch_id});
+              value = 2;
+            } else {
+              locationAlerts({location_id: locationDetails.location_id || props.locationDetails.location_id});
+              value = 1;
+            }
+            setLocationlabel(value);
             setDeviceCoordsList([]);
             setIsGeoMap(true);
           }}

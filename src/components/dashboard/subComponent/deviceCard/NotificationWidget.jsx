@@ -6,11 +6,14 @@ import {
   NotificationsActiveOutlined,
   SensorsOff,
   VolumeOff,
+  Campaign,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { setAQIColor } from '../../../../utils/helperFunctions';
+import MachineCircularProgressbar from '../landingPageComponents/MachineCircularProgressbar';
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-function NotificationWidget({ type, figure, handleClick }) {
+function NotificationWidget({ type, figure, handleClick, userRole, testHooter, aqi }) {
   let data;
   const [dateTime, setDateTime] = useState({
     time: '',
@@ -21,10 +24,17 @@ function NotificationWidget({ type, figure, handleClick }) {
     data = {
       title: 'Hooter',
       figure: figure !== 1 ? 
-      (<VolumeOff style={{fontSize: '70px', color : '#808080'}}/>) :
-      (<VolumeUp style={{fontSize: '70px', color : 'goldenrod', animation: 'flash 1s infinite '}}/>) , 
+      (<VolumeOff style={{fontSize: '75px', color : '#808080'}}/>) :
+      (<VolumeUp style={{fontSize: '75px', color : 'goldenrod', animation: 'flash 1s infinite '}}/>) , 
       link: '',
-      icon: ''
+      icon: userRole === 'systemSpecialist' ? 
+        (
+          <Campaign
+            className="icon"
+            style={{ backgroundColor: 'rgba(179, 157, 219, 0.5)', color: '#512da8' }}
+          />
+        )
+      : ''
       ,
     };
     break;
@@ -89,6 +99,31 @@ function NotificationWidget({ type, figure, handleClick }) {
       ),
     };
     break;
+    case 'aqi':
+    data = {
+      title: 'AQI',
+      link: '',
+      figure: (
+        <div style={{
+          width: '50%',
+          minWidth: '100px',
+          maxWidth: '100px',
+          height: '50%',
+          maxHeight: '50px'
+        }}>
+            <MachineCircularProgressbar
+              text={aqi}
+              score={aqi} 
+              color={setAQIColor(aqi)} 
+              minReading='0' 
+              maxReading='500' 
+            />
+        </div>
+      ),
+      diff: '',
+      icon: '',
+    };
+    break;
   default:
     break;
   }
@@ -109,23 +144,79 @@ function NotificationWidget({ type, figure, handleClick }) {
     <div
       className="widget"
       onClick={() => {
-        handleClick();
+        type === 'alerts' && handleClick();
       }}
-      style={{ cursor: type === 'alerts' && 'pointer', justifyContent: type === 'hooterStatus' && 'center' }}
+      style={{ cursor: type === 'alerts' && 'pointer', 
+      display: 'inline-block',
+      justifyContent: type === 'hooterStatus' && userRole !== 'systemSpecialist' ? 'center' : '' 
+    }}
     >
-      <div className="left">
-        <span className="title">{data.title}</span>
-        <span className="counter">
-          {data.figure}
-        </span>
-        <span className="link">{data.link}</span>
-      </div>
-      {type !== 'hooterStatus' && 
-      <div className="right">
-        <div className="percentage positive">
+      { type !== 'hooterStatus' ? 
+        <div>
+          <div className="left">
+            <span className="title" style={{minWidth: type === 'disconnectedDevice' ? '150px' : '120px'}}>{data.title}</span>
+            <span className="counter" style={{minWidth: type === 'disconnectedDevice' ? '150px' : '120px', alignSelf: type === 'aqi' && 'center'}}>
+              {data.figure}
+            </span>
+            <span className="link">{data.link}</span>
+          </div>
+          <div className="right" style={{
+            alignItems: 'end'
+          }}>
+            <div className="percentage positive">
+            </div>
+            <div onClick={()=>{
+              userRole === 'systemSpecialist' && type === 'hooterStatus' ? testHooter() : {};
+              }}
+            >
+              {data.icon}
+            </div>
+          </div>
+        </div> : 
+        <div>
+          <div className="left">
+            <span className="title" style={{minWidth: '150px'}}>{data.title}</span>
+          </div>
+          <div style={{
+            minWidth: '150px'
+          }}>
+            <div style={{
+              height: '100%',
+              display: 'flex',
+              minWidth: '150px',
+              alignItems: 'flex-end',
+              justifyContent: userRole === 'systemSpecialist' ? 'space-between' : 'center',
+            }}>
+              <div 
+                onClick={()=>handleClick()}
+                style={{
+                  cursor: userRole === 'systemSpecialist' && 'pointer'
+                }}
+              >
+                <span className="counter" style={{minWidth: '150px'}}>
+                  {data.figure}
+                </span>
+              </div>
+              <div 
+                style={{
+                  float: 'right',
+                  height: '100%',
+                  cursor: 'pointer'
+                }} 
+                onClick={()=>{
+                  userRole === 'systemSpecialist' && testHooter();
+                }}
+              >
+                <div className="right" style={{
+                  alignItems: 'end'
+                }}>
+                  {data.icon}
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
-        {data.icon}
-      </div>
       }
     </div>
   );

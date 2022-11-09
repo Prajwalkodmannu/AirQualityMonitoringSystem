@@ -62,10 +62,16 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 function DigitalCard(props) {
   return (
     <Card
-      sx={{ minWidth: 200, boxShadow: 5, borderRadius: 2 }}
+      sx={{ minWidth: 200, boxShadow: 5, borderRadius: 2, height: 217 }}
     >
-      <CardActionArea>
-        <Grid item xs={12} style={{ backgroundColor: props.lightColor || '#cce6ff', height: '50px' }}>
+      <CardActionArea onClick={() => {
+          props.sensorStatus === 0 ? '' : '';
+        }}
+        style={{
+          cursor: 'not-allowed',
+        }}
+      >
+        <Grid item xs={12} style={{ backgroundColor: props.sensorStatus === 0 ? '#9e9e9e' : props.lightColor || '#cce6ff', height: '50px' }}>
           <Stack
             direction="row"
             justifyContent="space-evenly"
@@ -74,7 +80,7 @@ function DigitalCard(props) {
           >
             <Tooltip title={props.sensorNameUnit}>
               <Typography style={{
-                color: props.color || '#004d99',
+                color: props.sensorStatus === 0 ? '#212121' : props.color || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -88,7 +94,7 @@ function DigitalCard(props) {
             </Tooltip>
             <Tooltip title={props.sensorName}>
               <Typography style={{
-                color: props.color || '#004d99',
+                color: props.sensorStatus === 0 ? '#212121' : props.color || '#004d99',
                 marginTop: '15px',
                 whiteSpace: 'nowrap',
                 width: '100px',
@@ -103,7 +109,12 @@ function DigitalCard(props) {
             </Tooltip>
           </Stack>
         </Grid>
-        <Box sx={{ width: '100%', borderRadius: '8' }}>
+        <Box sx={{ width: '100%', borderRadius: '8' }} style={{
+          height: '166px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}>
           <Stack
             direction="row"
             justifyContent="space-evenly"
@@ -111,14 +122,23 @@ function DigitalCard(props) {
             spacing={5}
             mt={2}
             xs={{ justifyContent: 'space-around' }}
+            style={{
+              marginTop: '0px'
+            }}
           >
             <div style={{
               width: 90, height: 90, float: 'left', marginTop: 2,
+              display: 'flex'
             }}
             >
               <FormControlLabel
-                control={<MaterialUISwitch defaultChecked disabled />}
+                control={<MaterialUISwitch  defaultChecked={props.sensorStatus}  disabled style={{
+                  cursor: 'not-allowed',
+                }}/>}
                 label="Digital"
+                style={{
+                  cursor: 'not-allowed',
+                }}
               />
             </div>
           </Stack>

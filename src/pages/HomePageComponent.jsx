@@ -3,10 +3,12 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/navbarComponent/Sidebar';
 import Navbar from '../components/navbarComponent/Navbar';
 import './css/home.scss';
-import { UserAccessProvider } from '../context/UserAccessProvider';
+import { LatestAlertProvider, UserAccessProvider } from '../context/UserAccessProvider';
 import ApplicationStore from '../utils/localStorageUtil';
 import {
-  FetchBranchService, FetchFacilitiyService, FetchLocationService, NotificationAlerts,
+  BuildingFetchService,
+  DeviceFetchService,
+  FetchBranchService, FetchFacilitiyService, FetchLocationService, FloorfetchService, LabfetchService, NotificationAlerts,
 } from '../services/LoginPageService';
 import GlobalNotifier from '../components/notification/GlobalNotificationBar';
 import { alertSeverityCode, setAlertColor } from '../utils/helperFunctions';
@@ -20,6 +22,9 @@ function HomePageComponent() {
   const [locationLabel, setLocationLabel] = useState('');
   const [branchLabel, setBranchLabel] = useState('');
   const [facilityLabel, setFacilityLabel] = useState('');
+  const [buildingLabel, setBuildingLabel] = useState('');
+  const [floorLabel, setFloorLabel] = useState('');
+  const [labLabel, setLabLabel] = useState('');
   const [mobileMenu, setMobileOpen] = useState(true);
   const [notifierState, setNotifierState] = useState({
     open: false,
@@ -31,35 +36,115 @@ function HomePageComponent() {
   const { notificationList } = ApplicationStore().getStorage('notificationDetails');
   const { locationDetails, userDetails, intervalDetails } = ApplicationStore().getStorage('userDetails');
   const {
-    location_id, branch_id, facility_id,
+    location_id, branch_id, facility_id, building_id, floor_id, lab_id
   } = locationDetails;
 
   const { locationIdList, branchIdList, facilityIdList, buildingIdList, floorIdList,
     labIdList, deviceIdList, sensorIdList, } = ApplicationStore().getStorage('alertDetails');
   const intervalSec = intervalDetails.alertLogInterval * 1000 || 10000;
+  const [labelCount, setLabelCount] = useState(0);
+  const [lableCountLoop, setLableCountLoop] = useState(false);
 
   useEffect(() => {
-    if (userDetails.userRole !== 'superAdmin') {
-      FetchLocationService(handleSuccess, handleException);
-      FetchBranchService({ location_id }, handleBranchSuccess, handleException);
-      FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
-    }
-  }, []);
-
-  useEffect(() => {
+    console.log('Interval running...');
     if (userDetails.userRole !== 'superAdmin') {
       ApplicationStore().setStorage('siteDetails', {
-        locationLabel, branchLabel, facilityLabel,
+        locationLabel, branchLabel, facilityLabel, buildingLabel, floorLabel, labLabel
       });
       const notifierInterval = setInterval(() => {
-        NotificationAlerts({ location_id, branch_id, facility_id }, handleNotificationSuccess, handleNotificationException);
+        NotificationAlerts({ location_id, branch_id, facility_id, building_id, floor_id, lab_id }, handleNotificationSuccess, handleNotificationException);
       }, intervalSec); // set to 'intervalSec' after testing alert call
 
       return () => {
         clearInterval(notifierInterval);
       };
     }
-  })
+  });
+
+  useEffect(() => {
+    if (userDetails.userRole !== 'superAdmin') {
+      if (lab_id) {
+        fetchLab();
+      } else if (floor_id) {
+        fetchFloor();
+      } else if (building_id) {
+        fetchBuilding();
+      } else if (facility_id) {
+        fetchFacility();
+      } else if (branch_id) {
+        fetchBranch();
+      } else if (location_id) {
+        fetchLocation();
+      } else {
+        setLabelCount(oldValue => oldValue++);
+        FetchLocationService(handleSuccess, handleException);
+      }
+
+      // const interVal = setInterval(()=>{
+      //   console.log('Interval running...');
+      //   if(labelCount === 0){
+      //     console.log('Interval clearing...');
+      //     ApplicationStore().setStorage('siteDetails', {
+      //       locationLabel, branchLabel, facilityLabel, buildingLabel, floorLabel, labLabel
+      //     });
+      //     clearInterval(interVal);
+      //   }
+      // }, 1000);
+      // return () => clearInterval(interVal);
+
+    }
+  }, []);
+
+
+  const fetchLocation = () => {
+    setLabelCount(oldValue => oldValue + 2);
+    FetchLocationService(handleSuccess, handleException);
+    FetchBranchService({ location_id }, handleBranchSuccess, handleException);
+  }
+  const fetchBranch = () => {
+    setLabelCount(oldValue => oldValue + 3);
+    FetchLocationService(handleSuccess, handleException);
+    FetchBranchService({ location_id }, handleBranchSuccess, handleException);
+    FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
+  }
+
+  const fetchFacility = () => {
+    setLabelCount(oldValue => oldValue + 4);
+    FetchLocationService(handleSuccess, handleException);
+    FetchBranchService({ location_id }, handleBranchSuccess, handleException);
+    FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
+    BuildingFetchService({ location_id, branch_id, facility_id }, handleBuildingSuccess, handleException);
+  }
+
+  const fetchBuilding = () => {
+    setLabelCount(oldValue => oldValue + 5);
+    FetchLocationService(handleSuccess, handleException);
+    FetchBranchService({ location_id }, handleBranchSuccess, handleException);
+    FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
+    BuildingFetchService({ location_id, branch_id, facility_id }, handleBuildingSuccess, handleException);
+    FloorfetchService({ location_id, branch_id, facility_id, building_id }, handleFloorSuccess, handleException);
+  }
+
+  const fetchFloor = () => {
+    setLabelCount(oldValue => oldValue + 6);
+    FetchLocationService(handleSuccess, handleException);
+    FetchBranchService({ location_id }, handleBranchSuccess, handleException);
+    FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
+    BuildingFetchService({ location_id, branch_id, facility_id }, handleBuildingSuccess, handleException);
+    FloorfetchService({ location_id, branch_id, facility_id, building_id }, handleFloorSuccess, handleException);
+    LabfetchService({ location_id, branch_id, facility_id, building_id, floor_id }, handleLabSuccess, handleException);
+  }
+
+  const fetchLab = () => {
+    setLabelCount(oldValue => oldValue + 7);
+    FetchLocationService(handleSuccess, handleException);
+    FetchBranchService({ location_id }, handleBranchSuccess, handleException);
+    FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
+    BuildingFetchService({ location_id, branch_id, facility_id }, handleBuildingSuccess, handleException);
+    FloorfetchService({ location_id, branch_id, facility_id, building_id }, handleFloorSuccess, handleException);
+    LabfetchService({ location_id, branch_id, facility_id, building_id, floor_id }, handleLabSuccess, handleException);
+    // DeviceFetchService({location_id, branch_id, facility_id, building_id, floor_id, lab_id}, handleDeviceSuccess, handleException)
+  }
 
   const handleSuccess = (dataObject) => {
     dataObject?.data.map((datas) => {
@@ -67,6 +152,7 @@ function HomePageComponent() {
         setLocationLabel(datas.stateName);
       }
     });
+    setLabelCount(oldvalue => oldvalue--);
   };
   const handleBranchSuccess = (dataObject) => {
     dataObject?.data.map((datas) => {
@@ -74,6 +160,7 @@ function HomePageComponent() {
         setBranchLabel(datas.branchName);
       }
     });
+    setLabelCount(oldValue => oldValue--);
   };
   const handleFacilitySuccess = (dataObject) => {
     dataObject?.data.map((datas) => {
@@ -81,7 +168,43 @@ function HomePageComponent() {
         setFacilityLabel(datas.facilityName);
       }
     });
+    setLabelCount(oldValue => oldValue--);
   };
+
+  const handleBuildingSuccess = (dataObject) => {
+    dataObject?.data.map((datas) => {
+      if (datas.id === parseInt(building_id)) {
+        setBuildingLabel(datas.buildingName);
+      }
+    });
+    setLabelCount(oldValue => oldValue--);
+  };
+
+  const handleFloorSuccess = (dataObject) => {
+    dataObject?.data.map((datas) => {
+      if (datas.id === parseInt(floor_id)) {
+        setFloorLabel(datas.floorName);
+      }
+    });
+    setLabelCount(oldValue => oldValue--);
+  };
+
+  const handleLabSuccess = (dataObject) => {
+    dataObject?.data.map((datas) => {
+      if (datas.id === parseInt(lab_id)) {
+        setLabLabel(datas.labDepName);
+      }
+    });
+    setLabelCount(oldValue => oldValue--);
+  };
+
+  // const handleDeviceSuccess = (dataObject) => {
+  //   dataObject?.data.map((datas) => {
+  //     if (datas.id === parseInt(lab_id)) {
+  //       setLabLabel(datas.facilityName);
+  //     }
+  //   });
+  // };
 
   const handleException = () => { };
 
@@ -187,22 +310,24 @@ function HomePageComponent() {
     <div className="home">
       <Sidebar handleDrawerToggle={handleDrawerToggle} mobileMenu={mobileMenu} />
       <div className="homeContainer">
-        <GlobalNotifier
-          notifierState={notifierState}
-          setNotifierState={setNotifierState}
-          anchorElNotification={anchorElNotification}
-          setAnchorElNotification={setAnchorElNotification}
-        />
-        <Navbar
-          handleDrawerToggle={handleDrawerToggle}
-          mobileMenu={mobileMenu}
-          notificationList={notificationList}
-          anchorElNotification={anchorElNotification}
-          setAnchorElNotification={setAnchorElNotification}
-        />
-        <UserAccessProvider>
-          <Outlet />
-        </UserAccessProvider>
+        <LatestAlertProvider >
+          <GlobalNotifier
+            notifierState={notifierState}
+            setNotifierState={setNotifierState}
+            anchorElNotification={anchorElNotification}
+            setAnchorElNotification={setAnchorElNotification}
+          />
+          <Navbar
+            handleDrawerToggle={handleDrawerToggle}
+            mobileMenu={mobileMenu}
+            notificationList={notificationList}
+            anchorElNotification={anchorElNotification}
+            setAnchorElNotification={setAnchorElNotification}
+          />
+          <UserAccessProvider>
+            <Outlet />
+          </UserAccessProvider>
+        </LatestAlertProvider>
       </div>
     </div>
   );

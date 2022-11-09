@@ -9,10 +9,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import LoadingButton from '@mui/lab/LoadingButton';
 import RestartAltRoundedIcon from '@mui/icons-material/RestartAltRounded';
 import { AddCategoryValidate } from '../../../validation/formValidation';
-import { BumpTestAddService, BumpTestFetchService, ChangeDeviceMode } from '../../../services/LoginPageService';
+import { BumpTestAddService, BumpTestFetchService, ChangeDeviceMode, GasCylinderFetchService } from '../../../services/LoginPageService';
 import { BumpTestData } from '../../../services/BumpTestServicePage';
 import NotificationBar from '../../notification/ServiceNotificationBar';
 import { BumptestValidate } from '../../../validation/formValidation';
+import { WarningAmber } from '@mui/icons-material';
 /* eslint-disable no-plusplus */
 
 const convertDateTime = (value) => {
@@ -64,6 +65,8 @@ function BumpTestComponentModal({
   open, setOpen, isAddButton, setRefreshData, deployedSensorTagList, device_id,
 }) {
   const [sensorTagName, setSensorTagName] = useState('');
+  // const [gasCylinderName, setGasCylinderName] = useState({});
+  // const [expiryDate, setExpiryDate] = useState(false);
   const [lastDueDate, setLastDueDate] = useState('');
   const [typeCheck, setTypeCheck] = useState('zeroCheck');
   const [percentageConcentrationGas, setPercentrationConcentrationGas] = useState(0);
@@ -73,8 +76,10 @@ function BumpTestComponentModal({
   const [nextDueDate, setNextDueDate] = useState('');
   const [result, setResult] = useState('');
   const [deployedSensorList, setDeployedSensorList] = useState([]);
+  // const [gasCylinderList, setGasCylinderList] = useState([]);
   const [bumpTestData, setBumpTestData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [cylinderDialog, setCylinderDialog] = useState(false);
   const [progress, setProgress] = useState('start');
   let i = 0;
   let j = 0;
@@ -82,6 +87,7 @@ function BumpTestComponentModal({
   const [errorObject, setErrorObject] = useState({});
   const [bumpData, setBumpData] = useState([]);
   const [inputDisable, setInputDisable] = useState(false);
+  const [enableStart, setEnableStart] = useState(true);
   const [openNotification, setNotification] = useState({
     status: false,
     type: 'error',
@@ -90,13 +96,23 @@ function BumpTestComponentModal({
 
   useEffect(() => {
     loadData();
+    // GasCylinderFetchService(handleGasSuccess, handleGasException);
   }, [deployedSensorTagList]);
+
+  // const handleGasSuccess = (dataObject) =>{
+  //   setGasCylinderList(dataObject.data || []);
+  // }
+
+  // const handleGasException = (errorObject, errorMessage) =>{
+    
+  // }
 
   const loadData = () => {
     setDeployedSensorList(deployedSensorTagList || []);
   };
 
   const reset = () => {
+    setEnableStart(true);
     setSensorTagName('');
     setLastDueDate('');
     setTypeCheck('zeroCheck');
@@ -112,8 +128,11 @@ function BumpTestComponentModal({
     setBumpData([]);
   };
 
-  const getBumpData = (e) => {
-    e.preventDefault();
+  const confirmGasCylinderExpiry = () =>{
+    setCylinderDialog(true);
+  };
+
+  const getBumpData = () => {
     setLoading(true);
     setProgress('started');
     setBumpData([]);
@@ -187,6 +206,7 @@ function BumpTestComponentModal({
 
   /* eslint-disable-next-line */
   const getBumpTestResultData = (data) => {
+    setEnableStart(false);
     setLastDueDate('');
     setTypeCheck('zeroCheck');
     setPercentrationConcentrationGas('');
@@ -227,13 +247,13 @@ function BumpTestComponentModal({
     BumptestValidate(value, type, setErrorObject);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (isAddButton) {
       if (durationPeriod == '') {
         validateForNullValue(durationPeriod, 'durationPeriod')
       } else {
-        await BumpTestAddService({
+        BumpTestAddService({
           /* eslint-disable-next-line */
           sensorTagName, lastDueDate, typeCheck, percentageConcentrationGas, durationPeriod, displayedValue, nextDueDate, result, percentageDeviation, device_id,
         }, handleSuccess, handleException);
@@ -276,6 +296,8 @@ function BumpTestComponentModal({
     setDisplayedValue('');
     setLoading(false);
     setProgress('start');
+    // setExpiryDate(false);
+    // setGasCylinderName({});
   };
   const cancelHandleSuccess = () => {
     setRefreshData((oldvalue) => !oldvalue);
@@ -284,6 +306,33 @@ function BumpTestComponentModal({
     loadData();
     reset();
   };
+
+  // const checkGasExpiryDate = (data) =>{
+  //   setGasCylinderName(data);
+  //   // setExpiryDate(data.expiryDate);
+  //   var todayDate = new Date();
+  //   let currentDate = todayDate.getFullYear()+'-'+('0'+(todayDate.getMonth()+1)).slice(-2)+'-'+ ('0' + todayDate.getDate()).slice(-2);
+
+  //   const presentDay = new Date(currentDate);
+  //   const expiryday = new Date(data.expiryDate);
+  //   console.log('Expiry Date :', data.expiryDate);
+  //   console.log('Current Date :', currentDate);
+  //   if(presentDay >= expiryday){
+  //     setCylinderDialog(true);
+  //     setExpiryDate(false);
+  //     // setNotification({
+  //     //   status: true,
+  //     //   type: 'error',
+  //     //   message: 'Gas Cylinder Expired...!',
+  //     // });
+  //     // setTimeout(() => {
+  //     //   handleClose();
+  //     // }, 3000);
+  //   } else{
+  //     setExpiryDate(true);
+  //   }
+  // }
+
   return (
     <Dialog
       fullWidth
@@ -303,7 +352,7 @@ function BumpTestComponentModal({
                 item
                 xs={12}
                 sm={6}
-                md={4}
+                md={6}
                 lg={4}
                 xl={4}
               >
@@ -352,6 +401,33 @@ function BumpTestComponentModal({
                   autoComplete="off"
                 />
               </Grid>
+              {/* <Grid
+                sx={{ mt: 0, padding: 0 }}
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={4}
+                xl={4}
+              >
+                <FormControl fullWidth sx={{ mt: 0, padding: 0 }}>
+                  <InputLabel id="demo-simple-select-label">Gas Cylinders</InputLabel>
+                  <Select
+                    required
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={gasCylinderName}
+                    label="Gas Cylinders"
+                    onChange={(e) => {
+                      checkGasExpiryDate(e.target.value);
+                    }}
+                  >
+                    {gasCylinderList.map((data, index) => (
+                      <MenuItem value={data} key={index}>{data.gasCylinderName}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid> */}
               <Grid
                 sx={{ mt: 0, padding: 0 }}
                 item
@@ -370,6 +446,13 @@ function BumpTestComponentModal({
                     onClick={(e) => {
                       setTypeCheck(e.target.value);
                       setPercentrationConcentrationGas(e.target.value === 'zeroCheck' ? 0 : '');
+                      if(e.target.value === 'zeroCheck'){
+                        setErrorObject((oldValue)=>{
+                          return {...oldValue, percentageConcentrationGas: {}}
+                        });
+                      } else if (e.target.value === 'SpanCheck'){
+                        validateForNullValue(percentageConcentrationGas, 'percentageConcentrationGas');
+                      }
                     }}
                   >
                     <FormControlLabel value="zeroCheck" control={<Radio required />} label="Zero Check" />
@@ -377,10 +460,6 @@ function BumpTestComponentModal({
                   </RadioGroup>
                 </FormControl>
               </Grid>
-            </Grid>
-          </div>
-          <div className="flex items-center justify-between gap-3">
-            <Grid container spacing={1} sx={{ mt: 0 }}>
               <Grid
                 sx={{ mt: 0, padding: 0 }}
                 item
@@ -401,17 +480,20 @@ function BumpTestComponentModal({
                   value={typeCheck === 'zeroCheck' ? 0 : percentageConcentrationGas}
                   required
                   onChange={(e) => { setPercentrationConcentrationGas(e.target.value); }}
+                  onBlur={() => validateForNullValue(percentageConcentrationGas, 'percentageConcentrationGas')}
                   autoComplete="off"
+                  error={errorObject?.percentageConcentrationGas?.errorStatus}
+                  helperText={errorObject?.percentageConcentrationGas?.helperText}
                 />
               </Grid>
               <Grid
                 sx={{ mt: 0, padding: 0 }}
                 item
                 xs={12}
-                sm={2}
-                md={2}
-                lg={2}
-                xl={2}
+                sm={6}
+                md={4}
+                lg={4}
+                xl={4}
               >
                 <TextField
                   sx={{ marginTop: 0 }}
@@ -433,6 +515,17 @@ function BumpTestComponentModal({
                   helperText={errorObject?.durationPeriod?.helperText}
                 />
               </Grid>
+            </Grid>
+          </div>
+          <div style={{
+            alignItems:'center'
+          }}>
+            <Grid container spacing={1} sx={{ mt: 0 }} style={{
+              alignContent: 'center',
+              display: 'flex',
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+            }}>
               <Grid
                 sx={{ mt: 0, padding: 0 }}
                 item
@@ -443,12 +536,15 @@ function BumpTestComponentModal({
                 xl={2}
               >
                 <LoadingButton
-                  disabled={errorObject?.durationPeriod?.errorStatus}
+                  disabled={errorObject?.durationPeriod?.errorStatus || errorObject?.percentageConcentrationGas?.errorStatus || enableStart } // || expiryDate === false
                   onClick={(e) => {
                     if (durationPeriod == '') {
-                      validateForNullValue(durationPeriod, 'durationPeriod')
-                    } else {
-                      getBumpData(e);
+                      validateForNullValue(durationPeriod, 'durationPeriod');
+                    }else if (percentageConcentrationGas === '' && typeCheck === 'SpanCheck') {
+                      validateForNullValue(percentageConcentrationGas, 'percentageConcentrationGas');
+                    }else {
+                      // getBumpData(e);
+                      confirmGasCylinderExpiry();
                     }
                   }}
                   endIcon={<RestartAltRoundedIcon />}
@@ -520,20 +616,20 @@ function BumpTestComponentModal({
               >
                 <DialogActions sx={{ margin: '0px' }}>
                   <Button
+                    disabled={inputDisable === true}
+                    size="large"
+                    type="submit"
+                  >
+                    {' '}
+                    {isAddButton ? 'Submit' : 'Update'}
+                  </Button>
+                  <Button
                     size="large"
                     autoFocus
                     /* eslint-disable-next-line */
                     onClick={onCancel}
                   >
                     Cancel
-                  </Button>
-                  <Button
-                    disabled={inputDisable === true}
-                    size="large"
-                    type="submit"
-                  >
-                    {' '}
-                    {isAddButton ? 'Add' : 'Update'}
                   </Button>
 
                 </DialogActions>
@@ -571,6 +667,60 @@ function BumpTestComponentModal({
         openNotification={openNotification.status}
         type={openNotification.type}
       />
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        sx={{ '& .MuiDialog-paper': { width: '90%', maxHeight: '100%', minWidth: '350px' } }}
+        open={cylinderDialog}
+        style={{
+          width: '100%'
+        }}
+        // {props.open}
+      >
+        <DialogTitle sx={{ textAlign: 'center' }}>
+          <WarningAmber color="warning" style={{ fontSize: 95 }} />
+          <br />
+          <Typography
+            // sx={{ m: 1 }}
+            variant="h5"
+            component="span"
+          >
+            Warning!
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ textAlign: 'center' }}>
+          <Typography
+            variant="h6"
+            component="span"
+          >
+            Kindly check the expiry date of the Span Check / Zero Check gas cylinder. 
+          </Typography>
+          <br />
+          Using expired cylinders may result in improper readings and improper results. Please proceed only if date is within the expiry date.
+        </DialogContent>
+        <DialogActions sx={{ margin: '10px' }}>
+          <div style={{ textAlign: 'center' }}>
+            <Button 
+              onClick={() => {
+                // setExpiryDate(true);
+                setCylinderDialog(false);
+                getBumpData();
+              }}
+            >
+              Proceed
+            </Button>
+            <Button
+              onClick={() => {
+                // setExpiryDate(false);
+                setCylinderDialog(false);
+                onCancel();
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 }

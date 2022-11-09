@@ -38,6 +38,9 @@ function LayoutMachine({
                 setSensorTag={setSensorTag}
                 color={data.alertColor}
                 lightColor={data.alertLightColor}
+                maxRatedReadingScale={data.maxRatedReadingScale}
+                minRatedReadingScale={data.minRatedReadingScale}
+                units={data.units}
                 sensorIdList={sensorIdList}
               />
             </Grid>
@@ -45,7 +48,7 @@ function LayoutMachine({
         })}
         {digitalSensorList.map((data) => {
           return (
-            <Grid item xs={12} sm={6} md={3} lg={3} key={data.sensorTagId}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={data.sensorTagId}>
               <DigitalCard
                 id={data.sensorTagId}
                 sensorStatus={data.sensorStatus}
@@ -60,6 +63,9 @@ function LayoutMachine({
                 setSensorTag={setSensorTag}
                 color={data.alertColor}
                 lightColor={data.alertLightColor}
+                maxRatedReadingScale={data.maxRatedReadingScale}
+                minRatedReadingScale={data.minRatedReadingScale}
+                units={data.units}
                 sensorIdList={sensorIdList}
               />
             </Grid>
@@ -83,6 +89,9 @@ function LayoutMachine({
                 setSensorTag={setSensorTag}
                 color={data.alertColor}
                 lightColor={data.alertLightColor}
+                maxRatedReadingScale={data.maxRatedReadingScale}
+                minRatedReadingScale={data.minRatedReadingScale}
+                units={data.units}
                 sensorIdList={sensorIdList}
               />
             </Grid>

@@ -149,3 +149,25 @@ export function setAlertPriorityAndType(element, data){
     alertPriority: data.alertType === 'Critical' ? 1 : data.alertType === 'outOfRange' ? 2 : data.alertType === 'Warning' ? 3: 4,
   };
 }
+
+export function setAQIColor(value){
+  var color = '#FF0D86';
+  if(value>0){
+    if(value<=50){
+      color = '#38B261';
+    } else if(value<=100){
+      color = '#D19D00';
+    } else if(value<=150){
+      color = '#FFA500';
+    } else if(value<=200){
+      color = '#FF0000';
+    } else if(value<=300){
+      color = '#A020F0';
+    } else {
+      color = '#800000';
+    }
+  }else{
+    color = '#FF0D86';
+  }
+  return color;
+}

@@ -1,47 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import {
-  FormControl, Stack, Button, Fab, Typography, TextField
+  FormControl, Stack, Button, Fab, Typography, TextField,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import DownloadIcon from '@mui/icons-material/Download';
 import { DataGrid } from '@mui/x-data-grid';
 import { FetchAqiStatusReportDetails } from '../../services/LoginPageService';
-import { DownloadReportAqiStatusCsv } from '../../services/DownloadCsvReportsService';
+import { DownloadReportAqiCsv } from '../../services/DownloadCsvReportsService';
+
 
 function AqiSitesReportForm(props) {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [isLoading, setGridLoading] = useState(false);
+  const [rowCountState, setRowCountState] = useState();
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
   const [aqiStatusReportList, setAqiStatusReportList] = useState([]);
   const [unTaggedAqiStatusReportList, setUnTaggedAqiStatusReportList] = useState();
 
   useEffect(() => {
-    FetchAqiStatusReportDetails({}, AqiStatusReportHandleSuccess, AqiStatusReportHandleException);
-  }, [unTaggedAqiStatusReportList]);
+    // FetchAqiStatusReportDetails({}, AqiStatusReportHandleSuccess, AqiStatusReportHandleException);
+    fetchNewData();
+  }, [unTaggedAqiStatusReportList, page]);
 
   const AqiStatusReportHandleSuccess = (dataObject) => {
-    console.log(dataObject)
-    setAqiStatusReportList(dataObject.data);
-    // console.log(dataObject);
-    // setRowCountState(dataObject.data.totalRowCount)
-    // setGridLoading(false);
+    setAqiStatusReportList(dataObject.data.data);
+    setRowCountState(dataObject.data.totalRowCount);
     setGridLoading(false);
   };
 
   const AqiStatusReportHandleException = () => { };
 
+  const dateFormat = (value) => {
+    const dateTime = value.split(' ');
+    const date = dateTime[0].split('-');
+    const dateValue = `${date[2]}-${date[1]}-${date[0]}`;
+    return dateValue;
+  };
+
   const columns = [
     {
-      field: 'my_date',
+      field: 'date',
       headerName: 'Date',
       width: 100,
-      // renderCell: (params) => (
-      //   <Typography>
-      //     {
-      //       dateFormat(params.value)
-      //     }
-      //   </Typography>
-      // ),
+      renderCell: (params) => (
+        <Typography>
+          {
+            dateFormat(params.value)
+          }
+        </Typography>
+      ),
     },
     {
       field: 'stateName',
@@ -76,49 +85,56 @@ function AqiSitesReportForm(props) {
     {
       field: 'deviceName',
       headerName: 'Device Name',
-      width: 100,
+      width: 120,
     },
     {
-      field: 'maxAqi',
+      field: 'AqiValue',
       headerName: 'AQI Status',
       width: 100,
     },
 
   ];
-  // const dateFormat = (value) => {
-  //   const dateTime = value.split(' ');
-  //   const date = dateTime[0].split('-');
-  //   const dateValue = `${date[2]}-${date[1]}-${date[0]}`;
-  //   return dateValue;
-  // };
+
+  const fetchNewData = () => {
+    FetchAqiStatusReportDetails({
+      page,
+      pageSize,
+      lab_id: props.lab_id,
+      fromDate,
+      toDate,
+    }, AqiStatusReportHandleSuccess, AqiStatusReportHandleException);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setGridLoading(true);
-    FetchAqiStatusReportDetails({
-      location_id: props.location_id,
-      branch_id: props.branch_id,
-      facility_id: props.facility_id,
-      building_id: props.building_id,
-      floor_id: props.floor_id,
-      lab_id: props.lab_id,
-      fromDate,
-      toDate
-    }, AqiStatusReportHandleSuccess, AqiStatusReportHandleException);
+    fetchNewData();
+  };
+
+  const handleCancel = () => {
+    setFromDate('');
+    setToDate('');
+    setGridLoading(false);
+    setUnTaggedAqiStatusReportList(!unTaggedAqiStatusReportList);
+  };
+
+  const onPageChange = (newPage) => {
+    setPage(newPage);
+  };
+  const onPageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
   };
 
   const DownloadCsv = () => {
-    DownloadReportAqiStatusCsv({
-      location_id: props.location_id,
-      branch_id: props.branch_id,
-      facility_id: props.facility_id,
-      building_id: props.building_id,
-      floor_id: props.floor_id,
-      lab_id: props.lab_id,
-    }, DownloadAqiStatusReportHandleSuccess, DownloadAqiStatusReportHandleException);
+    // setReportControlType("download");
+    DownloadReportAqiCsv({ labId: props.labId, fromDate, toDate }, csvReportHandleSuccess, csvReportHandleException);
   };
-  const DownloadAqiStatusReportHandleSuccess = () => { };
-  const DownloadAqiStatusReportHandleException = () => { };
+
+  const csvReportHandleSuccess = () => { };
+
+  const csvReportHandleException = () => { };
+
+
 
   return (
     <form onSubmit={handleSubmit}>
@@ -130,7 +146,7 @@ function AqiSitesReportForm(props) {
             color="primary"
             aria-label="add"
             onClick={() => {
-              // DownloadCsv();
+              DownloadCsv();
             }}
           >
             <DownloadIcon sx={{ mr: 1 }} />
@@ -140,7 +156,8 @@ function AqiSitesReportForm(props) {
             Send
           </Button>
 
-          <TextField sx={{ minWidth: 250 }}
+          <TextField
+            sx={{ minWidth: 250 }}
             label="From Date"
             type="date"
             value={fromDate}
@@ -154,18 +171,8 @@ function AqiSitesReportForm(props) {
               shrink: true,
             }}
           />
-          {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            label="From Date"
-                            value={fromDate}
-                            onChange={(newValue) => {
-
-                                setFromDate(newValue);
-                            }}
-                        />
-                    </LocalizationProvider> */}
-          <TextField sx={{ minWidth: 250 }}
+          <TextField
+            sx={{ minWidth: 250 }}
             label="to date"
             type="date"
             value={toDate}
@@ -179,34 +186,30 @@ function AqiSitesReportForm(props) {
               shrink: true,
             }}
           />
-          {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            label="To Date"
-                            value={toDate}
-                            onChange={(newValue) => {
-                                setToDate(newValue);
-                            }}
-                        />
-                    </LocalizationProvider> */}
           <FormControl>
             <Button size="medium" variant="contained" autoFocus type="submit">
               Submit
             </Button>
           </FormControl>
           <FormControl>
-            <Button size="medium" variant="contained" autoFocus>
+            <Button size="medium" variant="contained" autoFocus onClick={handleCancel}>
               Cancel
             </Button>
           </FormControl>
         </Stack>
-        <div style={{ height: 300, width: '100%', marginTop: 20 }}>
+        <div style={{ height: 310, width: '100%', marginTop: 20 }}>
           <DataGrid
             rows={aqiStatusReportList}
+            rowCount={rowCountState}
             columns={columns}
+            page={page}
+            pagination
             loading={isLoading}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
+            pageSize={pageSize}
+            onPageChange={onPageChange}
+            onPageSizeChange={onPageSizeChange}
+            // rowsPerPageOptions={[5, 10]}
+            paginationMode="server"
           />
         </div>
       </div>

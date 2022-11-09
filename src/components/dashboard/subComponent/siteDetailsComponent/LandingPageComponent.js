@@ -10,7 +10,7 @@ import ApplicationStore from '../../../../utils/localStorageUtil';
 
 function LandingPageComponent({ locationDetails, setIsDashBoard }) {
   const [deviceId, setDeviceId] = useState({
-    device_id : locationDetails.device_id
+    device_id: locationDetails.device_id
   });
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -19,10 +19,11 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
   const [modbusSensorList, setModbusSensorList] = useState([]);
   const [sensorTagId, setSensorTagId] = useState('');
   const [sensorTag, setSensorTag] = useState('');
-  const [segretionInterval, setSegretionInterval] = useState('10');
+  const [segretionInterval, setSegretionInterval] = useState('1');
   const [rangeInterval, setRangeInterval] = useState('500*60');
   const [totalSensors, setTotalSensors] = useState(0);
   const [totalAlerts, setTotalALerts] = useState(0);
+  const [aqiIndex, setAqiIndex] = useState('NA');
   const { intervalDetails } = ApplicationStore().getStorage('userDetails');
   const { sensorIdList } = ApplicationStore().getStorage('alertDetails');
   const intervalSec = intervalDetails.sensorLogInterval * 1000;
@@ -31,7 +32,7 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
   useEffect(() => {
     intervalCallFunction();
     /* eslint-disable-next-line */
-    if (open === true) {} else {
+    if (open === false) {
       const devicePolling = setInterval(() => {
         intervalCallFunction();
       }, intervalSec);
@@ -45,8 +46,9 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
     DashboardSensorListDetails({ device_id: locationDetails.device_id }, fetchSenosorListSuccess, fetchSenosorListException);
   };
   const fetchSenosorListSuccess = (dataObject) => {
-    setTotalSensors(dataObject.sensorCount || '');
-    setTotalALerts(dataObject.alertCount || '');
+    setTotalSensors(dataObject.sensorCount || '0');
+    setTotalALerts(dataObject.alertCount || '0');
+    setAqiIndex(dataObject.aqiIndex || 'NA');
     setAnalogSensorList(dataObject.Analog.data || []);
     setDigitalSensorList(dataObject.Digital.data || []);
     setModbusSensorList(dataObject.Modbus.data || []);
@@ -71,7 +73,8 @@ function LandingPageComponent({ locationDetails, setIsDashBoard }) {
 
         <Widget type="devices" totalSensors={totalSensors} />
         <Widget type="alerts" setAlertOpen={setAlertOpen} totalAlerts={totalAlerts} />
-        <Widget type="time" />
+        <Widget type="aqi" aqi={aqiIndex}/>
+        <Widget type="time"/>
       </div>
       <LayoutMachine
         setOpen={setOpen}

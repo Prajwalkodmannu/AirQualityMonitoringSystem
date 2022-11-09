@@ -22,6 +22,9 @@ function CustomerModal({
   const [alertLogInterval, setAlertLogInterval] = useState('');
   const [deviceLogInterval, setDeviceLogInterval] = useState('');
   const [sensorLogInterval, setSensorLogInterval] = useState('');
+  const [dataRetentionPeriodInterval, setDataRetentionPeriodInterval] = useState('');
+  const [expireDateReminder, setExpireDateReminder] = useState('');
+  const [periodicBackupInterval, setPeriodicBackupInterval] = useState('');
   const [btnReset, setBtnReset] = useState(false);
   const [errorObject, setErrorObject] = useState({});
   const [openNotification, setNotification] = useState({
@@ -43,9 +46,12 @@ function CustomerModal({
     setAddress(customerData.address || '');
     setCustomerID(customerData.customerId || '');
     setAlertLogInterval(customerData.alertLogInterval || '');
-    setDeviceLogInterval(customerData.setDeviceLogInterval || '');
-    setSensorLogInterval(customerData.setSensorLogInterval || '');
-    setPreviewBuilding(customerData.customerLogo ? `http://varmatrix.com/Aqms/blog/public/${customerData.customerLogo}` : previewImage);
+    setDeviceLogInterval(customerData.deviceLogInterval || '');
+    setSensorLogInterval(customerData.sensorLogInterval || '');
+    setDataRetentionPeriodInterval(customerData.dataRetentionPeriodInterval || '');
+    setExpireDateReminder(customerData.expireDateReminder || '');
+    setPeriodicBackupInterval(customerData.periodicBackupInterval || '');
+    setPreviewBuilding(customerData.customerLogo ? `https://wisething.in/aideaLabs/blog/public/${customerData.customerLogo}?${new Date().getTime()}` : previewImage);
 
     setCustomerLogo('');
   };
@@ -54,28 +60,27 @@ function CustomerModal({
   };
 
   const handleSuccess = (dataObject) => {
+    setRefreshData((oldvalue) => !oldvalue);
     setNotification({
       status: true,
       type: 'success',
       message: dataObject.message,
     });
-    setRefreshData((oldvalue) => !oldvalue);
     setTimeout(() => {
       handleClose();
       setOpen(false);
     }, 5000);
-    return dataObject;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (isAddButton) {
       CustomerAddService({
-        customerName, email, phoneNo, address, customerId, customerLogo, alertLogInterval, deviceLogInterval, sensorLogInterval,
+        customerName, email, phoneNo, address, customerId, customerLogo, alertLogInterval, deviceLogInterval, sensorLogInterval, dataRetentionPeriodInterval, expireDateReminder, periodicBackupInterval
       }, handleSuccess, handleException);
     } else {
       CustomerEditService({
-        id, customerName, email, phoneNo, address, customerId, customerLogo, alertLogInterval, deviceLogInterval, sensorLogInterval,
+        id, customerName, email, phoneNo, address, customerId, customerLogo, alertLogInterval, deviceLogInterval, sensorLogInterval, dataRetentionPeriodInterval, expireDateReminder, periodicBackupInterval
       }, handleSuccess, handleException);
     }
   };
@@ -91,7 +96,7 @@ function CustomerModal({
     }, 5000);
   };
 
-  const passwordSubmit = async (e) => {
+  const passwordSubmit = (e) => {
     e.preventDefault();
     UnblockUserService({ email, password, id }, passwordValidationSuccess, passwordValidationException);
     setBtnReset(false);
@@ -310,6 +315,72 @@ function CustomerModal({
                       autoComplete="off"
                       error={errorObject?.sensorLogInterval?.errorStatus}
                       helperText={errorObject?.sensorLogInterval?.helperText}
+                    />
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <div className="rounded-md -space-y-px">
+                  <div className="mb-2">
+                    <TextField
+                      sx={{ mb: 1 }}
+                      label="Data Retention Period"
+                      type="number"
+                      value={dataRetentionPeriodInterval}
+                      variant="outlined"
+                      placeholder="Data Retention Period"
+                      /* eslint-disable-next-line */
+                      className="mb-2 appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500  sm:text-sm"
+                      required
+                      onBlur={() => validateForNullValue(dataRetentionPeriodInterval, 'dataRetentionPeriodInterval')}
+                      onChange={(e) => setDataRetentionPeriodInterval(e.target.value)}
+                      autoComplete="off"
+                      error={errorObject?.dataRetentionPeriodInterval?.errorStatus}
+                      helperText={errorObject?.dataRetentionPeriodInterval?.helperText}
+                    />
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <div className="rounded-md -space-y-px">
+                  <div className="mb-2">
+                    <TextField
+                      sx={{ mb: 1 }}
+                      label="Expire Date Reminder"
+                      type="number"
+                      value={expireDateReminder}
+                      variant="outlined"
+                      placeholder="Expire Date Reminder"
+                      /* eslint-disable-next-line */
+                      className="mb-2 appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500  sm:text-sm"
+                      required
+                      onBlur={() => validateForNullValue(expireDateReminder, 'expireDateReminder')}
+                      onChange={(e) => setExpireDateReminder(e.target.value)}
+                      autoComplete="off"
+                      error={errorObject?.expireDateReminder?.errorStatus}
+                      helperText={errorObject?.expireDateReminder?.helperText}
+                    />
+                  </div>
+                </div>
+              </Grid>
+              <Grid item xs={6}>
+                <div className="rounded-md -space-y-px">
+                  <div className="mb-2">
+                    <TextField
+                      sx={{ mb: 1 }}
+                      label="Periodic Backup Interval"
+                      type="number"
+                      value={periodicBackupInterval}
+                      variant="outlined"
+                      placeholder="Periodic Backup Interval"
+                      /* eslint-disable-next-line */
+                      className="mb-2 appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500  sm:text-sm"
+                      required
+                      onBlur={() => validateForNullValue(periodicBackupInterval, 'periodicBackupInterval')}
+                      onChange={(e) => setPeriodicBackupInterval(e.target.value)}
+                      autoComplete="off"
+                      error={errorObject?.periodicBackupInterval?.errorStatus}
+                      helperText={errorObject?.periodicBackupInterval?.helperText}
                     />
                   </div>
                 </div>

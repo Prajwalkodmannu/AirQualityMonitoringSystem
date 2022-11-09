@@ -8,7 +8,7 @@ import { FloorListResults } from './siteDetails/floor/floorList';
 function Floor() {
   const routeStateObject = useLocation();
   const { buildingImg } = routeStateObject.state;
-  const imgSrc = `http://varmatrix.com/Aqms/blog/public/${buildingImg}`;
+  const imgSrc = `https://wisething.in/aideaLabs/blog/public/${buildingImg}`;
   return (
     <Container maxWidth={false} style={{ marginTop: 0 }}>
       <Grid

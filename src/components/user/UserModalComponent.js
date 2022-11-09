@@ -115,9 +115,16 @@ function UserModal({
                             building_id: userData?.building_id,
                             floor_id: userData?.floor_id,
                           },(labRespObj)=>{
-                            LabfetchService(labRespObj);
+                            labHandleSuccess(labRespObj);
+                            if(userData?.lab_id){
+                              setLabId(userData.lab_id);
+                              setBackdrop(false);
+                            }
                           },locationHandleException);
                           setFloorId(userData.floor_id);
+                        }
+                        else{
+                          setBackdrop(false);
                         }
                       }, locationHandleException);
                       setBuildingId(userData.building_id);
@@ -125,7 +132,7 @@ function UserModal({
                     else{
                       setBackdrop(false);
                     }
-                  },locationHandleException)
+                  },locationHandleException);
                 }
                 else{
                   setBackdrop(false);
@@ -204,11 +211,11 @@ function UserModal({
     event.preventDefault();
     if (isAddButton) {
       await UserAddService({
-        location_id, branch_id, facility_id, empId, email, phoneNo, empRole, empName, empNotification,
+        location_id, branch_id, facility_id, building_id, floor_id, lab_id, empId, email, phoneNo, empRole, empName, empNotification,
       }, handleSuccess, handleException);
     } else {
       await UserUpdateService({
-        location_id, branch_id, facility_id, empId, email, phoneNo, empRole, empName, empNotification, id,
+        location_id, branch_id, facility_id, building_id, floor_id, lab_id, empId, email, phoneNo, empRole, empName, empNotification, id,
       }, handleSuccess, handleException);
     }
   };
@@ -269,6 +276,11 @@ function UserModal({
     setBuildingList([]);
     setFloorList([]);
     setLabList([]);
+    setBranchId('');
+    setFacilityId('');
+    setBuildingId('');
+    setFloorId('');
+    setLabId('');
   };
 
   const branchHandleException = () => {};
@@ -278,6 +290,10 @@ function UserModal({
     setBuildingList([]);
     setFloorList([]);
     setLabList([]);
+    setFacilityId('');
+    setBuildingId('');
+    setFloorId('');
+    setLabId('');
   };
 
   const facilityHandleException = () => {};
@@ -286,15 +302,22 @@ function UserModal({
     setBuildingList(dataObject.data);
     setFloorList([]);
     setLabList([]);
+    setBuildingId('');
+    setFloorId('');
+    setLabId('');
   }
 
   const floorHandleSuccess = (dataObject) =>{
     setFloorList(dataObject.data);
     setLabList([]);
+    setFloorId('');
+    setLabId('');
   }
 
   const labHandleSuccess = (dataObject) =>{
     setLabList(dataObject.data);
+    setLabId('');
+    setBackdrop(false);
   }
   
   const onLocationChange = (location_id) => {
@@ -307,6 +330,11 @@ function UserModal({
       setBuildingList([]);
       setFloorList([]);
       setLabList([]);
+      setBranchId('');
+      setFacilityId('');
+      setBuildingId('');
+      setFloorId('');
+      setLabId('');
     }
   };
 
@@ -319,6 +347,10 @@ function UserModal({
       setBuildingList([]);
       setFloorList([]);
       setLabList([]);
+      setFacilityId('');
+      setBuildingId('');
+      setFloorId('');
+      setLabId('');
     }
   };
 
@@ -330,6 +362,9 @@ function UserModal({
       setBuildingList([]);
       setFloorList([]);
       setLabList([]);
+      setBuildingId('');
+      setFloorId('');
+      setLabId('');
     }
   };
 
@@ -340,6 +375,8 @@ function UserModal({
     } else {
       setFloorList([]);
       setLabList([]);
+      setFloorId('');
+      setLabId('');
     }
   }
   const onFloorChange = (floor_id) =>{
@@ -348,6 +385,7 @@ function UserModal({
       LabfetchService({ location_id, branch_id, facility_id, building_id, floor_id }, labHandleSuccess, locationHandleException);
     } else {
       setLabList([]);
+      setLabId('');
     }
   }
   

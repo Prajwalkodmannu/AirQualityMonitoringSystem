@@ -3,7 +3,7 @@ import ApplicationStore from '../utils/localStorageUtil';
 
 const _fetchServiceDownloadCsvData = (PATH, serviceMethod, data, successCallback, errorCallBack) => {
   const { user_token, userDetails } = ApplicationStore().getStorage('userDetails');
-  const END_POINT = 'http://varmatrix.com/wAqms/api/';
+  const END_POINT = 'https://wisething.in/aideaLabs/api/';
   const { emailId, userRole, companyCode } = userDetails;
 
   const headers = {
@@ -99,4 +99,18 @@ export const DownloadReportSensorLogCsv = (data, successCallback, errorCallBack)
   const { fromDate } = data;
   const { toDate } = data;
   return _fetchServiceDownloadCsvData(`exportSensorLogCsv?=&deviceId=${deviceId}&fromDate=${fromDate}&toDate=${toDate}`, 'GET', {}, successCallback, errorCallBack);
+};
+
+export const DownloadReportAqiCsv = (data, successCallback, errorCallBack) => {
+  const { labId } = data;
+  const { fromDate } = data;
+  const { toDate } = data;
+  return _fetchServiceDownloadCsvData(`aqiReportExport?=&deviceId=${labId}&fromDate=${fromDate}&toDate=${toDate}`, 'GET', {}, successCallback, errorCallBack);
+};
+
+export const serverUtiliExport = (data, successCallback, errorCallBack) => {
+  const { labId } = data;
+  const { fromDate } = data;
+  const { toDate } = data;
+  return _fetchServiceDownloadCsvData(`serverUtiliExport`, 'GET', {}, successCallback, errorCallBack);
 };

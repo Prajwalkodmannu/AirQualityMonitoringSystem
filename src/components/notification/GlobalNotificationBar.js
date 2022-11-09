@@ -1,24 +1,29 @@
 import { NotificationsActive, NotificationsActiveOutlined, SecurityOutlined, WarningAmber } from '@mui/icons-material';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { LatestAlertAccess } from '../../context/UserAccessProvider';
 
 function GlobalNotifier({
   notifierState, setNotifierState, setAnchorElNotification,
 }) {
+  const value = LatestAlertAccess();
+  const {alertStatus, setAlertStatus} = value;
   const handleClose = (e) => {
     e.preventDefault();
+    setAlertStatus(oldValue=>!oldValue);
     setNotifierState((currentProps) => {
       return { ...currentProps, open: false };
     });
   };
 
   const handleMenu = (e) => {
+    setAlertStatus(oldValue=>!oldValue);
     setNotifierState((currentProps) => {
       return { ...currentProps, open: false };
     });
     setAnchorElNotification({ ...e.currentTarget, top: '16px', left: '708px' });
   };
-
+  
   const action = (
     <>
       <Button
@@ -35,25 +40,11 @@ function GlobalNotifier({
       >
         Ignore
       </Button>
-      {/* <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <Close fontSize="small" />
-      </IconButton> */}
+      
     </>
   );
   return (
-    // <Snackbar
-    //   anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-    //   open={notifierState.open}
-    //   // onClose={handleClose}
-    //   message={notifierState.message}
-    //   ContentProps={{ style: { backgroundColor: notifierState.color, color: 'black', height: 100 } }}
-    //   action={action}
-    // />
+    
     <Dialog 
       open={notifierState.open}
       fullWidth

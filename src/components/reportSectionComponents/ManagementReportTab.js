@@ -8,7 +8,7 @@ import Alarm from './Alarm';
 import ServerUtilization from './ServerUtilization';
 import FirmwareVersion from './FirmwareVersion';
 import BumpTest from './BumpTest';
-import IndividualReportForm from './IndividualReportForm';
+import SensorStatus from './SensorStatus';
 import DeviceLogs from './DeviceLogs';
 import SoftwareVersion from './SoftwareVersion';
 
@@ -293,10 +293,10 @@ export default function ManagementReportTab() {
                         </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
-                        <AqiSitesReportForm location_id={location_id} branch_id={branch_id} facility_id={facility_id} building_id={building_id} floor_id={floor_id} lab_id={lab_id} />
+                        <AqiSitesReportForm lab_id={lab_id} />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <IndividualReportForm deviceList={deviceList} />
+                        <SensorStatus deviceList={deviceList} />
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         <Alarm deviceList={deviceList} />

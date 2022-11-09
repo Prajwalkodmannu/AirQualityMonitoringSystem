@@ -19,7 +19,6 @@ function ImageMarkerList({ labImage, deviceCoordsList, height }) {
   return (
     <div>
       <ImageMarker
-        extraClass="imageMapperMaxSize"
         src={labImage || building}
         markers={deviceCoordsList}
         onAddMarker={(marker) => { setFloorCoordinations(marker); setMarkers([...markers, marker]); }}

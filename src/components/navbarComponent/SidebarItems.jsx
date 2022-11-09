@@ -26,6 +26,11 @@ const SidebarItems = {
     icon: <Group className="sidebarIcon" />,
   },
   {
+    name: 'Gas Cylinder',
+    route: 'GasCylinder',
+    icon: <Storefront className="sidebarIcon" />,
+  },
+  {
     name: 'Report',
     route: 'Report',
     icon: <SummarizeIcon className="sidebarIcon" />,
@@ -37,7 +42,7 @@ const SidebarItems = {
     icon: <BusinessOutlined className="sidebarIcon" />,
   }],
   'Profile Settings': [{
-    name: 'ChangePassword ',
+    name: 'Change Password ',
     route: 'ChangePassword',
     icon: <LockReset className="sidebarIcon" />,
   },
@@ -95,7 +100,8 @@ function DrawerObject() {
 
   useEffect(() => {
     if (userDetails.companyLogo) {
-      setCompanyLogo(`http://varmatrix.com/Aqms/blog/public/${userDetails.companyLogo}?${new Date().getTime()}`);
+      // setCompanyLogo(`http://wisething.in/Aqms/blog/public/${userDetails.companyLogo}?${new Date().getTime()}`);
+      setCompanyLogo(`https://wisething.in/aideaLabs/blog/public/${userDetails.companyLogo}`);
     }
   }, []);
 

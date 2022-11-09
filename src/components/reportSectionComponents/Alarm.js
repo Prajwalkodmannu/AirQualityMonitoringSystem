@@ -26,8 +26,14 @@ function Alarm(props) {
   const [reportControlType, setReportControlType] = useState();
 
   useEffect(() => {
-    FetchAlarmReportDetails({}, AlarmReportHandleSuccess, AlarmReportHandleException);
-  }, [unTaggedAlarmReportList]);
+    fetchNewData();
+  }, [unTaggedAlarmReportList, page]);
+
+  const dateFormat = (value) => {
+    const date = value.split('-');
+    const dateValue = `${date[2]}-${date[1]}-${date[0]}`;
+    return dateValue;
+  };
 
   const columns = [
     {
@@ -70,15 +76,11 @@ function Alarm(props) {
     {
       field: 'Reason',
       headerName: 'Reason',
-      width: 130,
+      width: 200,
     },
   ];
 
-  const dateFormat = (value) => {
-    const date = value.split('-');
-    const dateValue = `${date[2]}-${date[1]}-${date[0]}`;
-    return dateValue;
-  };
+
 
   const HandleDeviceChange = (deviceId) => {
     setDeviceId(deviceId);
@@ -87,11 +89,11 @@ function Alarm(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     fetchNewData();
+
   };
 
   const onPageSizeChange = (newPageSize) => {
     setPageSize(newPageSize);
-    fetchNewData();
   };
 
   const DownloadCsv = () => {
@@ -128,7 +130,6 @@ function Alarm(props) {
 
   const onPageChange = (newPage) => {
     setPage(newPage);
-    fetchNewData();
   };
 
   const SendEmail = () => {
@@ -179,17 +180,6 @@ function Alarm(props) {
               shrink: true,
             }}
           />
-          {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            label="From Date"
-                            value={fromDate}
-                            onChange={(newValue) => {
-
-                                setFromDate(newValue);
-                            }}
-                        />
-                    </LocalizationProvider> */}
           <TextField
             sx={{ minWidth: 230 }}
             label="to date"
@@ -205,16 +195,6 @@ function Alarm(props) {
               shrink: true,
             }}
           />
-          {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateTimePicker
-                            renderInput={(props) => <TextField {...props} />}
-                            label="To Date"
-                            value={toDate}
-                            onChange={(newValue) => {
-                                setToDate(newValue);
-                            }}
-                        />
-                    </LocalizationProvider> */}
           <Box sx={{ minWidth: 230 }}>
             <FormControl fullWidth>
               <InputLabel>Devices</InputLabel>
@@ -247,7 +227,6 @@ function Alarm(props) {
             rows={alarmReportList}
             rowCount={rowCountState}
             loading={isLoading}
-            rowsPerPageOptions={[5, 10, 100]}
             pagination
             page={page}
             pageSize={pageSize}

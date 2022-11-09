@@ -1,10 +1,11 @@
-import { Breadcrumbs, Chip } from '@mui/material';
+import { Box, Breadcrumbs, Chip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { darken, lighten } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 import { FetchLocationService } from '../../../../services/LoginPageService';
 import ApplicationStore from '../../../../utils/localStorageUtil';
-import { setAlertPriorityAndType } from '../../../../utils/helperFunctions';
+import { setAlertPriorityAndType, setAQIColor } from '../../../../utils/helperFunctions';
+import { LatestAlertAccess } from '../../../../context/UserAccessProvider';
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -19,11 +20,12 @@ function LocationGridComponent(props) {
   const { locationIdList } = ApplicationStore().getStorage('alertDetails');
   const [notificationStatus, setNotificationStatus] = useState(locationIdList);
   const [isLoading, setGridLoading] = useState(true);
+  const {alertStatus, setAlertStatus} = LatestAlertAccess();
   const columns = [
     {
       field: 'stateName',
       headerName: 'Location Name',
-      width: 400,
+      width: 200,
       type: 'actions',
       getActions: (params) => [
         <LinkTo selectedRow={params.row} />,
@@ -59,6 +61,22 @@ function LocationGridComponent(props) {
         );
       }),
     },
+    {
+      field: 'aqiIndex',
+      headerName: 'AQI Index',
+      width: 100,
+      renderCell: ((params) => {
+        return(
+          <span
+            style={{
+              color: setAQIColor(params.row.aqiIndex)
+            }}
+          >
+            {params.row.aqiIndex}
+          </span>
+        )
+      }),
+    }
   ];
 
   useEffect(() => {
@@ -68,7 +86,19 @@ function LocationGridComponent(props) {
 
     setProgressState((oldValue) => {
       let newValue = 0;
-      if (locationDetails.facility_id) {
+      if(locationDetails.lab_id){
+        newValue = 6;
+        locationAlerts({ lab_id: locationDetails.lab_id });
+      }
+      else if(locationDetails.floor_id){
+        newValue = 5;
+        locationAlerts({ floor_id: locationDetails.floor_id });
+      }
+      else if(locationDetails.building_id){
+        newValue = 4;
+        locationAlerts({ building_id: locationDetails.building_id });
+      }
+      else if (locationDetails.facility_id) {
         newValue = 3;
         locationAlerts({ facility_id: locationDetails.facility_id });
       }
@@ -85,7 +115,7 @@ function LocationGridComponent(props) {
       }
       return newValue;
     });
-  }, []);
+  }, [alertStatus]);
 
   function LinkTo({ selectedRow }) {
     const { locationDetails } = ApplicationStore().getStorage('userDetails');
@@ -144,16 +174,88 @@ function LocationGridComponent(props) {
           Location
         </h3>
       </Breadcrumbs>
-
-      <DataGrid
-        rows={dataList}
-        columns={columns}
-        loading={isLoading}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        disableSelectionOnClick
-        style={{ maxHeight: `${93}%` }}
-      />
+      {/* <Box
+        sx={{
+          height: 400,
+          '& .super-app-theme--red': {
+            color: 'maroon',
+            bgcolor: (theme) => getBackgroundColor('#FAE8FA', theme.palette.mode),
+            '&:hover': {
+              bgcolor: (theme) => getHoverBackgroundColor('#FAE8FA', theme.palette.mode),
+            },
+            ':hover': { backgroundColor: '#FAE8FA' },
+          },
+          '& .super-app-theme--orange': {
+            color: 'purple',
+            bgcolor: (theme) => getBackgroundColor('#9fa8da', theme.palette.mode),
+            '&:hover': {
+              bgcolor: (theme) => getHoverBackgroundColor(
+                '#9fa8da',
+                theme.palette.mode,
+              ),
+            },
+          },
+          '& .super-app-theme--disabled': {
+            bgcolor: (theme) => getBackgroundColor('#ffcdd2', theme.palette.mode),
+            '&:hover': {
+              bgcolor: (theme) => getHoverBackgroundColor(
+                '#ffcdd2',
+                theme.palette.mode,
+              ),
+            },
+          },
+          '& .super-app-theme--enabled': {
+            bgcolor: (theme) => getBackgroundColor('#A5D6A7', theme.palette.mode),
+            '&:hover': {
+              bgcolor: (theme) => getHoverBackgroundColor(
+                '#A5D6A7',
+                theme.palette.mode,
+              ),
+            },
+          },
+          '& .super-app-theme--outOfRange': {
+            color: 'darkgoldenrod',
+            bgcolor: (theme) => getBackgroundColor('#FFFCE3', theme.palette.mode),
+            '&:hover': {
+              bgcolor: (theme) => getHoverBackgroundColor('#FFFCE3', theme.palette.mode),
+            },
+          },
+          '& .super-app-theme--green': {
+            color: 'green',
+            bgcolor: (theme) => getBackgroundColor('#F2FFF2', theme.palette.mode),
+            '&:hover': {
+              bgcolor: (theme) => getHoverBackgroundColor('#F2FFF2', theme.palette.mode),
+            },
+          },
+          }}
+      > */}
+        <DataGrid
+          rows={dataList}
+          columns={columns}
+          loading={isLoading}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          disableSelectionOnClick
+          style={{ maxHeight: `${93}%` }}
+          // getCellClassName={(params) => {
+          //   let element = {
+          //     alertLabel: 'Good',
+          //     alertColor: 'green',
+          //     alertPriority: 4,
+          //   };
+          //   const alertObject = notificationStatus?.filter((alert) => {
+          //     return params.row.id === parseInt(alert.id);
+          //   });
+    
+          //   alertObject?.map((data) => {
+          //     element = setAlertPriorityAndType(element, data);
+          //   });
+          //   if (params.field === 'id') {
+          //     return `super-app-theme--${element.alertColor}`;
+          //   }
+          // }}
+        />
+      {/* </Box> */}
     </div>
   );
 }
