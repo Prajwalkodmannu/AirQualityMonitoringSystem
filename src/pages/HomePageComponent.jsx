@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/navbarComponent/Sidebar';
 import Navbar from '../components/navbarComponent/Navbar';
 import './css/home.scss';
@@ -12,6 +12,7 @@ import {
 } from '../services/LoginPageService';
 import GlobalNotifier from '../components/notification/GlobalNotificationBar';
 import { alertSeverityCode, setAlertColor } from '../utils/helperFunctions';
+import { Backdrop, CircularProgress } from '@mui/material';
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 /* eslint-disable no-nested-ternary */
@@ -19,6 +20,7 @@ import { alertSeverityCode, setAlertColor } from '../utils/helperFunctions';
 /* eslint-disable radix */
 
 function HomePageComponent() {
+  const navigate = useNavigate();
   const [locationLabel, setLocationLabel] = useState('');
   const [branchLabel, setBranchLabel] = useState('');
   const [facilityLabel, setFacilityLabel] = useState('');
@@ -26,6 +28,7 @@ function HomePageComponent() {
   const [floorLabel, setFloorLabel] = useState('');
   const [labLabel, setLabLabel] = useState('');
   const [mobileMenu, setMobileOpen] = useState(true);
+  const [backdropOpen, setBackdropOpen] = useState(false);
   const [notifierState, setNotifierState] = useState({
     open: false,
     message: 'You have new notification !',
@@ -35,6 +38,8 @@ function HomePageComponent() {
   const [anchorElNotification, setAnchorElNotification] = useState(null);
   const { notificationList } = ApplicationStore().getStorage('notificationDetails');
   const { locationDetails, userDetails, intervalDetails } = ApplicationStore().getStorage('userDetails');
+  const { navigateDashboard } = ApplicationStore().getStorage('navigateDashboard');
+
   const {
     location_id, branch_id, facility_id, building_id, floor_id, lab_id
   } = locationDetails;
@@ -42,8 +47,7 @@ function HomePageComponent() {
   const { locationIdList, branchIdList, facilityIdList, buildingIdList, floorIdList,
     labIdList, deviceIdList, sensorIdList, } = ApplicationStore().getStorage('alertDetails');
   const intervalSec = intervalDetails.alertLogInterval * 1000 || 10000;
-  const [labelCount, setLabelCount] = useState(0);
-  const [lableCountLoop, setLableCountLoop] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(notificationList?.length);
 
   useEffect(() => {
     console.log('Interval running...');
@@ -76,40 +80,35 @@ function HomePageComponent() {
       } else if (location_id) {
         fetchLocation();
       } else {
-        setLabelCount(oldValue => oldValue++);
         FetchLocationService(handleSuccess, handleException);
       }
 
-      // const interVal = setInterval(()=>{
-      //   console.log('Interval running...');
-      //   if(labelCount === 0){
-      //     console.log('Interval clearing...');
-      //     ApplicationStore().setStorage('siteDetails', {
-      //       locationLabel, branchLabel, facilityLabel, buildingLabel, floorLabel, labLabel
-      //     });
-      //     clearInterval(interVal);
-      //   }
-      // }, 1000);
-      // return () => clearInterval(interVal);
-
+      setBackdropOpen(true);
     }
+    setTimeout(() => {
+      if (userDetails.userRole !== 'superAdmin') {
+        if (navigateDashboard === true) {
+          setBackdropOpen(false);
+          ApplicationStore().setStorage('navigateDashboard', { navigateDashboard: false });
+          navigate('/Dashboard');
+        }
+      };
+      setBackdropOpen(false);
+    }, 3000);
   }, []);
 
 
   const fetchLocation = () => {
-    setLabelCount(oldValue => oldValue + 2);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
   }
   const fetchBranch = () => {
-    setLabelCount(oldValue => oldValue + 3);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
   }
 
   const fetchFacility = () => {
-    setLabelCount(oldValue => oldValue + 4);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
@@ -117,7 +116,6 @@ function HomePageComponent() {
   }
 
   const fetchBuilding = () => {
-    setLabelCount(oldValue => oldValue + 5);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
@@ -126,7 +124,6 @@ function HomePageComponent() {
   }
 
   const fetchFloor = () => {
-    setLabelCount(oldValue => oldValue + 6);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
@@ -136,7 +133,6 @@ function HomePageComponent() {
   }
 
   const fetchLab = () => {
-    setLabelCount(oldValue => oldValue + 7);
     FetchLocationService(handleSuccess, handleException);
     FetchBranchService({ location_id }, handleBranchSuccess, handleException);
     FetchFacilitiyService({ location_id, branch_id }, handleFacilitySuccess, handleException);
@@ -152,7 +148,6 @@ function HomePageComponent() {
         setLocationLabel(datas.stateName);
       }
     });
-    setLabelCount(oldvalue => oldvalue--);
   };
   const handleBranchSuccess = (dataObject) => {
     dataObject?.data.map((datas) => {
@@ -160,7 +155,6 @@ function HomePageComponent() {
         setBranchLabel(datas.branchName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
   const handleFacilitySuccess = (dataObject) => {
     dataObject?.data.map((datas) => {
@@ -168,7 +162,6 @@ function HomePageComponent() {
         setFacilityLabel(datas.facilityName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
 
   const handleBuildingSuccess = (dataObject) => {
@@ -177,7 +170,6 @@ function HomePageComponent() {
         setBuildingLabel(datas.buildingName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
 
   const handleFloorSuccess = (dataObject) => {
@@ -186,7 +178,6 @@ function HomePageComponent() {
         setFloorLabel(datas.floorName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
 
   const handleLabSuccess = (dataObject) => {
@@ -195,7 +186,6 @@ function HomePageComponent() {
         setLabLabel(datas.labDepName);
       }
     });
-    setLabelCount(oldValue => oldValue--);
   };
 
   // const handleDeviceSuccess = (dataObject) => {
@@ -214,7 +204,7 @@ function HomePageComponent() {
     // Check for new alert with existing stack
     const arraySet = newDataObject.filter((object1) => {
       return !notificationList.some((object2) => {
-        return object1.id === object2.id;
+        return object1.id === object2.id // || (object1.sensorId === object2.sensorId && object1.id <= object2.id );
       });
     });
     // make an alert if we have new alert
@@ -234,12 +224,14 @@ function HomePageComponent() {
         };
       });
       ApplicationStore().setStorage('notificationDetails', { notificationList: newDataObject, newNotification: newNotificationValue });
+      setNotificationCount(newDataObject?.length);
     }
 
     ApplicationStore().setStorage('notificationDetails', {
       notificationList: newDataObject,
       newNotification: newNotificationValue
     });
+    setNotificationCount(newDataObject?.length);
 
     let updatedAlertDetails = {
       locationIdList: [],
@@ -323,12 +315,23 @@ function HomePageComponent() {
             notificationList={notificationList}
             anchorElNotification={anchorElNotification}
             setAnchorElNotification={setAnchorElNotification}
+            notificationCount={notificationCount}
           />
-          <UserAccessProvider>
-            <Outlet />
-          </UserAccessProvider>
+          <div style={{
+            height: '94vh'
+          }}>
+            <UserAccessProvider>
+              <Outlet />
+            </UserAccessProvider>
+          </div>
         </LatestAlertProvider>
       </div>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={backdropOpen}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

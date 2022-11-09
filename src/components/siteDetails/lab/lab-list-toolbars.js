@@ -8,11 +8,14 @@ export function LabListToolbar(props) {
   return (
     <Box
       sx={{
-        mb: '10px',
         alignItems: 'center',
         display: 'flex',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
+      }}
+      style={{
+        height: '6vh',
+        minHeight: '60px'
       }}
     >
       <Typography

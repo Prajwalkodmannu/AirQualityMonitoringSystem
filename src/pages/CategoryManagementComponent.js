@@ -55,7 +55,9 @@ function CategoryManagement() {
   const routeStateObject = useLocation();
 
   return (
-    <div className="container mx-auto">
+    <div 
+    // className="container mx-auto"
+    >
       <Container maxWidth={false} style={{ padding: 0 }}>
         <Box sx={{
           width: '100%', marginBottom: 0, marginTop: 0, padding: 0,

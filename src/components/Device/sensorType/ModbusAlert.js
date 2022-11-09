@@ -3,6 +3,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useUserAccess } from '../../../context/UserAccessProvider';
+import ApplicationStore from '../../../utils/localStorageUtil';
 
 function ModbusAlert({
   pollingIntervalType, setPollingIntervalType,
@@ -27,14 +28,15 @@ function ModbusAlert({
   outofrangeHighAlert, setOutofrangeHighAlert,
   outofrangeRefMinValue, outofrangeRefMaxValue,
 }) {
+  const { userDetails } = ApplicationStore().getStorage('userDetails');
   const moduleAccess = useUserAccess()('devicelocation');
 
   const validateAlertrange = (currentValue, minimumValue, maximumvalue, setCurrentValue) =>{
-    if(currentValue<minimumValue){
-      setCurrentValue(minimumValue);
+    if(parseInt(currentValue)<parseInt(minimumValue)){
+      userDetails.userRole !== 'systemSpecialist' && setCurrentValue(minimumValue);
     }
-    if(currentValue>maximumvalue){
-      setCurrentValue(maximumvalue);
+    if(parseInt(currentValue)>parseInt(maximumvalue)){
+      userDetails.userRole !== 'systemSpecialist' && setCurrentValue(maximumvalue);
     }
   }
 
@@ -89,17 +91,17 @@ function ModbusAlert({
           sx={{ mt: 0, padding: 0 }}
           item
           xs={12}
-          sm={4}
-          md={4}
-          lg={4}
-          xl={4}
+          sm={12}
+          md={2}
+          lg={2}
+          xl={2}
         >
           <FormControl fullWidth margin="normal" sx={{ marginTop: 0 }} disabled={moduleAccess.edit === false && true}>
             <InputLabel id="demo-simple-select-label">
               Sensor alert
             </InputLabel>
             <Select
-              sx={{ minWidth: 250 }}
+              // sx={{ minWidth: 250 }}
               labelId="demo-simple-select-label"
               value={criticalAlertType}
               label="Sensor alert"
@@ -121,10 +123,10 @@ function ModbusAlert({
           sx={{ mt: 0, padding: 0, display: 'flex' }}
           item
           xs={12}
-          sm={8}
-          md={8}
-          lg={8}
-          xl={8}
+          sm={12}
+          md={10}
+          lg={10}
+          xl={10}
           // style={{float:'right'}}
         >
           <Grid
@@ -138,7 +140,7 @@ function ModbusAlert({
                   sx={{ mt: 0, padding: 0 }}
                   item
                   xs={12}
-                  sm={6}
+                  sm={12}
                   md={6}
                   lg={6}
                   xl={6}
@@ -171,7 +173,7 @@ function ModbusAlert({
                   sx={{ mt: 0, padding: 0 }}
                   item
                   xs={12}
-                  sm={6}
+                  sm={12}
                   md={6}
                   lg={6}
                   xl={6}
@@ -203,7 +205,7 @@ function ModbusAlert({
         <Grid
           sx={{ mt: 0, padding: 0 }}
           item
-          xs={12}
+          xs={6}
           sm={6}
           md={6}
           lg={6}
@@ -216,8 +218,8 @@ function ModbusAlert({
               disabled={criticalAlertType === 'High' || criticalAlertType === 'High' || (moduleAccess.edit === false && true)}
               type='number'
               inputProps={{
-                min: criticalRefMinValue,
-                max: criticalRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && criticalRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && criticalRefMaxValue,
               }}
               onBlur={() => {
                 // validateForNullValue(alertTag, "alertTag");
@@ -240,7 +242,7 @@ function ModbusAlert({
         <Grid
           sx={{ mt: 0, padding: 0 }}
           item
-          xs={12}
+          xs={6}
           sm={6}
           md={6}
           lg={6}
@@ -253,8 +255,8 @@ function ModbusAlert({
               disabled={criticalAlertType === 'Low' || criticalAlertType === '' || (moduleAccess.edit === false && true)}
               type='number'
               inputProps={{
-                min: criticalRefMinValue,
-                max: criticalRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && criticalRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && criticalRefMaxValue,
               }}
               onBlur={() => {
                 // validateForNullValue(alertTag, "alertTag");
@@ -293,17 +295,17 @@ function ModbusAlert({
           sx={{ mt: 0, padding: 0 }}
           item
           xs={12}
-          sm={4}
-          md={4}
-          lg={4}
-          xl={4}
+          sm={12}
+          md={2}
+          lg={2}
+          xl={2}
         >
           <FormControl fullWidth margin="normal" sx={{ marginTop: 0 }} disabled={moduleAccess.edit === false && true}>
             <InputLabel id="demo-simple-select-label">
               Sensor alert
             </InputLabel>
             <Select
-              sx={{ minWidth: 250 }}
+              // sx={{ minWidth: 250 }}
               labelId="demo-simple-select-label"
               value={warningAlertType}
               label="Sensor alert"
@@ -325,10 +327,10 @@ function ModbusAlert({
           sx={{ mt: 0, padding: 0, display: 'flex' }}
           item
           xs={12}
-          sm={8}
-          md={8}
-          lg={8}
-          xl={8}
+          sm={12}
+          md={10}
+          lg={10}
+          xl={10}
           style={{
             // float:'right'
           }}
@@ -344,7 +346,7 @@ function ModbusAlert({
                   sx={{ mt: 0, padding: 0 }}
                   item
                   xs={12}
-                  sm={6}
+                  sm={12}
                   md={6}
                   lg={6}
                   xl={6}
@@ -377,7 +379,7 @@ function ModbusAlert({
                   sx={{ mt: 0, padding: 0 }}
                   item
                   xs={12}
-                  sm={6}
+                  sm={12}
                   md={6}
                   lg={6}
                   xl={6}
@@ -409,7 +411,7 @@ function ModbusAlert({
         <Grid
           sx={{ mt: 0, padding: 0 }}
           item
-          xs={12}
+          xs={6}
           sm={6}
           md={6}
           lg={6}
@@ -426,8 +428,8 @@ function ModbusAlert({
                 validateAlertrange(warningMinValue, warningRefMinValue, warningRefMaxValue, setWarningMinValue);
               }}
               inputProps={{
-                min: warningRefMinValue,
-                max: warningRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && warningRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && warningRefMaxValue,
               }}
               onChange={(e) => {
                 setWarningMinValue(e.target.value);
@@ -446,7 +448,7 @@ function ModbusAlert({
         <Grid
           sx={{ mt: 0, padding: 0 }}
           item
-          xs={12}
+          xs={6}
           sm={6}
           md={6}
           lg={6}
@@ -463,8 +465,8 @@ function ModbusAlert({
                 validateAlertrange(warningMaxValue, warningRefMinValue, warningRefMaxValue, setWarningMaxValue);
               }}
               inputProps={{
-                min: warningRefMinValue,
-                max: warningRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && warningRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && warningRefMaxValue,
               }}
               onChange={(e) => {
                 setWarningMaxValue(e.target.value);
@@ -499,17 +501,17 @@ function ModbusAlert({
           sx={{ mt: 0, padding: 0 }}
           item
           xs={12}
-          sm={4}
-          md={4}
-          lg={4}
-          xl={4}
+          sm={12}
+          md={2}
+          lg={2}
+          xl={2}
         >
           <FormControl fullWidth margin="normal" sx={{ marginTop: 0 }} disabled={moduleAccess.edit === false && true}>
             <InputLabel id="demo-simple-select-label">
               Sensor alert
             </InputLabel>
             <Select
-              sx={{ minWidth: 250 }}
+              // sx={{ minWidth: 250 }}
               labelId="demo-simple-select-label"
               value={outofrangeAlertType}
               label="Sensor alert"
@@ -531,10 +533,10 @@ function ModbusAlert({
           sx={{ mt: 0, padding: 0, display: 'flex' }}
           item
           xs={12}
-          sm={8}
-          md={8}
-          lg={8}
-          xl={8}
+          sm={12}
+          md={10}
+          lg={10}
+          xl={10}
           style={{
             // float:'right'
           }}
@@ -550,7 +552,7 @@ function ModbusAlert({
                   sx={{ mt: 0, padding: 0 }}
                   item
                   xs={12}
-                  sm={6}
+                  sm={12}
                   md={6}
                   lg={6}
                   xl={6}
@@ -583,7 +585,7 @@ function ModbusAlert({
                   sx={{ mt: 0, padding: 0 }}
                   item
                   xs={12}
-                  sm={6}
+                  sm={12}
                   md={6}
                   lg={6}
                   xl={6}
@@ -615,7 +617,7 @@ function ModbusAlert({
         <Grid
           sx={{ mt: 0, padding: 0 }}
           item
-          xs={12}
+          xs={6}
           sm={6}
           md={6}
           lg={6}
@@ -632,8 +634,8 @@ function ModbusAlert({
                 validateAlertrange(outofrangeMinValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMinValue);
               }}
               inputProps={{
-                min: outofrangeRefMinValue,
-                max: outofrangeRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMaxValue,
               }}
               onChange={(e) => {
                 setOutofrangeMinValue(e.target.value);
@@ -652,7 +654,7 @@ function ModbusAlert({
         <Grid
           sx={{ mt: 0, padding: 0 }}
           item
-          xs={12}
+          xs={6}
           sm={6}
           md={6}
           lg={6}
@@ -669,8 +671,8 @@ function ModbusAlert({
                 validateAlertrange(outofrangeMaxValue, outofrangeRefMinValue, outofrangeRefMaxValue, setOutofrangeMaxValue);
               }}
               inputProps={{
-                min: outofrangeRefMinValue,
-                max: outofrangeRefMaxValue,
+                min: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMinValue,
+                max: userDetails.userRole !== 'systemSpecialist' && outofrangeRefMaxValue,
               }}
               onChange={(e) => {
                 setOutofrangeMaxValue(e.target.value);

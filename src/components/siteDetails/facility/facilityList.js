@@ -9,6 +9,7 @@ import FacilityModal from './FacilityModalComponent';
 import NotificationBar from '../../notification/ServiceNotificationBar';
 import { useUserAccess } from '../../../context/UserAccessProvider';
 import DeleteConfirmationDailog from '../../../utils/confirmDeletion';
+import ApplicationStore from '../../../utils/localStorageUtil';
 
 export function FacilityListResults(props) {
   const branchColumns = [
@@ -67,7 +68,7 @@ export function FacilityListResults(props) {
   const { location_id, branch_id } = routeStateObject.state;
   const [refreshData, setRefreshData] = useState(false);
   const moduleAccess = useUserAccess()('location');
-
+  const {locationLabel, branchLabel} = ApplicationStore().getStorage('siteDetails');
   const [openNotification, setNotification] = useState({
     status: false,
     type: 'error',
@@ -184,21 +185,42 @@ export function FacilityListResults(props) {
     return (path);
   });
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <Breadcrumbs aria-label="breadcrumb" separator="›">
-        <Link underline="hover" color="inherit" to="/Location">
-          Location
-        </Link>
-        <Link
-          underline="hover"
-          color="inherit"
-          to={`/Location/${pathname[1]}`}
-          state={{
-            location_id,
-          }}
-        >
-          {pathname[1]}
-        </Link>
+    <div style={{ height: '46vh', width: '100%' }}>
+      <Breadcrumbs aria-label="breadcrumb" separator="›" style={{
+        height: '2vh',
+        minHeight: '15px'
+      }}>
+        {locationLabel ? (
+          <Typography
+            underline="hover"
+            color="inherit"
+          >
+            Location
+          </Typography>
+        ) : (
+          <Link underline="hover" color="inherit" to="/Location">
+            Location
+          </Link>
+        )}
+        {branchLabel ? (
+          <Typography
+            underline="hover"
+            color="inherit"
+          >
+            {pathname[1]}
+          </Typography>
+        ) : (
+          <Link
+            underline="hover"
+            color="inherit"
+            to={`/Location/${pathname[1]}`}
+            state={{
+              location_id,
+            }}
+          >
+            {pathname[1]}
+          </Link>
+        )}
         <Typography
           underline="hover"
           color="inherit"
@@ -219,7 +241,9 @@ export function FacilityListResults(props) {
         loading={isLoading}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
-        style={{ maxHeight: `${80}%` }}
+        style={{ 
+          // maxHeight: `${80}%`,
+        height: '37vh' }}
       />
 
       <FacilityModal

@@ -77,24 +77,24 @@ function DeviceAdd({
   const [criticalAlertType, setCriticalAlertType] = useState(editData?.criticalAlertType || '');
   const [criticalLowAlert, setCriticalLowAlert] = useState(editData?.criticalLowAlert || '');
   const [criticalHighAlert, setCriticalHighAlert] = useState(editData?.criticalHighAlert || '');
-  const [criticalRefMinValue, setRefCriticalMinValue] = useState(editData?.criticalMinValue || '');
-  const [criticalRefMaxValue, setRefCriticalMaxValue] = useState(editData?.criticalMaxValue || '');
+  const [criticalRefMinValue, setRefCriticalMinValue] = useState(editData?.criticalRefMinValue || '');
+  const [criticalRefMaxValue, setRefCriticalMaxValue] = useState(editData?.criticalRefMaxValue || '');
   // --- Warning Alert --- //
   const [warningMinValue, setWarningMinValue] = useState(editData?.warningMinValue || '');
   const [warningMaxValue, setWarningMaxValue] = useState(editData?.warningMaxValue || '');
   const [warningAlertType, setWarningAlertType] = useState(editData?.warningAlertType || '');
   const [warningLowAlert, setWarningLowAlert] = useState(editData?.warningLowAlert || '');
   const [warningHighAlert, setWarningHighAlert] = useState(editData?.warningHighAlert || '');
-  const [warningRefMinValue, setRefWarningMinValue] = useState(editData?.warningMinValue || '');
-  const [warningRefMaxValue, setRefWarningMaxValue] = useState(editData?.warningMaxValue || '');
+  const [warningRefMinValue, setRefWarningMinValue] = useState(editData?.warningRefMinValue || '');
+  const [warningRefMaxValue, setRefWarningMaxValue] = useState(editData?.warningRefMaxValue || '');
   // --- Out-of-Range Alert --- //
   const [outofrangeMinValue, setOutofrangeMinValue] = useState(editData?.outofrangeMinValue || '');
   const [outofrangeMaxValue, setOutofrangeMaxValue] = useState(editData?.outofrangeMaxValue || '');
   const [outofrangeAlertType, setOutofrangeAlertType] = useState(editData?.outofrangeAlertType || '');
   const [outofrangeLowAlert, setOutofrangeLowAlert] = useState(editData?.outofrangeLowAlert || '');
   const [outofrangeHighAlert, setOutofrangeHighAlert] = useState(editData?.outofrangeHighAlert || '');
-  const [outofrangeRefMinValue, setRefOutofrangeMinValue] = useState(editData?.outofrangeMinValue || '');
-  const [outofrangeRefMaxValue, setRefOutofrangeMaxValue] = useState(editData?.outofrangeMaxValue || '');
+  const [outofrangeRefMinValue, setRefOutofrangeMinValue] = useState(editData?.outofrangeRefMinValue || '');
+  const [outofrangeRefMaxValue, setRefOutofrangeMaxValue] = useState(editData?.outofrangeRefMaxValue || '');
   // ---- STEL & TWA ----------//
   const [alarm, setAlarm] = useState(editData?.alarm || '');
 
@@ -362,7 +362,12 @@ function DeviceAdd({
   };
 
   const resetForm = () => {
+    setCategoryId('');
+    setDeviceId('');
+    setDeviceList([]);
+    setSensorOutput('Digital');
     setSensorCategoryId('');
+    setSensorList([]);
     setSensorName('');
     setSensorTag('');
     setDigitalAlertType('');
@@ -400,18 +405,52 @@ function DeviceAdd({
     setOutofrangeAlertType('');
     setOutofrangeLowAlert('');
     setOutofrangeHighAlert('');
+
+    // -- STEL&TWA -- //
+    setAlarm('');
+    setIsAQI(false);
+    setIsStel(false);
+    setStelDuration('');
+    setStelType('');
+    setStelLimit(0);
+    setStelAlert('');
+    setTwaDuration('');
+    setTwaStartTime('01:05');
+    setStelStartTime('01:05');
+    setTwaType('');
+    setTwaLimit(0);
+    setTwaAlert('');
+    setParmGoodMinScale('');
+    setParmGoodMaxScale('');
+    setParmSatisfactoryMinScale('');
+    setParmSatisfactoryMaxScale('');
+    setParmModerateMinScale('');
+    setParmModerateMaxScale('');
+    setParmPoorMinScale('');
+    setParmPoorMaxScale('');
+    setParmVeryPoorMinScale('');
+    setParmVeryPoorMaxScale('');
+    setParmSevereMinScale('');
+    setParmSevereMaxScale('');
+    // --MIN & Max Alert Range-- //
+    setRefCriticalMinValue('');
+    setRefCriticalMaxValue('');
+    setRefWarningMinValue('');
+    setRefWarningMaxValue('');
+    setRefOutofrangeMinValue('');
+    setRefOutofrangeMaxValue('');
   };
   return (
-    <div className="w-full" style={{ marginTop: 0, overflow: 'auto' }}>
-      <form className="mt-0 p-0 w-full" onSubmit={handleSubmit}>
+    <div className="w-full" style={{ marginTop: 0, overflow: 'auto',}}>
+      <form className="mt-0 p-0 w-full" onSubmit={handleSubmit} >
         <DialogContent
-          sx={{ px: 0, p: 3 }}
+          sx={{ px: 0, p: isUpdate ? '10px' : '0px' }}
           style={{
             height: '78vh',
           }}
         >
           <DialogTitle style={{ float: 'left', padding: '0px', marginBottom: '10px' }}>
-            Edit Sensor
+            {isUpdate ? 'Edit' : 'Add'} Sensor
           </DialogTitle>
           <Grid container spacing={1} sx={{ mt: 0 }}>
             <Grid
@@ -437,6 +476,7 @@ function DeviceAdd({
                     disabled={editData && true}
                     label="Device Category"
                     onChange={(e) => {
+                      setDeviceList([]);
                       deviceChanged(e.target.value);
                     }}
                     error={errorObject?.deviceCategory?.errorStatus}

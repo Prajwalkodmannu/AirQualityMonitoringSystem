@@ -1,7 +1,8 @@
 import {
   Dashboard, Group, BusinessOutlined, LockReset, Map,
   Storefront, BrowserUpdated,
-  ChatBubbleOutline
+  ChatBubbleOutline,
+  Email
 } from '@mui/icons-material';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import { Link } from 'react-router-dom';
@@ -55,6 +56,11 @@ const SidebarItems = {
     name: 'Location',
     route: 'Location',
     icon: <Map className="sidebarIcon" />,
+  },
+  {
+    name: 'Email Config',
+    route: 'EmailConfig',
+    icon: <Email className="sidebarIcon" />,
   }],
   'Device Management': [{
     name: 'Devices',
@@ -115,7 +121,7 @@ function DrawerObject() {
                 src={companyLogo}
                 alt=""
                 className="avatar"
-                style={{ width: 200, height: 50 }}
+                style={{ width: 200, height: '6vh' }}
               />
             </Link>
           </div>

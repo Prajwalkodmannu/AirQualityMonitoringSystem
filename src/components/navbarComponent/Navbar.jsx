@@ -27,7 +27,7 @@ function Navbar(props) {
   // const { dispatch } = useContext(DarkModeContext);
   const navigate = useNavigate();
   const { userDetails, intervalDetails } = ApplicationStore().getStorage('userDetails');
-  const isSystemSpecialist = userDetails?.userRole === 'systemSpecialist';
+  const userRole = userDetails?.userRole;
   const [userDisplayName, setUserDisplayName] = useState('');
   const [customerDisplayName, setCustomerDisplayName] = useState('Company Name Here...');
   const [open, setOpen] = useState(false);
@@ -78,6 +78,7 @@ function Navbar(props) {
       ApplicationStore().setStorage('siteDetails', '');
       ApplicationStore().setStorage('alertDetails', '');
       ApplicationStore().setStorage('notificationDetails', '');
+      ApplicationStore().setStorage('navigateDashboard', '');
       navigate('/login');
     }, 2000);
   };
@@ -91,8 +92,22 @@ function Navbar(props) {
       message: '',
     });
   };
+
+  const alertIcon = (alertType) => {
+    switch (alertType) {
+      case 'Critical': return (<ErrorOutlineOutlined sx={{ color: 'red', fontSize: 30 }} />);
+      case 'Warning': return (<PriorityHigh style={{ color: 'yellow', fontSize: 30 }} />);
+      case 'outOfRange': return (<WarningAmber sx={{ color: '#ba68c8', fontSize: 30 }} />);
+      case 'Stel': return (<WarningAmber sx={{ color: 'red', fontSize: 30 }} />);
+      case 'TWA': return (<WarningAmber sx={{ color: 'yellow', fontSize: 30 }} />);
+      default: return (<WarningAmber sx={{ color: 'yellow', fontSize: 30 }} />)
+    }
+  }
+
   return (
-    <div className="navbar">
+    <div className="navbar" style={{
+      height: '6vh'
+    }}>
       <Toolbar>
         <IconButton
           color="inherit"
@@ -130,7 +145,7 @@ function Navbar(props) {
                       cursor: 'pointer',
                     }}
                   />
-                  <div className="counter">{props.notificationList.length}</div>
+                  <div className="counter">{props.notificationCount}</div>
                 </div>
               </Tooltip>
               <Menu
@@ -200,9 +215,10 @@ function Navbar(props) {
                           }}
                         >
                           <ListItemAvatar>
-                            {alertType === 'Critical' ? <ErrorOutlineOutlined sx={{ color: 'red', fontSize: 30 }} /> :
-                              alertType === 'Warning' ? <PriorityHigh style={{ color: 'yellow', fontSize: 30 }} /> :
-                                <WarningAmber sx={{ color: '#ba68c8', fontSize: 30 }} />}
+                            {/* {alertType === 'Critical' ? <ErrorOutlineOutlined sx={{ color: 'red', fontSize: 30 }} /> :
+                          alertType === 'Warning' ?  <PriorityHigh style={{ color: 'yellow', fontSize: 30 }}/> :
+                          <WarningAmber sx={{ color: '#ba68c8', fontSize: 30 }} />} */}
+                            {alertIcon(alertType)}
                           </ListItemAvatar>
                           <ListItemText
                             primary={<div>
@@ -259,7 +275,7 @@ function Navbar(props) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            {isSystemSpecialist
+            {(userRole === 'systemSpecialist' || userRole === 'superAdmin' || userRole === 'Admin' || userRole === 'Manager')
               && (
                 <MenuItem onClick={() => {
                   handleClose();
@@ -283,6 +299,7 @@ function Navbar(props) {
         setNotification={setNotification}
         handleClose={handleClose}
         intervalDetails={intervalDetails}
+        userRole={userRole}
       />
       <NotificationBar
         handleClose={handleNotificationClose}

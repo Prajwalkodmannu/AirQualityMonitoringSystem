@@ -7,6 +7,7 @@ import DeviceAdd from '../DeviceAdd';
 import NotificationBar from '../../notification/ServiceNotificationBar';
 import DeviceLocationModal from '../deviceLocation/DeviceLocationModalComponent';
 import { AddCategoryValidate } from '../../../validation/formValidation';
+import { useUserAccess } from '../../../context/UserAccessProvider';
 
 function DeviceModel({
   open,
@@ -18,6 +19,7 @@ function DeviceModel({
   labMap,
   setRefreshData,
 }) {
+  const moduleAccess = useUserAccess()('devicelocation');
   const [id, setId] = useState('');
   const [deviceName, setDeviceName] = useState('');
   const [deviceTag, setDeviceTag] = useState('');
@@ -410,20 +412,22 @@ function DeviceModel({
               >
                 Cancel
               </Button>
-              <Button
-                sx={{ m: 2 }}
-                type="submit"
-                disabled={
-                  errorObject?.deviceName?.errorStatus
-                  || errorObject?.deviceTag?.errorStatus
-                  || errorObject?.macAddress?.errorStatus
-                  || errorObject?.firmwareVersion?.errorStatus
-                  || errorObject?.pollingPriority?.errorStatus
-                  || errorObject?.nonPollingPriority?.errorStatus
-                }
-              >
-                {isAddButton ? 'Add' : 'Update'}
-              </Button>
+              {moduleAccess.edit && 
+                <Button
+                  sx={{ m: 2 }}
+                  type="submit"
+                  disabled={
+                    errorObject?.deviceName?.errorStatus
+                    || errorObject?.deviceTag?.errorStatus
+                    || errorObject?.macAddress?.errorStatus
+                    || errorObject?.firmwareVersion?.errorStatus
+                    || errorObject?.pollingPriority?.errorStatus
+                    || errorObject?.nonPollingPriority?.errorStatus
+                  }
+                >
+                  {isAddButton ? 'Add' : 'Update'}
+                </Button>
+              }
             </div>
           </div>
         </form>

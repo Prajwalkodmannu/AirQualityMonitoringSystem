@@ -25,7 +25,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: '10px' }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -47,6 +47,9 @@ function a11yProps(index) {
 }
 
 function DeviceListResults() {
+  const {locationDetails} = ApplicationStore().getStorage('userDetails');
+  const {imageLabURL} = locationDetails ;
+
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -58,7 +61,7 @@ function DeviceListResults() {
   const labMap = routeStateObject.state.lab_map;
   const moduleAccess = useUserAccess()('devicelocation');
   const {
-    locationLabel, branchLabel, facilityLabel, buildingLabel,
+    locationLabel, branchLabel, facilityLabel, buildingLabel, floorLabel, labLabel
   } = ApplicationStore().getStorage('siteDetails');
 
   const pathList = routeStateObject.pathname.split('/').filter((x) => x);
@@ -67,17 +70,29 @@ function DeviceListResults() {
     return (path);
   });
   return (
-    <div className="container mx-auto" style={{ marginTop: 0, padding: 0 }}>
-      <Container maxWidth={false} style={{ padding: 0 }}>
+    <div className="" style={{ marginTop: 0, padding: 0, height: '94vh', }}>
+      <Container maxWidth={false} style={{ padding: 0, height: '94vh' }}>
         <Box sx={{
-          width: '100%', marginBottom: '0', marginTop: 0, padding: 0,
+          width: '100%', marginBottom: '0', marginTop: 0, padding: 0, height: '94vh'
         }}
         >
-          <Breadcrumbs aria-label="breadcrumb" separator="›" style={{ paddingTop: 5, paddingLeft: 15 }}>
-            <Link underline="hover" color="inherit" to="/Location">
-              Location
-            </Link>
-            {locationLabel
+          <Breadcrumbs aria-label="breadcrumb" separator="›" style={{ 
+            paddingTop: '1px', paddingLeft: '4px', height: '2vh', minHeight: '15px',
+            minWidth: 'max-content'
+          }}>
+            {locationLabel ? (
+              <Typography
+                underline="hover"
+                color="inherit"
+              >
+                Location
+              </Typography>
+            ) : (
+              <Link underline="hover" color="inherit" to="/Location">
+                Location
+              </Link>
+            )}
+            {branchLabel
               ? (
                 <Typography
                   underline="hover"
@@ -98,7 +113,7 @@ function DeviceListResults() {
                   {pathname[1]}
                 </Link>
               )}
-            {branchLabel
+            {facilityLabel
               ? (
                 <Typography
                   underline="hover"
@@ -120,48 +135,75 @@ function DeviceListResults() {
                   {pathname[2]}
                 </Link>
               )}
-            <Link
-              underline="hover"
-              color="inherit"
-              to={`/Location/${pathname[1]}/${pathname[2]}/${pathname[3]}`}
-              state={{
-                location_id,
-                branch_id,
-                facility_id,
-              }}
-            >
-              {pathname[3]}
-            </Link>
-            <Link
-              underline="hover"
-              color="inherit"
-              to={`/Location/${pathname[1]}/${pathname[2]}/${pathname[3]}/${pathname[4]}`}
-              state={{
-                location_id,
-                branch_id,
-                facility_id,
-                building_id,
-                buildingImg,
-              }}
-            >
-              {pathname[4]}
-            </Link>
-            <Link
-              underline="hover"
-              color="inherit"
-              to={`/Location/${pathname[1]}/${pathname[2]}/${pathname[3]}/${pathname[4]}/${pathname[5]}`}
-              state={{
-                location_id,
-                branch_id,
-                facility_id,
-                building_id,
-                floor_id,
-                buildingImg,
-                floorMap,
-              }}
-            >
-              {pathname[5]}
-            </Link>
+            {buildingLabel ? (
+                <Typography
+                  underline="hover"
+                  color="inherit"
+                >
+                  {pathname[3]}
+                </Typography>
+              ) : (
+                <Link
+                  underline="hover"
+                  color="inherit"
+                  to={`/Location/${pathname[1]}/${pathname[2]}/${pathname[3]}`}
+                  state={{
+                    location_id,
+                    branch_id,
+                    facility_id,
+                  }}
+                >
+                  {pathname[3]}
+                </Link>
+              )}
+            {floorLabel ? (
+                <Typography
+                  underline="hover"
+                  color="inherit"
+                >
+                  {pathname[4]}
+                </Typography>
+              ) : (
+                <Link
+                  underline="hover"
+                  color="inherit"
+                  to={`/Location/${pathname[1]}/${pathname[2]}/${pathname[3]}/${pathname[4]}`}
+                  state={{
+                    location_id,
+                    branch_id,
+                    facility_id,
+                    building_id,
+                    buildingImg,
+                  }}
+                >
+                  {pathname[4]}
+                </Link>
+              )}
+              {labLabel ? (
+                <Typography
+                  underline="hover"
+                  color="inherit"
+                >
+                  {pathname[5]}
+                </Typography>
+              ) : (
+                <Link
+                  underline="hover"
+                  color="inherit"
+                  to={`/Location/${pathname[1]}/${pathname[2]}/${pathname[3]}/${pathname[4]}/${pathname[5]}`}
+                  state={{
+                    location_id,
+                    branch_id,
+                    facility_id,
+                    building_id,
+                    floor_id,
+                    buildingImg,
+                    floorMap,
+                  }}
+                >
+                  {pathname[5]}
+                </Link>
+              )}
             <Typography
               underline="hover"
               color="inherit"
@@ -181,7 +223,7 @@ function DeviceListResults() {
               locationDetails={{
                 location_id, branch_id, facility_id, building_id, floor_id, lab_id,
               }}
-              labMap={labMap}
+              labMap={imageLabURL || labMap}
             />
           </TabPanel>
           <TabPanel value={value} index={1}>
@@ -189,7 +231,7 @@ function DeviceListResults() {
               locationDetails={{
                 location_id, branch_id, facility_id, building_id, floor_id, lab_id,
               }}
-              labMap={labMap}
+              labMap={imageLabURL || labMap}
               setValue={setValue}
             />
           </TabPanel>

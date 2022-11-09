@@ -1,9 +1,10 @@
 export const sidebarConfig = {
   superadmin: ['CustomerManagement', 'UserManagement', 'ChangePassword', 'AddDevice', 'DeviceLocation', 'AppVersion'],
   systemspecialist: ['Dashboard', 'Location', 'UserManagement', 'Vendor', 'Report', 'ChangePassword',
-    'Device', 'AddDevice', 'DeviceLocation'],
-  admin: ['Dashboard', 'Location', 'UserManagement', 'Vendor', 'Report', 'ChangePassword', 'AddDevice', 'DeviceLocation'],
-  manager: ['Dashboard', 'Location', 'UserManagement', 'Vendor', 'ChangePassword', 'AddDevice', 'DeviceLocation'],
+    'Device', 'AddDevice', 'DeviceLocation', 'EmailConfig'],
+  admin: ['Dashboard', 'Location', 'UserManagement', 'Vendor', 'Report',
+    'ChangePassword', 'AddDevice', 'DeviceLocation', 'EmailConfig'],
+  manager: ['Dashboard', 'Location', 'UserManagement', 'Vendor', 'ChangePassword', 'AddDevice', 'DeviceLocation', 'Report'],
   user: ['Dashboard', 'Location', 'ChangePassword', 'AddDevice', 'DeviceLocation'],
 };
 // 'GasCylinder'
@@ -31,6 +32,32 @@ export const crudConfig = {
       view: true,
       add: true,
       edit: true,
+      delete: true,
+    },
+    user: {
+      view: true,
+      add: false,
+      edit: false,
+      delete: true,
+    },
+  },
+  location: {
+    systemspecialist: {
+      view: true,
+      add: true,
+      edit: true,
+      delete: true,
+    },
+    admin: {
+      view: true,
+      add: false,
+      edit: true,
+      delete: false,
+    },
+    manager: {
+      view: true,
+      add: false,
+      edit: true,
       delete: false,
     },
     user: {
@@ -40,7 +67,7 @@ export const crudConfig = {
       delete: false,
     },
   },
-  location: {
+  emailconfig: {
     systemspecialist: {
       view: true,
       add: true,
@@ -258,24 +285,48 @@ export const crudConfig = {
       add: true,
       edit: true,
       delete: true,
+      changeDeviceMode: {
+        view: true,
+        add: true,
+        edit: true,
+        delete: true,
+      },
     },
     admin: {
       view: true,
       add: false,
       edit: true,
       delete: false,
+      changeDeviceMode: {
+        view: true,
+        add: false,
+        edit: true,
+        delete: false,
+      },
     },
     manager: {
       view: true,
       add: false,
       edit: true,
       delete: false,
+      changeDeviceMode: {
+        view: false,
+        add: false,
+        edit: false,
+        delete: false,
+      },
     },
     user: {
       view: true,
       add: false,
       edit: false,
       delete: false,
+      changeDeviceMode: {
+        view: false,
+        add: false,
+        edit: false,
+        delete: false,
+      },
     },
   },
 };

@@ -95,6 +95,7 @@ function AddDeviceListResults(props) {
   ];
   const [progressStatus, setProgressStatus] = useState(3);
   const [device_id, setDeviceId] = useState('0');
+  const [calibratingDeviceId, setCalibratingDeviceId] = useState('');
   const [sensorRefresh, setSensorRefresh] = useState(false);
   const [open, setOpen] = useState(false);
   const [deviceModalOpen, setDeviceModalOpen] = useState(false);
@@ -184,7 +185,7 @@ function AddDeviceListResults(props) {
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={props.selectedRow.deviceMode}
-        disabled={!moduleAccess.edit && true}
+        disabled={!moduleAccess.changeDeviceMode.edit && true}
         label="Mode"
         fullWidth
         onChange={(e) => {
@@ -220,6 +221,7 @@ function AddDeviceListResults(props) {
       handleClose();
       switch (dataObject.deviceMode) {
       case 'calibration':
+        setCalibratingDeviceId(dataObject.deviceId);
         calibrateDeployedSensorsList(dataObject.deviceId);
         break;
       case 'bumpTest':
@@ -302,7 +304,7 @@ function AddDeviceListResults(props) {
 
   /* eslint-disable-next-line */
   function EditData(props) {
-    return (moduleAccess.edit
+    return (moduleAccess.view
       && (
         <EditIcon
           style={{ cursor: 'pointer' }}
@@ -327,7 +329,7 @@ function AddDeviceListResults(props) {
   }
   /* eslint-disable-next-line */
   function SensorsData(props) {
-    return (
+    return (moduleAccess.view && (
       <SensorsIcon
         style={{ cursor: 'pointer' }}
         onClick={(event) => {
@@ -337,7 +339,7 @@ function AddDeviceListResults(props) {
           setDeviceId(props.selectedRow.id);
         }}
       />
-    );
+    ));
   }
   const fetchSensorList = (device_id) => {
     SensorDeployFetchService({ ...props.locationDetails, device_id }, fetchSenosorListSuccess, fetchSenosorListException);
@@ -361,7 +363,7 @@ function AddDeviceListResults(props) {
   };
   /* eslint-disable-next-line */
   function AppSettingsAltIconData(props) {
-    return (moduleAccess.edit
+    return (moduleAccess.view
       && (
         <AppSettingsAltIcon
           style={{ cursor: 'pointer' }}
@@ -540,6 +542,7 @@ function AddDeviceListResults(props) {
         progressStatus={progressStatus}
         setProgressStatus={setProgressStatus}
         deployedSensorTagList={deployedSensorTagList}
+        calibratingDeviceId={calibratingDeviceId}
       />
       <BumpTestComponentModal
         device_id={device_id}
@@ -566,10 +569,14 @@ function AddDeviceListResults(props) {
         setNotification={setNotification}
       />
       <DebugModeModal
+        changeDeviceId={changeDeviceId}
+        setChangeDeviceId={setChangeDeviceId}
+        changeDeviceIdMode={changeDeviceIdMode}
         open={debugModalOpen}
         setOpen={setDebugModalOpen}
         setRefreshData={setRefreshData}
         device_id={device_id}
+        setNotification={setNotification}
       />
       <NotificationBar
         handleClose={handleClose}

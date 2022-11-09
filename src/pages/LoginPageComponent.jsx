@@ -64,6 +64,7 @@ function LoginPage() {
         };
       }).then((data) => {
         ApplicationStore().setStorage('userDetails', data);
+        ApplicationStore().setStorage('navigateDashboard', {navigateDashboard : true});
         ApplicationStore().setStorage('alertDetails', {
           locationIdList: [],
           branchIdList: [],
@@ -83,7 +84,7 @@ function LoginPage() {
           if (data.userDetails.secondLevelAuthorization === 'true') {
             navigate('/otp');
           } else if (data.userDetails.forcePasswordReset === 0) {
-            data.userDetails.userRole === 'superAdmin' ? navigate('/UserManagement') : navigate('/Dashboard') ;
+            data.userDetails.userRole === 'superAdmin' ? navigate('/UserManagement') : navigate('/') ;
           } else {
             navigate('/passwordReset');
           }

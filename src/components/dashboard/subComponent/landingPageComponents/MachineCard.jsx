@@ -112,8 +112,8 @@ function MachineCard(props) {
                   score={props.sensorStatus === 0 ? '0': props.last}
                   text={props.sensorStatus === 0 ? 'NA' : props.last}
                   color={props.sensorStatus === 0 ? 'NA' : props.alertColor} 
-                  minReading={props.minRatedReadingScale} 
-                  maxReading={props.maxRatedReadingScale} />
+                  minReading={props.minRatedReadingScale || 0} 
+                  maxReading={props.maxRatedReadingScale || 100} />
               }
             </div>
             <div style={{
