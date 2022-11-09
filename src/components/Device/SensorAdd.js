@@ -365,47 +365,46 @@ function DeviceAdd({
     setCategoryId('');
     setDeviceId('');
     setDeviceList([]);
-    setSensorOutput('Digital');
     setSensorCategoryId('');
     setSensorList([]);
-    setSensorName('');
     setSensorTag('');
     setDigitalAlertType('');
     setDigitalLowAlert('');
     setDigitalHighAlert('');
+    setPollingIntervalType('');
+    setCriticalAlertType('');
+    setCriticalLowAlert('');
+    setCriticalHighAlert('');
+    setWarningAlertType('');
+    setWarningLowAlert('');
+    setWarningHighAlert('');
+    setOutofrangeAlertType('');
+    setOutofrangeLowAlert('');
+    setOutofrangeHighAlert('');
+    clearSensorSpecification();
+  };
+
+  const clearSensorSpecification = () =>{
+    setSensorName('');
+    setSensorOutput('Digital');
     setSensorType('');
-    setRelayOutput('ON');
+    // -- analog --//
     setUnits('');
+    setRelayOutput('ON');
     setMinRatedReading('');
+    setMinRatedReadingChecked(false);
     setMinRatedReadingScale('');
     setMaxRatedReading('');
-    setMaxRatedReadingScale('');
-    setMinRatedReadingChecked(false);
     setMaxRatedReadingChecked(false);
+    setMaxRatedReadingScale('');
+    // --modbus--/
+    setIpAddress('');
+    setSubnetMask('');
     setSlaveId('');
     setRegisterId('');
     setLength('');
     setRegisterType('');
     setConversionType('');
-    setIpAddress('');
-    setSubnetMask('');
-    setPollingIntervalType('');
-    setCriticalMinValue('');
-    setCriticalMaxValue('');
-    setCriticalAlertType('');
-    setCriticalLowAlert('');
-    setCriticalHighAlert('');
-    setWarningMinValue('');
-    setWarningMaxValue('');
-    setWarningAlertType('');
-    setWarningLowAlert('');
-    setWarningHighAlert('');
-    setOutofrangeMinValue('');
-    setOutofrangeMaxValue('');
-    setOutofrangeAlertType('');
-    setOutofrangeLowAlert('');
-    setOutofrangeHighAlert('');
-
     // -- STEL&TWA -- //
     setAlarm('');
     setIsAQI(false);
@@ -433,13 +432,20 @@ function DeviceAdd({
     setParmSevereMinScale('');
     setParmSevereMaxScale('');
     // --MIN & Max Alert Range-- //
+    setCriticalMinValue('');
     setRefCriticalMinValue('');
+    setCriticalMaxValue('');
     setRefCriticalMaxValue('');
+    setWarningMinValue('');
     setRefWarningMinValue('');
+    setWarningMaxValue('');
     setRefWarningMaxValue('');
+    setOutofrangeMinValue('');
     setRefOutofrangeMinValue('');
+    setOutofrangeMaxValue('');
     setRefOutofrangeMaxValue('');
-  };
+  }
+
   return (
     <div className="w-full" style={{ marginTop: 0, overflow: 'auto',}}>
       <form className="mt-0 p-0 w-full" onSubmit={handleSubmit} >
@@ -552,6 +558,7 @@ function DeviceAdd({
                       setSensorCategoryId(e.target.value);
                       setSensorList([]);
                       SensorFetchService(e.target.value, sensorHandleSuccess, handleException);
+                      clearSensorSpecification();
                     }}
                   >
                     {sensorCategoryList.map((data) => {
@@ -594,97 +601,90 @@ function DeviceAdd({
                   xl={6}
                 >
                   <Box>
-                    <Autocomplete
-                      open={open}
-                      value={sensorList[0]?.sensorName}
-                      onOpen={() => {
-                        setOpen(true);
-                      }}
-                      onClose={() => {
-                        setOpen(false);
-                      }}
-                      isOptionEqualToValue={(option, value) => {
-                        return option.id === value.id;
-                      }}
-                      getOptionLabel={(option) => {
-                        return option.sensorName;
-                      }}
-                      options={sensorList}
-                      onChange={(e, data) => {
-                        DynamicUnitListService(sensorCategoryId, handleSensorUnitSuccess, handleSensorUnitException);
-                        setSensorName(data.id);
-                        setSensorOutput(data.sensorOutput);
-                        setSensorType(data.sensorType);
-                        // -- analog --//
-                        setUnits(data.units);
-                        setRelayOutput(data.relayOutput);
-                        setMinRatedReading(data.minRatedReading);
-                        setMinRatedReadingChecked(data.minRatedReadingChecked);
-                        setMinRatedReadingScale(data.minRatedReadingScale);
-                        setMaxRatedReading(data.maxRatedReading);
-                        setMaxRatedReadingChecked(data.maxRatedReadingChecked);
-                        setMaxRatedReadingScale(data.maxRatedReadingScale);
-                        // --modbus--/
-                        setIpAddress(data.ipAddress);
-                        setSubnetMask(data.subnetMask);
-                        setSlaveId(data.slaveId);
-                        setRegisterId(data.registerId);
-                        setLength(data.length);
-                        setRegisterType(data.registerType);
-                        setConversionType(data.conversionType);
-                        // -- STEL&TWA -- //
-                        setAlarm(data.alarm);
-                        setIsAQI(data.isAQI === '1');
-                        setIsStel(data.isStel === '1');
-                        setStelDuration(data.stelDuration);
-                        setStelType(data.stelType);
-                        setStelLimit(data.stelLimit);
-                        setStelAlert(data.stelAlert);
-                        setTwaDuration(data.twaDuration);
-                        setTwaStartTime(data.twaStartTime);
-                        setStelStartTime(data.stelStartTime);
-                        setTwaType(data.twaType);
-                        setTwaLimit(data.twaLimit);
-                        setTwaAlert(data.twaAlert);
-                        setParmGoodMinScale(data.parmGoodMinScale);
-                        setParmGoodMaxScale(data.parmGoodMaxScale);
-                        setParmSatisfactoryMinScale(data.parmSatisfactoryMinScale);
-                        setParmSatisfactoryMaxScale(data.parmSatisfactoryMaxScale);
-                        setParmModerateMinScale(data.parmModerateMinScale);
-                        setParmModerateMaxScale(data.parmModerateMaxScale);
-                        setParmPoorMinScale(data.parmPoorMinScale);
-                        setParmPoorMaxScale(data.parmPoorMaxScale);
-                        setParmVeryPoorMinScale(data.parmVeryPoorMinScale);
-                        setParmVeryPoorMaxScale(data.parmVeryPoorMaxScale);
-                        setParmSevereMinScale(data.parmSevereMinScale);
-                        setParmSevereMaxScale(data.parmSevereMaxScale);
-                        // --MIN & Max Alert Range-- //
-                        setCriticalMinValue(data.criticalMinValue);
-                        setRefCriticalMinValue(data.criticalMinValue);
-                        setCriticalMaxValue(data.criticalMaxValue);
-                        setRefCriticalMaxValue(data.criticalMaxValue);
-                        setWarningMinValue(data.warningMinValue);
-                        setRefWarningMinValue(data.warningMinValue);
-                        setWarningMaxValue(data.warningMaxValue);
-                        setRefWarningMaxValue(data.warningMaxValue);
-                        setOutofrangeMinValue(data.outofrangeMinValue);
-                        setRefOutofrangeMinValue(data.outofrangeMinValue);
-                        setOutofrangeMaxValue(data.outofrangeMaxValue);
-                        setRefOutofrangeMaxValue(data.outofrangeMaxValue);
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Sensor Name"
-                          required
-                          onKeyUp={() => {
-                            setTimeout(() => {
-                              SensorFetchService(sensorCategoryId, sensorHandleSuccess, handleException);
-                            }, 500);
-                          }}
-                        />
-                      )}
-                    />
+                    <FormControl fullWidth margin="normal" sx={{ marginTop: 0 }}>
+                      <InputLabel id="demo-simple-select-label">
+                        Sensor Name
+                      </InputLabel>
+                      <Select
+                        sx={{ minWidth: 250 }}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={sensorName}
+                        required
+                        disabled={editData && true}
+                        label="Sensor Category"
+                        onChange={(e) => {
+                          setSensorName(e.target.value || '');
+                          var result = sensorList.filter(obj => {
+                            return obj.id === e.target.value
+                          });
+                          setSensorOutput(result[0]?.sensorOutput || 'Digital');
+                          setSensorType(result[0]?.sensorType || '');
+                          // -- analog --//
+                          setUnits(result[0]?.units || '');
+                          setRelayOutput(result[0]?.relayOutput || 'ON');
+                          setMinRatedReading(result[0]?.minRatedReading || '');
+                          setMinRatedReadingChecked(result[0]?.minRatedReadingChecked || false);
+                          setMinRatedReadingScale(result[0]?.minRatedReadingScale || '');
+                          setMaxRatedReading(result[0]?.maxRatedReading || '');
+                          setMaxRatedReadingChecked(result[0]?.maxRatedReadingChecked || false);
+                          setMaxRatedReadingScale(result[0]?.maxRatedReadingScale || '');
+                          // --modbus--/
+                          setIpAddress(result[0]?.ipAddress );
+                          setSubnetMask(result[0]?.subnetMask);
+                          setSlaveId(result[0]?.slaveId);
+                          setRegisterId(result[0]?.registerId);
+                          setLength(result[0]?.length);
+                          setRegisterType(result[0]?.registerType);
+                          setConversionType(result[0]?.conversionType);
+                          // -- STEL&TWA -- //
+                          setAlarm(result[0]?.alarm);
+                          setIsAQI(result[0]?.isAQI === '1' || false);
+                          setIsStel(result[0]?.isStel === '1' || false);
+                          setStelDuration(result[0]?.stelDuration);
+                          setStelType(result[0]?.stelType);
+                          setStelLimit(result[0]?.stelLimit || 0);
+                          setStelAlert(result[0]?.stelAlert);
+                          setTwaDuration(result[0]?.twaDuration);
+                          setTwaStartTime(result[0]?.twaStartTime || '01:05');
+                          setStelStartTime(result[0]?.stelStartTime || '01:05');
+                          setTwaType(result[0]?.twaType);
+                          setTwaLimit(result[0]?.twaLimit || 0);
+                          setTwaAlert(result[0]?.twaAlert);
+                          setParmGoodMinScale(result[0]?.parmGoodMinScale);
+                          setParmGoodMaxScale(result[0]?.parmGoodMaxScale);
+                          setParmSatisfactoryMinScale(result[0]?.parmSatisfactoryMinScale);
+                          setParmSatisfactoryMaxScale(result[0]?.parmSatisfactoryMaxScale);
+                          setParmModerateMinScale(result[0]?.parmModerateMinScale);
+                          setParmModerateMaxScale(result[0]?.parmModerateMaxScale);
+                          setParmPoorMinScale(result[0]?.parmPoorMinScale);
+                          setParmPoorMaxScale(result[0]?.parmPoorMaxScale);
+                          setParmVeryPoorMinScale(result[0]?.parmVeryPoorMinScale);
+                          setParmVeryPoorMaxScale(result[0]?.parmVeryPoorMaxScale);
+                          setParmSevereMinScale(result[0]?.parmSevereMinScale);
+                          setParmSevereMaxScale(result[0]?.parmSevereMaxScale);
+                          // --MIN & Max Alert Range-- //
+                          setCriticalMinValue(result[0]?.criticalMinValue);
+                          setRefCriticalMinValue(result[0]?.criticalMinValue);
+                          setCriticalMaxValue(result[0]?.criticalMaxValue);
+                          setRefCriticalMaxValue(result[0]?.criticalMaxValue);
+                          setWarningMinValue(result[0]?.warningMinValue);
+                          setRefWarningMinValue(result[0]?.warningMinValue);
+                          setWarningMaxValue(result[0]?.warningMaxValue);
+                          setRefWarningMaxValue(result[0]?.warningMaxValue);
+                          setOutofrangeMinValue(result[0]?.outofrangeMinValue);
+                          setRefOutofrangeMinValue(result[0]?.outofrangeMinValue);
+                          setOutofrangeMaxValue(result[0]?.outofrangeMaxValue);
+                          setRefOutofrangeMaxValue(result[0]?.outofrangeMaxValue);
+                        }}
+                      >
+                        {sensorList.map((data) => {
+                          return (
+                            <MenuItem value={data.id}>{data.sensorName}</MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
                   </Box>
                 </Grid>
               )}

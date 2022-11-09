@@ -66,6 +66,13 @@ function HomePageComponent() {
   });
 
   useEffect(() => {
+    const { userDetails } = ApplicationStore().getStorage('userDetails');
+    if(userDetails?.forcePasswordReset === 1){
+      return navigate('/passwordReset');
+    }
+    if(userDetails?.secondLevelAuthorization === 'true'){
+      return navigate('/otp');
+    }
     if(userDetails.userRole !== 'superAdmin'){
       if(lab_id){
         fetchLab();

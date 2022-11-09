@@ -29,33 +29,27 @@ function MapsComponent(props) {
     setZoom(props?.zoom);
   }, []);
   return (
-    <LoadScript
-      googleMapsApiKey="AIzaSyBLUOrdeTct_dq-4ANyGGyiGoAHxeRR1yU"
+    <GoogleMap
+      id="marker-example"
+      mapContainerStyle={mapContainerStyle}
+      zoom={zoom}
+      center={position}
     >
-
-      <GoogleMap
-        id="marker-example"
-        mapContainerStyle={mapContainerStyle}
-        zoom={zoom}
-        center={position}
+      <Marker
+        icon={customBuildingIcon}
+        draggable
+        onDragEnd={onMarkerDragEnd}
+        position={position}
+      />
+      <InfoWindow
+        position={{ lat: (position.lat + props.flagDistance || 0.0018), lng: position.lng }}
+        onPositionChanged={() => {}}
       >
-        <Marker
-          icon={customBuildingIcon}
-          draggable
-          onDragEnd={onMarkerDragEnd}
-          position={position}
-        />
-        <InfoWindow
-          position={{ lat: (position.lat + props.flagDistance || 0.0018), lng: position.lng }}
-          onPositionChanged={() => {}}
-        >
-          <div>
-            <span style={{ padding: 0, margin: 0 }}>{props.stateName || 'New Location Here'}</span>
-          </div>
-        </InfoWindow>
-      </GoogleMap>
-
-    </LoadScript>
+        <div>
+          <span style={{ padding: 0, margin: 0 }}>{props.stateName || 'New Location Here'}</span>
+        </div>
+      </InfoWindow>
+    </GoogleMap>
   );
 }
 

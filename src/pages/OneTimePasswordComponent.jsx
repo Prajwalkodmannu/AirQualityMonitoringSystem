@@ -11,11 +11,11 @@ const OneTimePassword = () => {
     const [phone, setphone] = useState('');
 
     useEffect((props) => {
-        const {userDetails} = ApplicationStore().getStorage('userDetails');
-        // if (!JSON.parse(userDetails?.secondLevelAuthorization)) {
-        //     navigate(`/`);
-        // }
-    });
+        const {userDetails, user_token} = ApplicationStore().getStorage('userDetails');
+        return  userDetails?.secondLevelAuthorization === 'true' ? {} :
+        userDetails?.forcePasswordReset === 1 ? navigate('/passwordReset') :  
+        userDetails?.userRole === 'superAdmin' ? navigate('/UserManagement') : navigate('/Dashboard');
+    }, []);
 
     return (
         <>

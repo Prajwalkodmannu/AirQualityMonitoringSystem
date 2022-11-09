@@ -115,7 +115,7 @@ function LocationGridComponent(props) {
       }
       return newValue;
     });
-  }, [alertStatus]);
+  }, []);
 
   function LinkTo({ selectedRow }) {
     const { locationDetails } = ApplicationStore().getStorage('userDetails');
