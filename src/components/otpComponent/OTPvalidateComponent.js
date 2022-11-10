@@ -35,7 +35,8 @@ function OTPvalidate(props) {
   useEffect(() => {
     setEmail(props.email);
     setPhone(props.phone);
-  });
+  }, []);
+
   const validateForNullValue = (value) => {
     OTPvalidationValidate(value, setErrorObject);
   };
@@ -47,11 +48,19 @@ function OTPvalidate(props) {
       message: 'User Authentication Successfull..!',
     });
     setTimeout(() => {
-      const { userDetails } = ApplicationStore().getStorage('userDetails');
-      if (userDetails.forcePasswordReset === '0') {
-        navigate('/');
+      const storedUserDetails = ApplicationStore().getStorage('userDetails');
+      const {userDetails} = storedUserDetails;
+      ApplicationStore().setStorage('userDetails', {
+        ...storedUserDetails,
+        userDetails: {
+          ...userDetails,
+          secondLevelAuthorization : 'false'
+        },
+      });
+      if (userDetails?.forcePasswordReset === 0) {
+        userDetails?.userRole === 'superAdmin' ? navigate('/UserManagement'): navigate('/Dashboard');
       } else {
-        navigate('/passwordReset');
+        navigate('/ChangePassword');
       }
     }, 3000);
   };

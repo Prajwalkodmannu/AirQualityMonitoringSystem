@@ -29,7 +29,7 @@ function LoginPage() {
 
   useEffect(() => {
     const { user_token, userDetails } = ApplicationStore().getStorage('userDetails');
-    return user_token ? userDetails.userRole === 'superAdmin' ? navigate('/UserManagement') : navigate('/Dashboard') : {} ;
+    return user_token ? userDetails?.userRole === 'superAdmin' ? navigate('/UserManagement') : userDetails?.secondLevelAuthorization === 'true' ? navigate('/otp') : userDetails?.forcePasswordReset === 1 ? navigate('/passwordReset') : navigate('/Dashboard') : {} ;
   }, []);
 
   const validateForNullValue = (value, type) => {

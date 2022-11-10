@@ -42,34 +42,29 @@ function MapsMultiplePoints(props) {
     // },[]);
 
     return (
-        <LoadScript
-            googleMapsApiKey="AIzaSyBLUOrdeTct_dq-4ANyGGyiGoAHxeRR1yU"
+        <GoogleMap
+            id="location-marker"
+            mapContainerStyle={mapContainerStyle}
+            zoom={props.zoom}
+            center={props.center}
         >
-            <GoogleMap
-                id="location-marker"
-                mapContainerStyle={mapContainerStyle}
-                zoom={props.zoom}
-                center={props.center}
-            >
-                {props.markers.map(({ id, name, position }, index) => (
-                    <Marker
-                        icon={customBuildingIcon}
-                        draggable={props.isDragable ? props.isDragable : true}
-                        onDragEnd={onMarkerDragEnd}
-                        key={index}
-                        position={position}
-                        onClick={() => handleActiveMarker(index)}
-                    >
-                        {activeMarker === index ? (
-                            <InfoWindow onCloseClick={() => setActiveMarker(null)} >
-                                <div>{name}</div>
-                            </InfoWindow>
-                        ) : null}
-                    </Marker>
-                ))}
-            </GoogleMap>
-
-        </LoadScript>
+            {props.markers.map(({ id, name, position }, index) => (
+                <Marker
+                    icon={customBuildingIcon}
+                    draggable={props.isDragable ? props.isDragable : true}
+                    onDragEnd={onMarkerDragEnd}
+                    key={index}
+                    position={position}
+                    onClick={() => handleActiveMarker(index)}
+                >
+                    {activeMarker === index ? (
+                        <InfoWindow onCloseClick={() => setActiveMarker(null)} >
+                            <div>{name}</div>
+                        </InfoWindow>
+                    ) : null}
+                </Marker>
+            ))}
+        </GoogleMap>
     )
 }
 

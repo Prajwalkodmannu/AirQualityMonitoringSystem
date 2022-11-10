@@ -1,11 +1,13 @@
 /* eslint-disable max-len */
 import React from 'react';
 import {
-  HashRouter as Router, Routes, Route, Outlet, Navigate,
+  HashRouter as Router, Routes, Route, Outlet, Navigate, useNavigate,
 } from 'react-router-dom';
 import './App.css';
+import { LoadScript } from '@react-google-maps/api';
 import LoginPage from './pages/LoginPageComponent';
 import OneTimePassword from './pages/OneTimePasswordComponent';
+// eslint-disable-next-line import/no-named-as-default
 import HomePage from './pages/HomePageComponent';
 import VendorManagement from './pages/VendorComponent';
 import ForcePasswordReset from './pages/ForcePasswordResetComponent';
@@ -28,41 +30,51 @@ import GasCylinder from './pages/GasCylinderComponent';
 import EmailConfig from './pages/EmailConfig';
 
 function ProtectedRoutes() {
-  const { user_token } = ApplicationStore().getStorage('userDetails');
-  return user_token ? <Outlet /> : <Navigate replace to="/login" />;
+  const navigate = useNavigate();
+  const { user_token, userDetails } = ApplicationStore().getStorage('userDetails');
+  if (user_token) {
+    if (userDetails?.secondLevelAuthorization === 'true' || userDetails?.forcePasswordReset === 1) {
+      navigate('/login');
+    }
+    return <Outlet />;
+  }
+
+  return <Navigate replace to="/login" />;
 }
 
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/otp" element={<OneTimePassword />} />
-            <Route path="/passwordReset" element={<ForcePasswordReset />} />
-            <Route path="/" element={<HomePage />}>
-              <Route path="CustomerManagement/*" element={<CustomerManagement />} />
-              <Route path="UserManagement/*" element={<UserManagement />} />
-              <Route path="Vendor/*" element={<VendorManagement />} />
-              <Route path="GasCylinder" element={<GasCylinder />} />
-              <Route path="EmailConfig" element={<EmailConfig />} />
-              <Route path="Report/*" element={<ManagementReportTab />} />
-              <Route path="ChangePassword/*" element={<UserResetPassword />} />
-              <Route path="AppVersion/*" element={<AppVersion />} />
-              <Route path="Dashboard/*" element={<Dashboard />} />
-              <Route path="Location/*" element={<SiteDetails />} />
-              <Route path="Location/:locationId" element={<Branch />} />
-              <Route path="Location/:locationId/:locationId" element={<Facility />} />
-              <Route path="Location/:locationId/:locationId/:locationId/*" element={<Building />} />
-              <Route path="Location/:locationId/:locationId/:locationId/:locationId/*" element={<Floor />} />
-              <Route path="Location/:locationId/:locationId/:locationId/:locationId/:locationId/*" element={<Lab />} />
-              <Route path="Location/:locationId/:locationId/:locationId/:locationId/:locationId/:locationId/*" element={<AddDeviceSensor />} />
-              <Route path="Device/*" element={<CategoryManagement />} />
+      <LoadScript googleMapsApiKey="AIzaSyBBv6shA-pBM0e9KydvwubSY55chq0gqS8">
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/otp" element={<OneTimePassword />} />
+              <Route path="/passwordReset" element={<ForcePasswordReset />} />
+              <Route path="/" element={<HomePage />}>
+                <Route path="CustomerManagement/*" element={<CustomerManagement />} />
+                <Route path="UserManagement/*" element={<UserManagement />} />
+                <Route path="Vendor/*" element={<VendorManagement />} />
+                <Route path="GasCylinder" element={<GasCylinder />} />
+                <Route path="EmailConfig" element={<EmailConfig />} />
+                <Route path="Report/*" element={<ManagementReportTab />} />
+                <Route path="ChangePassword/*" element={<UserResetPassword />} />
+                <Route path="AppVersion/*" element={<AppVersion />} />
+                <Route path="Dashboard/*" element={<Dashboard />} />
+                <Route path="Location/*" element={<SiteDetails />} />
+                <Route path="Location/:locationId" element={<Branch />} />
+                <Route path="Location/:locationId/:locationId" element={<Facility />} />
+                <Route path="Location/:locationId/:locationId/:locationId/*" element={<Building />} />
+                <Route path="Location/:locationId/:locationId/:locationId/:locationId/*" element={<Floor />} />
+                <Route path="Location/:locationId/:locationId/:locationId/:locationId/:locationId/*" element={<Lab />} />
+                <Route path="Location/:locationId/:locationId/:locationId/:locationId/:locationId/:locationId/*" element={<AddDeviceSensor />} />
+                <Route path="Device/*" element={<CategoryManagement />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
-      </Router>
+          </Routes>
+        </Router>
+      </LoadScript>
     </div>
   );
 }

@@ -36,7 +36,7 @@ function handleSwitchcase(alertStatus, colorCode, defaultCase, case1, case2, cas
 export function setAlertColor(newNotificationStack){
   if (newNotificationStack.length > 0) {
     let colorCode = {
-      priority: 3,
+      priority: 6,
       color: '#ab47bc',
       message: 'Alert'
     };
@@ -48,25 +48,25 @@ export function setAlertColor(newNotificationStack){
           message: 'Critical Alert'
         };
         break;
-      } else if(newNotificationStack[i].alertType === 'Warning') {
+      } else if(newNotificationStack[i].alertType === 'Warning' && colorCode.priority > 2) {
         colorCode = {
           priority: 2,
           color: '#ff9800',
           message: 'Warning Alert'
         }
-      } else if(newNotificationStack[i].alertType === 'outOfRange') {
+      } else if(newNotificationStack[i].alertType === 'outOfRange' && colorCode.priority > 3) {
         colorCode = {
           priority: 3,
           color: '#ab47bc',
           message: 'Out Of Range Alert'
         }
-      } else if(newNotificationStack[i].alertType === 'Stel') {
+      } else if(newNotificationStack[i].alertType === 'Stel' && colorCode.priority > 4) {
         colorCode = {
           priority: 4,
           color: '#E53935',
           message: 'STEL Alert'
         }
-      } else if(newNotificationStack[i].alertType === 'TWA') {
+      } else if(newNotificationStack[i].alertType === 'TWA' && colorCode.priority > 5) {
         colorCode = {
           priority: 5,
           color: '#ff9800',
